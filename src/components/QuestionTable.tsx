@@ -91,7 +91,7 @@ function QuestionTable() {
   }
 
   function getLocalStorageQuestions(): Question[] {
-    return JSON.parse(localStorage.getItem("questions") || "") || [];
+    return JSON.parse(localStorage.getItem("questions") || "null") || [];
   }
 
   return (
