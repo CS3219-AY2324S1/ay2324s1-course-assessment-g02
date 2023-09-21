@@ -72,7 +72,7 @@ function QuestionTable() {
   };
 
   function addQuestion(question: Question): void {
-    question.id = !!questionData
+    question.id = questionData.length > 0
       ? (questionData[questionData.length - 1].id || 0) + 1
       : 0;
     setQuestionData((qns) => {
