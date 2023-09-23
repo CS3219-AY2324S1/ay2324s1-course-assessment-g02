@@ -1,30 +1,19 @@
-import { model, InferSchemaType, Schema } from 'mongoose';
+import { prop, getModelForClass } from '@typegoose/typegoose';
 
-const questionSchema = new Schema({
-  _id: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  categories: {
-    type: [String], // Define it as an array of strings
-    required: true,
-  },
-  complexity: {
-    type: String,
-    enum: ['Easy', 'Medium', 'Hard'],
-    required: true,
-  },
-});
+class Question {
+  @prop({ required: true })
+  public title!: string;
 
-type Question = InferSchemaType<typeof questionSchema>;
+  @prop({ required: true })
+  public description!: string;
 
-export default model<Question>('Question', questionSchema);
+  @prop({ type: String, required: true })
+  public categories!: string[];
+
+  @prop({ required: true, enum: ['Easy', 'Medium', 'Hard'] })
+  public complexity!: string;
+}
+
+const QuestionModel = getModelForClass(Question);
+
+export default QuestionModel;
