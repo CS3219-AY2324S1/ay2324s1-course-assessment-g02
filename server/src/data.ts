@@ -5,7 +5,7 @@ export interface Question {
     complexity: "Easy" | "Medium" | "Hard";
     link: string;
     description: string;
-  }
+}
   
 export const dummyQuestionData: Question[] = [
     {
@@ -31,4 +31,4 @@ export const dummyQuestionData: Question[] = [
       link: "https://leetcode.com/problems/linked-list-cycle/",
       description: "idk lol",
     },
-  ];
+];
