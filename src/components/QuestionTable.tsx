@@ -7,11 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import {
-  Button,
-  Toolbar,
-  Tooltip,
-} from "@mui/material";
+import { Button, Toolbar, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import AddQuestionModal from "./AddQuestionModal";
@@ -52,8 +48,6 @@ const dummyQuestionData: Question[] = [
   },
 ];
 
-
-
 function QuestionTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -72,9 +66,10 @@ function QuestionTable() {
   };
 
   function addQuestion(question: Question): void {
-    question.id = questionData.length > 0
-      ? (questionData[questionData.length - 1].id || 0) + 1
-      : 0;
+    question.id =
+      questionData.length > 0
+        ? (questionData[questionData.length - 1].id || 0) + 1
+        : 0;
     setQuestionData((qns) => {
       updateLocalStorage([...qns, question]);
       return [...qns, question];
@@ -82,6 +77,8 @@ function QuestionTable() {
   }
 
   function deleteQuestion(questionId: number): void {
+    console.log("delete question: " + questionId);
+    console.log(questionData);
     setQuestionData(questionData.filter((x) => x.id !== questionId));
     updateLocalStorage(questionData.filter((x) => x.id !== questionId));
   }
@@ -129,7 +126,10 @@ function QuestionTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((question) => {
                 return (
-                  <QuestionTableRow question={question} deleteQuestion={deleteQuestion} />
+                  <QuestionTableRow
+                    question={question}
+                    deleteQuestion={deleteQuestion}
+                  />
                 );
               })}
           </TableBody>
