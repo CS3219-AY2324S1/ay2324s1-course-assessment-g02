@@ -1,8 +1,8 @@
 import React from "react";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import QuestionTable from "./components/QuestionTable";
-import { Auth } from "@supabase/auth-ui-react";
 import { supabase } from ".";
+import { Auth } from "@supabase/auth-ui-react";
 
 function App() : React.ReactElement{
   const { user } = Auth.useUser()

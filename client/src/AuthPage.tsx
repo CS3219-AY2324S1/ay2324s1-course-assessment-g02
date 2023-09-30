@@ -38,11 +38,6 @@ const Container = (props: any) => {
 }
 
 function AuthPage() {
-  const { user } = Auth.useUser()
-  
-  console.log(user)
-  console.log("checking for user on authPage")
-
   return (
     <Box
     display="flex"
@@ -54,7 +49,7 @@ function AuthPage() {
         <Auth
           supabaseClient={supabase}
           appearance={{ theme: ThemeSupa }}
-          providers={['google', 'facebook', 'github']}
+          providers={['google', 'github']}
           theme="default"
         />
       </AuthBox>

@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import AddQuestionModal from "./AddQuestionModal";
 import QuestionTableRow from "./QuestionTableRow";
+import { Auth } from "@supabase/auth-ui-react";
 
 export interface Question {
   id?: number;
@@ -53,6 +54,7 @@ function QuestionTable() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [questionData, setQuestionData] = useState(getLocalStorageQuestions());
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
+  const { user } = Auth.useUser();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -78,9 +80,14 @@ function QuestionTable() {
 
   function deleteQuestion(questionId: number): void {
     console.log("delete question: " + questionId);
-    console.log(questionData);
-    setQuestionData(questionData.filter((x) => x.id !== questionId));
-    updateLocalStorage(questionData.filter((x) => x.id !== questionId));
+    if (user && user.email == "admin@gmail.com") {
+      console.log(questionData);
+      setQuestionData(questionData.filter((x) => x.id !== questionId));
+      updateLocalStorage(questionData.filter((x) => x.id !== questionId));
+    } else {
+      // TODO: prettier UI here
+      console.log("not admin, cannot delete");
+    }
   }
 
   function updateLocalStorage(questions: Question[]): void {
@@ -90,7 +97,7 @@ function QuestionTable() {
   function getLocalStorageQuestions(): Question[] {
     return JSON.parse(localStorage.getItem("questions") || "null") || [];
   }
-
+  console.log(user);
   return (
     <Paper sx={{ padding: "0 5%", overflow: "hidden" }}>
       <AddQuestionModal
@@ -104,6 +111,7 @@ function QuestionTable() {
           <Button
             variant="outlined"
             startIcon={<AddIcon />}
+            disabled={user ? user.email != "admin@gmail.com" : true}
             onClick={() => setAddQuestionModalOpen(true)}
           >
             {"Add Question"}
