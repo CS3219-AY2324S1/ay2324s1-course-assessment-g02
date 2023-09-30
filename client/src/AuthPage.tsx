@@ -1,9 +1,7 @@
-import React from "react";
-import { createClient } from '@supabase/supabase-js'
+import React, { useEffect } from "react";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { Box, Button, Typography } from "@mui/material";
-import App from "./App";
 
 /* https://supabase.com/docs/guides/auth/auth-helpers/auth-ui */
 import {
@@ -14,6 +12,8 @@ import {
   // Import predefined theme
   ThemeSupa,
 } from '@supabase/auth-ui-shared'
+import { Redirect } from "wouter";
+import { supabase } from ".";
 
 
 const AuthBox = styled(Paper)(({ theme }) => ({
@@ -21,11 +21,6 @@ const AuthBox = styled(Paper)(({ theme }) => ({
   width: 400,
   padding: 10,
 }));
-
-const supabase = createClient(
-  process.env.REACT_APP_SUPABASE_URL || '',
-  process.env.REACT_APP_ANON_KEY || '',
-)
 
 const Container = (props: any) => {
   const { user } = Auth.useUser()
@@ -44,19 +39,17 @@ const Container = (props: any) => {
 
 function AuthPage() {
   const { user } = Auth.useUser()
+  
   console.log(user)
   console.log("checking for user on authPage")
-  if (user) {
-    return (<App/>)
-  }
+
   return (
-    <Auth.UserContextProvider supabaseClient={supabase}>
-      <Container supabaseClient={supabase}></Container>
     <Box
     display="flex"
     height={"100vh"}
     alignItems="center"
     justifyContent="center">
+      <Container supabaseClient={supabase}></Container>
       <AuthBox>
         <Auth
           supabaseClient={supabase}
@@ -66,7 +59,6 @@ function AuthPage() {
         />
       </AuthBox>
     </Box>
-    </Auth.UserContextProvider>
   );
 }
 
