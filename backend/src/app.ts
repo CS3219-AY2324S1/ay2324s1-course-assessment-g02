@@ -54,22 +54,6 @@ app.get('/populate-categories', async (req, res) => {
   }
 });
 
-app.get('/populate-all', async (req, res) => {
-  try {
-    // Populate categories table
-    const categories = await parseCSVToCategories();
-    // Populate questions table with empty question bodies
-    const questionsData = await parseCSVToQuestionsData();
-    // Populate question bodies in questions table
-    const questionBodies = await parseCSVToQuestionBodies();
-
-    res.json({ categories, questionsData, questionBodies });
-  } catch (error) {
-    console.error('Error populating all:', error);
-    res.status(500).json({ error: 'An error occurred while populating all.' });
-  }
-});
-
 app.get('/', (req, res) => {
   res.send('Hello, welcome to UVENTS!');
 });

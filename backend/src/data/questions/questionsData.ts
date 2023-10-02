@@ -3,7 +3,7 @@ import csv from 'csv-parser';
 import path from 'path';
 import { PrismaClient } from '@prisma/client';
 
-const MAX_NUM_QUESTIONS = 100;
+const MAX_NUM_QUESTIONS = 5; // TODO: doesn't work to stop parsing and adding to db
 const BLANK_QUESTION_BODY = '';
 const QUESTIONS_CSV_FILES_PATH = './src/data/questions';
 
@@ -29,12 +29,12 @@ export async function parseCSVToCategories(): Promise<CategoriesCSVRow[]> {
   await prisma.$connect();
   return new Promise((resolve, reject) => {
     const tagsData: CategoriesCSVRow[] = [];
-    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'questions.csv');
+    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'categories.csv');
     const categoriesSet = new Set<string>();
-
     fs.createReadStream(csvFilePath)
       .pipe(csv())
       .on('data', async (row) => {
+        console.log(row.topicTags);
         if (!row.topicTags || row.topicTags === '') {
           return;
         }
@@ -87,14 +87,9 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
     const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'questions.csv');
 
     fs.createReadStream(csvFilePath)
-      .pipe(csv({ headers: true }))
+      .pipe(csv())
       .on('data', async (row) => {
-        if (numQuestionsAdded === 0) {
-          // skip first row of headers
-          numQuestionsAdded += 1;
-          return;
-        }
-        if (numQuestionsAdded > MAX_NUM_QUESTIONS) {
+        if (numQuestionsAdded >= MAX_NUM_QUESTIONS) {
           return;
         }
         if (!isValidQuestionRow(row)) {
