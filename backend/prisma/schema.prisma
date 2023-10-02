@@ -97,9 +97,9 @@ model Category {
 }
 
 enum Complexity {
-  Low
+  Easy
   Medium
-  High
+  Hard
 }
 
 // AttemptedQuestions (Activity history):
