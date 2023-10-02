@@ -69,3 +69,6 @@ src/api/scripts/createData/7thStepsFull.json
 src/api/helpers/sendgrid/registerConfirmation.html
 src/api/config/database.js
 /data
+
+# backend .env
+*.env
