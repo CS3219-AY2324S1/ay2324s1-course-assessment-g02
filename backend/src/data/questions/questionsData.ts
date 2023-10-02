@@ -4,7 +4,7 @@ import path from 'path';
 import { PrismaClient } from '@prisma/client';
 
 const MAX_NUM_QUESTIONS = 100;
-// const BLANK_QUESTION_BODY = '';
+const BLANK_QUESTION_BODY = '';
 const QUESTIONS_CSV_FILES_PATH = './src/data/questions';
 
 interface QuestionCSVRow {
@@ -19,43 +19,113 @@ interface QuestionBodyCSVRow {
   Body: string;
 }
 
-export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
+interface CategoriesCSVRow {
+  topicTags: string[];
+}
+
+// Should be called before parseCSVToQuestionsData
+export async function parseCSVToCategories(): Promise<CategoriesCSVRow[]> {
+  const prisma = new PrismaClient();
+  await prisma.$connect();
   return new Promise((resolve, reject) => {
-    const prisma = new PrismaClient();
-    const questionsData: QuestionCSVRow[] = [];
+    const tagsData: CategoriesCSVRow[] = [];
     const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'questions.csv');
-    let numQuestionsAdded = 0;
+    const categoriesSet = new Set<string>();
 
     fs.createReadStream(csvFilePath)
       .pipe(csv())
       .on('data', async (row) => {
-        if (
-          numQuestionsAdded >= MAX_NUM_QUESTIONS ||
-          row.QID === '' ||
-          row.title === '' ||
-          row.topicTags === '' ||
-          row.difficulty === ''
-        ) {
+        if (!row.topicTags || row.topicTags === '') {
           return;
         }
         try {
-          const tags = row.topicTags.split(',');
-          questionsData.push({
-            QID: row.QID,
-            title: row.title,
-            difficulty: row.difficulty,
-            topicTags: tags
-          });
-          // await prisma.question.create({
-          //   data: {
-          //     title: row.title,
-          //     complexity: row.difficulty,
-          //     categories: tags,
-          //     body: BLANK_QUESTION_BODY
-          //   }
-          // });
-          numQuestionsAdded += 1;
+          const categories = row.topicTags.split(',');
+          categories.forEach((category: string) => categoriesSet.add(category));
         } catch (error) {
+          reject(error);
+        }
+      })
+      .on('end', async () => {
+        // add the categories to the database
+        const promises = Array.from(categoriesSet).map((categoryName) =>
+          prisma.category.create({
+            data: {
+              name: categoryName
+            }
+          })
+        );
+        // wait for creates to finish
+        await Promise.all(promises);
+
+        await prisma.$disconnect();
+
+        // for testing purposes
+        const categoriesCSVRow: CategoriesCSVRow = {
+          topicTags: Array.from(categoriesSet)
+        };
+        tagsData.push(categoriesCSVRow);
+        resolve(tagsData);
+      })
+
+      .on('error', (error) => {
+        reject(error);
+      });
+  });
+}
+
+function isValidQuestionRow(row: QuestionCSVRow): boolean {
+  return row.QID !== '' && row.title !== '' && row.difficulty !== '';
+}
+
+// Should be called after parseCSVToCategories
+export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
+  const prisma = new PrismaClient();
+  await prisma.$connect();
+  let numQuestionsAdded = 0;
+  return new Promise((resolve, reject) => {
+    const questionsData: QuestionCSVRow[] = [];
+    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'questions.csv');
+
+    fs.createReadStream(csvFilePath)
+      .pipe(csv({ headers: true }))
+      .on('data', async (row) => {
+        if (numQuestionsAdded === 0) {
+          // skip first row of headers
+          numQuestionsAdded += 1;
+          return;
+        }
+        if (numQuestionsAdded > MAX_NUM_QUESTIONS) {
+          return;
+        }
+        if (!isValidQuestionRow(row)) {
+          console.log('INVALID QUESTION');
+          console.log(row);
+          return;
+        }
+        try {
+          let categoryNames: string[] = [];
+          if (row.topicTags) {
+            categoryNames = row.topicTags.split(',');
+            console.log(categoryNames);
+          }
+          console.log(row);
+          await prisma.question.create({
+            data: {
+              id: Number(row.QID),
+              title: row.title,
+              complexity: row.difficulty,
+              categories: {
+                connect: categoryNames.map((categoryName) => ({
+                  name: categoryName
+                }))
+              },
+              body: BLANK_QUESTION_BODY
+            }
+          });
+          numQuestionsAdded += 1;
+          console.log(numQuestionsAdded);
+        } catch (error) {
+          console.error('CSV processing error:', error);
           reject(error);
         }
       })
@@ -70,43 +140,47 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
   });
 }
 
+// Should be called after parseCSVToQuestionsData
 export async function parseCSVToQuestionBodies(): Promise<
   QuestionBodyCSVRow[]
 > {
+  const prisma = new PrismaClient();
+  await prisma.$connect();
   return new Promise((resolve, reject) => {
-    const prisma = new PrismaClient();
     const bodiesData: QuestionBodyCSVRow[] = [];
     const csvFilePath = path.join(
       QUESTIONS_CSV_FILES_PATH,
       'questionsbody.csv'
     );
-    let numQuestionsAdded = 0;
 
     fs.createReadStream(csvFilePath)
       .pipe(csv())
       .on('data', async (row) => {
-        if (
-          numQuestionsAdded >= MAX_NUM_QUESTIONS ||
-          row.QID === '' ||
-          row.Body === ''
-        ) {
+        if (row.QID === '' || row.Body === '') {
           return;
         }
-        try {
-          bodiesData.push({
-            QID: row.QID,
-            Body: row.Body
-          });
-          // await prisma.question.update({
-          //   where: {
-          //     id: Number(row.QID) // Convert QID to a number
-          //   },
-          //   data: {
-          //     body: row.Body
-          //   }
-          // });
+        console.log(row);
+        // check if QID exists in questions table
+        const question = await prisma.question.findUnique({
+          where: {
+            id: Number(row.QID)
+          }
+        });
+        if (!question) {
+          console.log('QID NOT FOUND:', row.QID);
+          return;
+        }
+        console.log('QID FOUND', row.QID);
 
-          numQuestionsAdded += 1;
+        try {
+          await prisma.question.update({
+            where: {
+              id: Number(row.QID)
+            },
+            data: {
+              body: row.Body
+            }
+          });
         } catch (error) {
           reject(error);
         }
