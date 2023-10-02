@@ -67,8 +67,7 @@ enum BadgeTypes {
 // ID (PK)
 // title: text not null
 // description: text not null
-// categories: ENUM list not null
-// tags ?????????????????
+// categories: FK to Categories
 // complexity: ENUM not null
 // avgQuestionRating
 // numberOfRatings between 0 and 5
