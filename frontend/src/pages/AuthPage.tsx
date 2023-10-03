@@ -52,7 +52,7 @@ function AuthPage() {
                     supabaseClient={supabase}
                     appearance={{ theme: ThemeSupa }}
                     providers={['google', 'github']}
-                    theme={theme == 'light' ? 'default' : 'hannahThemeDark'}
+                    theme={theme == 'light' ? 'default' : 'dark'}
                 />
             </AuthBox>
         </Box>
