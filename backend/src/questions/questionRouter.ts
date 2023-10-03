@@ -40,7 +40,11 @@ questionRouter.get(
         categories: true
       }
     });
-    res.json(question);
+    if (!question) {
+      res.status(404).json({ message: 'Question not found' });
+      return;
+    }
+    res.status(200).json(question);
   })
 );
 
@@ -54,7 +58,11 @@ questionRouter.post(
       data: {
         title,
         body,
-        categories,
+        categories: {
+          connect: categories.map((category: { id: number }) => ({
+            id: category.id
+          }))
+        },
         complexity
       }
     });
