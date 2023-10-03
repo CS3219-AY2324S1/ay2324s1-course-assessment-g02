@@ -5,7 +5,7 @@
   "main": "src/app.ts",
   "scripts": {
     "build": "npx tsc",
-    "start": "ts-node src/app.ts",
+    "start": "nodemon --exec ts-node src/app.ts",
     "dev": "nodemon",
     "serve": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,14 +18,17 @@
   "dependencies": {
     "@prisma/client": "^5.3.1",
     "concurrently": "^8.2.1",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
     "prisma": "^5.3.1"
   },
   "devDependencies": {
+    "@prisma/client": "^4.10.1",
     "@tsconfig/node-lts": "^18.12.5",
     "@types/express": "^4.17.17",
-    "@types/node": "^20.6.3",
+    "@types/node": "^20.8.2",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
     "eslint": "^8.49.0",

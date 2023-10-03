@@ -27,9 +27,10 @@ model User {
   updatedAt    DateTime      @updatedAt
   userFriends1 UserFriends[] @relation("user1")
   userFriends2 UserFriends[] @relation("user2")
-  attemptedQuestion1 AttemptedQuestions[] @relation("user1")
-  attemptedQuestion2 AttemptedQuestions[] @relation("user2")
+  attemptedQuestion1 AttemptedQuestion[] @relation("user1")
+  attemptedQuestion2 AttemptedQuestion[] @relation("user2")
   badges Badges[]
+  @@map("Users")
 }
 
 // UserFriends (NX):
@@ -67,38 +68,39 @@ enum BadgeTypes {
 // ID (PK)
 // title: text not null
 // description: text not null
-// categories: ENUM list not null
-// tags ?????????????????
+// categories: FK to Categories
 // complexity: ENUM not null
 // avgQuestionRating
 // numberOfRatings between 0 and 5
 // numberOfAttempts
 // numberOfSolves
-model Questions {
+model Question {
   id         Int          @id @default(autoincrement())
   title      String
   body       String
-  categories Categories[]
+  categories Category[]
   complexity Complexity
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   avgRating  Float       @default(0)
-  ratings    Int
-  attempts   Int
-  solves     Int
-  attempt AttemptedQuestions[]
+  ratings    Int        @default(0)
+  attempts   Int        @default(0)
+  solves     Int        @default(0)
+  attempt AttemptedQuestion[]
+	@@map("Questions")
 }
 
-enum Categories {
-  Low
-  Medium
-  High
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  questions Question[]
+  @@map("Categories")
 }
 
 enum Complexity {
-  Low
+  Easy
   Medium
-  High
+  Hard
 }
 
 // AttemptedQuestions (Activity history):
@@ -108,14 +110,15 @@ enum Complexity {
 // questionId (FK) not null
 // attempted_at DATETIME
 // completed_at DATETIME
-model AttemptedQuestions {
+model AttemptedQuestion {
   attemptId Int       @id @default(autoincrement())
   user1   User @relation("user1", fields: [userId1], references: [userId])
   userId1 Int
   user2   User @relation("user2", fields: [userId2], references: [userId])
   userId2 Int
-  question Questions @relation(fields: [questionId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
   questionId Int
   attemptedAt    DateTime      @default(now())
   completedAt     DateTime      @updatedAt
+	@@map("AttemptedQuestions")
 }
