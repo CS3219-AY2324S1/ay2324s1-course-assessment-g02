@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
+import { NavLink } from 'react-router-dom'
 
 function HomePage() {
   const [count, setCount] = useState(0)
@@ -15,6 +16,7 @@ function HomePage() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+      <NavLink to="problems">Go to Problems</NavLink>
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
