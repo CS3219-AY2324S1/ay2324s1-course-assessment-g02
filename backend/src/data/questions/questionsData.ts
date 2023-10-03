@@ -3,7 +3,7 @@ import csv from 'csv-parser';
 import path from 'path';
 import { PrismaClient } from '@prisma/client';
 
-const MAX_NUM_QUESTIONS = 5; // TODO: doesn't work to stop parsing and adding to db
+const MAX_NUM_QUESTIONS = 100;
 const BLANK_QUESTION_BODY = '';
 const QUESTIONS_CSV_FILES_PATH = './src/data/questions';
 
@@ -29,7 +29,7 @@ export async function parseCSVToCategories(): Promise<CategoriesCSVRow[]> {
   await prisma.$connect();
   return new Promise((resolve, reject) => {
     const tagsData: CategoriesCSVRow[] = [];
-    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'categories.csv');
+    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'questions.csv');
     const categoriesSet = new Set<string>();
     fs.createReadStream(csvFilePath)
       .pipe(csv())
@@ -74,7 +74,13 @@ export async function parseCSVToCategories(): Promise<CategoriesCSVRow[]> {
 }
 
 function isValidQuestionRow(row: QuestionCSVRow): boolean {
-  return row.QID !== '' && row.title !== '' && row.difficulty !== '';
+  const isDefined: boolean =
+    row.QID !== undefined &&
+    row.title !== undefined &&
+    row.difficulty !== undefined;
+  const isNotEmpty: boolean =
+    row.QID !== '' && row.title !== '' && row.difficulty !== '';
+  return isDefined && isNotEmpty;
 }
 
 // Should be called after parseCSVToCategories
@@ -97,6 +103,8 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
           console.log(row);
           return;
         }
+        numQuestionsAdded += 1;
+
         try {
           let categoryNames: string[] = [];
           if (row.topicTags) {
@@ -117,7 +125,6 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
               body: BLANK_QUESTION_BODY
             }
           });
-          numQuestionsAdded += 1;
           console.log(numQuestionsAdded);
         } catch (error) {
           console.error('CSV processing error:', error);
@@ -162,10 +169,8 @@ export async function parseCSVToQuestionBodies(): Promise<
           }
         });
         if (!question) {
-          console.log('QID NOT FOUND:', row.QID);
           return;
         }
-        console.log('QID FOUND', row.QID);
 
         try {
           await prisma.question.update({
