@@ -27,10 +27,7 @@ const Container = (props: any) => {
   if (user)
     return (
       <>
-        <Typography>Signed in: {user.email}</Typography>
-        <Button onClick={() => props.supabaseClient.auth.signOut()}>
-          Sign out
-        </Button>
+        <Redirect to="/" />
       </>
 
     )
