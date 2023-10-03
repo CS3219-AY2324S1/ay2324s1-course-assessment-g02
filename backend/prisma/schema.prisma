@@ -30,6 +30,7 @@ model User {
   attemptedQuestion1 AttemptedQuestion[] @relation("user1")
   attemptedQuestion2 AttemptedQuestion[] @relation("user2")
   badges Badges[]
+  @@map("Users")
 }
 
 // UserFriends (NX):
