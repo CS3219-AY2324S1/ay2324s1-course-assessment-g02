@@ -9,14 +9,17 @@ function App() : React.ReactElement{
   return (
     <div className="App">
       {/* sorry markus, i put this in trying to get the signout to go to the side but FAILED lmao */}
-      <Box sx={{ flexGrow: 1 }}> 
+      {/* It's ok I fixed it */}
+      <Box> 
         <AppBar position="sticky">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexgrow: 1, my: 2 }}>
-              Assignment 1
+            <Typography display='flex' variant='h6' sx={{my: 2 }}>
+              Assignment 3
             </Typography>
-            <Typography>User: {user ? user.email : 'Not signed in'}</Typography>
-            <Button color="inherit" onClick={() => {supabase.auth.signOut()}}>
+            <Typography sx={{marginLeft: 'auto'}}>
+              User: {user ? user.email : 'Not signed in'}
+            </Typography>
+            <Button  color="inherit" onClick={() => {supabase.auth.signOut()}}>
               Sign out
             </Button>
           </Toolbar>
