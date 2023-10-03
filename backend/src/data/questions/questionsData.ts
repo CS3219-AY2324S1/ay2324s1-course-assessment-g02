@@ -1,7 +1,7 @@
 import fs from 'fs';
 import csv from 'csv-parser';
 import path from 'path';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../../lib/prisma';
 
 const MAX_NUM_QUESTIONS = 100;
 const BLANK_QUESTION_BODY = '';
@@ -25,7 +25,6 @@ interface CategoriesCSVRow {
 
 // Should be called before parseCSVToQuestionsData
 export async function parseCSVToCategories(): Promise<CategoriesCSVRow[]> {
-  const prisma = new PrismaClient();
   await prisma.$connect();
   return new Promise((resolve, reject) => {
     const tagsData: CategoriesCSVRow[] = [];
@@ -85,7 +84,6 @@ function isValidQuestionRow(row: QuestionCSVRow): boolean {
 
 // Should be called after parseCSVToCategories
 export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
-  const prisma = new PrismaClient();
   await prisma.$connect();
   let numQuestionsAdded = 0;
   return new Promise((resolve, reject) => {
@@ -134,6 +132,7 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
       .on('end', async () => {
         // console.log(questionsData);
         await prisma.$disconnect();
+
         resolve(questionsData);
       })
       .on('error', (error) => {
@@ -146,7 +145,6 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
 export async function parseCSVToQuestionBodies(): Promise<
   QuestionBodyCSVRow[]
 > {
-  const prisma = new PrismaClient();
   await prisma.$connect();
   return new Promise((resolve, reject) => {
     const bodiesData: QuestionBodyCSVRow[] = [];
@@ -188,6 +186,7 @@ export async function parseCSVToQuestionBodies(): Promise<
       .on('end', async () => {
         // console.log(questionsData);
         await prisma.$disconnect();
+
         resolve(bodiesData);
       })
       .on('error', (error) => {

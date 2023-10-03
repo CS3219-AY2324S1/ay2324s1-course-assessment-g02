@@ -23,8 +23,9 @@
     "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "lib/*.ts"],
   "exclude": ["**/node_modules", "dist"]
 }
