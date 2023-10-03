@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 
 const MAX_NUM_QUESTIONS = 100;
 const BLANK_QUESTION_BODY = '';
-const QUESTIONS_CSV_FILES_PATH = './src/data/questions';
+const QUESTIONS_CSV_FILES_PATH = './src/data/questions/csv';
 
 interface QuestionCSVRow {
   QID: string;
