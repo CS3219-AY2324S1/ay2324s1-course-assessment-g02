@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import dataRouter from './data/questions/dataRouter';
+import questionRouter from './questions/questionRouter';
 
 dotenv.config();
 const app = express();
@@ -10,6 +11,7 @@ app.use(express.json()); // Enable JSON request body parsing
 
 // Import routes
 app.use('/data', dataRouter);
+app.use('/questions', questionRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, welcome to UVENTS!');
