@@ -88,7 +88,7 @@ model UserFriends {
 // badge: ENUM not null
 // badgeLink:  (image url) 
 model Badges {
-  badgeId Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
   user User @relation(fields: [userId], references: [userId])
   userId String @db.Uuid
   badgeLink String
@@ -148,7 +148,7 @@ enum Complexity {
 // attempted_at DATETIME
 // completed_at DATETIME
 model AttemptedQuestion {
-  attemptId Int       @id @default(autoincrement())
+  id Int       @id @default(autoincrement())
   user1   User @relation("user1", fields: [userId1], references: [userId])
   userId1 String @db.Uuid
   user2   User @relation("user2", fields: [userId2], references: [userId])
