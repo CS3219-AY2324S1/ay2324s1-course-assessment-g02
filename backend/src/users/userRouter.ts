@@ -5,15 +5,6 @@ import prisma from '../../lib/prisma';
 const userRouter = express.Router();
 export default userRouter;
 
-// interface QuestionUpdateData {
-//   title?: string;
-//   body?: string;
-//   complexity?: Complexity;
-//   categories?: {
-//     set: { id: number }[]; // Array of category IDs for the 'set' operation
-//   };
-// }
-
 // Get all users
 userRouter.get(
   '/',
@@ -40,7 +31,11 @@ userRouter.get(
         id: Number(req.params.id)
       },
       include: {
-        categories: true
+        userFriends1: true,
+        userFriends2: true,
+        attemptedQuestion1: true,
+        attemptedQuestion2: true,
+        badges: true
       }
     });
     if (!user) {
@@ -55,70 +50,53 @@ userRouter.get(
 userRouter.post(
   '/',
   asyncHandler(async (req: Request, res: Response) => {
-    const { title, body, categories, complexity } = req.body;
+    const { userId, email } = req.body;
 
-    const newQuestion = await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
-        title,
-        body,
-        categories: {
-          connect: categories.map((category: { id: number }) => ({
-            id: category.id
-          }))
-        },
-        complexity
+        userId,
+        email
       }
     });
 
     // Respond with a success message
     res.status(201).json({
       message: 'user created successfully',
-      user: newQuestion
+      user: newUser
     });
   })
 );
 
-// Update user
+// Update user's username, userId, and/or email
+// Doesn't include friends, attempted questions, or badges
+// Expect different routes for that
 userRouter.put(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    const { title, body, categories, complexity } = req.body;
-    const questionId = Number(req.params.id);
+    const { username, userId, email } = req.body;
+    const id = Number(req.params.id);
 
-    const existingQuestion = await prisma.user.findUnique({
-      where: { id: questionId },
-      include: {
-        categories: true
-      }
+    const existingUser = await prisma.user.findUnique({
+      where: { id }
     });
 
-    if (!existingQuestion) {
+    if (!existingUser) {
       res.status(404).json({ message: 'user not found' });
       return;
     }
 
-    // Prepare the data object for the update
-    const updateData: QuestionUpdateData = {
-      title: title || existingQuestion.title,
-      body: body || existingQuestion.body,
-      complexity: complexity || existingQuestion.complexity
-    };
-
-    if (categories && categories.length > 0) {
-      const categoryIds = categories.map((category) => ({ id: category.id }));
-      updateData.categories = {
-        set: categoryIds
-      };
-    }
-
-    const updatedQuestion = await prisma.user.update({
-      where: { id: questionId },
-      data: updateData
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: {
+        username: username || existingUser.username,
+        userId: userId || existingUser.userId,
+        email: email || existingUser.email
+      }
     });
 
     res.status(200).json({
       message: 'user updated successfully',
-      user: updatedQuestion
+      user: updatedUser
     });
   })
 );
@@ -127,13 +105,13 @@ userRouter.put(
 userRouter.delete(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    const questionId = Number(req.params.id);
+    const id = Number(req.params.id);
 
-    const deletedQuestion = await prisma.user.delete({
-      where: { id: questionId }
+    const deletedUser = await prisma.user.delete({
+      where: { id }
     });
 
-    if (!deletedQuestion) {
+    if (!deletedUser) {
       res.status(404).json({ message: 'user not found' });
       return;
     }
