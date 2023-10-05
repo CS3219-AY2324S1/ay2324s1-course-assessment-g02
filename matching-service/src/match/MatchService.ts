@@ -56,6 +56,8 @@ export default class MatchService {
       };
     }
 
+    console.log(map);
+
     return {
       status: false,
       id,
@@ -72,12 +74,11 @@ export default class MatchService {
     const key = `${difficulty}_${language}`;
     const data = await this.redisService.get(key);
     const map = data !== null ? JSON.parse(data) : {};
-    console.log(map);
     if (!(id in map)) {
       map[id] = null;
       await this.redisService.set(key, JSON.stringify(map));
+      console.log(`Added ${id} to match queue for ${difficulty}_${language}`);
     }
-    console.log(`Added ${id} to match queue for ${difficulty}_${language}`);
   }
 
   async deleteMatch(id: string, difficulty: string, language: string) {
