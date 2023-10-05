@@ -8,6 +8,7 @@
     "outDir": "./dist",
     "moduleResolution": "NodeNext",
     "removeComments": true,
+    "strictNullChecks": false,
     "strict": true,
     "noImplicitThis": true,
     "noUnusedLocals": false,

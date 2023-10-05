@@ -1,12 +1,17 @@
-import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import matchRouter from './match/MatchController';
 
+dotenv.config();
 const app = express();
-const port = 4001;
+const port = process.env.MATCH_PORT || 8084;
+app.use(cors());
+app.use(bodyParser.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, welcome to PeerPrep matching-service!');
-});
+app.use('/match', matchRouter);
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}/`);
+  console.log(`Matching Server running on http://localhost:${port}/`);
 });
