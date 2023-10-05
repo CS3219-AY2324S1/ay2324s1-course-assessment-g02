@@ -91,7 +91,6 @@ const MainNavigationBar = ({ isLoggedIn }) => {
           )}
         </Toolbar>
       </AppBar>
-      <Toolbar variant="dense" />
     </Box>
   );
 };
