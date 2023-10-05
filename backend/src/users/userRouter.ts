@@ -46,6 +46,23 @@ userRouter.get(
   })
 );
 
+// Get id from userId
+userRouter.get(
+  '/userId/:userId',
+  asyncHandler(async (req: Request, res: Response) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        userId: req.params.userId
+      }
+    });
+    if (!user) {
+      res.status(404).json({ message: 'user not found' });
+      return;
+    }
+    res.status(200).json(user.id);
+  })
+);
+
 // Create user
 userRouter.post(
   '/',
