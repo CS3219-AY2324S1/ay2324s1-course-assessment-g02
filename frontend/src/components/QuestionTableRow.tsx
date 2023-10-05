@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import { Question, Category } from './QuestionTable';
+import { Question } from '../constants/models';
 
 function QuestionTableRow(props: {
   question: Question;

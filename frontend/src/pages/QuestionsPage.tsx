@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 function QuestionsPage(): React.ReactElement {
   const { user } = Auth.useUser();
   const [isLoggedIn] = useState(false); // You can set this state based on your authentication logic
+  console.log(user);
   const navigate = useNavigate();
   return user ? (
     <>

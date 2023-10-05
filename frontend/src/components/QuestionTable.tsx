@@ -14,48 +14,9 @@ import AddQuestionModal from './AddQuestionModal';
 import QuestionTableRow from './QuestionTableRow';
 import { Auth } from '@supabase/auth-ui-react';
 import './QuestionTable.css';
-import { fetchQuestions } from '../api';
+import { fetchQuestions } from '../constants/api/questionsApi';
 import { useQuery } from 'react-query';
-
-export interface Category {
-  id: number;
-  name: string;
-}
-
-export interface Question {
-  id?: number;
-  title: string;
-  categories: Category[];
-  complexity: 'Easy' | 'Medium' | 'Hard';
-  link: string;
-  body: string;
-}
-
-const dummyQuestionData: Question[] = [
-  {
-    id: 0,
-    title: 'Reverse a String',
-    categories: ['Strings', 'Algorithms'],
-    complexity: 'Easy',
-    link: 'https://leetcode.com/problems/reverse-string/',
-    description:
-      'Write a function that reverses a string. The input string is given as an array of characters s. You must do this by modifying the input array in-place with O(1) extra memory.' +
-      'Example 1:\n' +
-      'Input: s = ["h","e","l","l","o"] Output: ["o","l","l","e","h"] Example 2:\n' +
-      'Input: s = ["H","a","n","n","a","h"] Output: ["h","a","n","n","a","H"]\n' +
-      'Constraints:\n' +
-      '1 <= s.length <= 105\n' +
-      's[i] is a printable ascii character.'
-  },
-  {
-    id: 1,
-    title: 'Linked List Cycle Detection',
-    categories: ['Data Structures', 'Algorithms'],
-    complexity: 'Easy',
-    link: 'https://leetcode.com/problems/linked-list-cycle/',
-    description: 'idk lol'
-  }
-];
+import { Question } from '../constants/models';
 
 function QuestionTable() {
   const [page, setPage] = useState(0);
@@ -68,7 +29,6 @@ function QuestionTable() {
     'questions',
     fetchQuestions
   );
-  console.log(data);
   if (isLoading) {
     return <>Questions Loading</>;
   }
@@ -117,7 +77,7 @@ function QuestionTable() {
   function getLocalStorageQuestions(): Question[] {
     return JSON.parse(localStorage.getItem('questions') || 'null') || [];
   }
-  console.log(user);
+
   return (
     <Paper className="full-screen-paper">
       <AddQuestionModal
