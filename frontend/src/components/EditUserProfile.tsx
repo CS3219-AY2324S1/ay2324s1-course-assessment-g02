@@ -56,4 +56,4 @@ function EditUserProfile(userId: string) {
   );
 }
 
-export default QuestionTable;
+export default EditUserProfile;

@@ -6,9 +6,9 @@ export interface Category {
 export interface Question {
   id?: number;
   title: string;
-  categories: Category[];
+  // TODO: Fix this to be dynamic with the backend
+  categories: string[];
   complexity: 'Easy' | 'Medium' | 'Hard';
-  link: string;
   body: string;
 }
 

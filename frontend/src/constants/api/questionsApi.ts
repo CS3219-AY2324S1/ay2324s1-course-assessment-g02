@@ -26,3 +26,8 @@ export async function updateQuestion(id: number, payload) {
   const response = await axios.put(`${questionsUrl}/${id}`, payload, {});
   return response;
 }
+
+export async function deleteQuestionApi(id: number) {
+  const response = await axios.delete(`${questionsUrl}/${id}`);
+  return response;
+}

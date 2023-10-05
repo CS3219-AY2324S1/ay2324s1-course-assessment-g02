@@ -13,28 +13,21 @@ import React from 'react';
 import AddQuestionModal from './AddQuestionModal';
 import QuestionTableRow from './QuestionTableRow';
 import { Auth } from '@supabase/auth-ui-react';
-import './QuestionTable.css';
-import { fetchQuestions } from '../constants/api/questionsApi';
-import { useQuery } from 'react-query';
+import './index.css';
+import { QuestionSchema } from '../constants/api/apiSchema';
 import { Question } from '../constants/models';
+import { useQuery } from 'react-query';
+import {
+  deleteQuestionApi,
+  createQuestion
+} from '../constants/api/questionsApi';
 
-function QuestionTable() {
+function QuestionTable(props: { questionData: QuestionSchema[] }) {
   const [page, setPage] = useState(0);
+  const [data, setData] = useState(props.questionData);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [questionData, setQuestionData] = useState(getLocalStorageQuestions());
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
   const { user } = Auth.useUser();
-
-  const { data, error, isError, isLoading } = useQuery(
-    'questions',
-    fetchQuestions
-  );
-  if (isLoading) {
-    return <>Questions Loading</>;
-  }
-  if (isError) {
-    return <div>Error! {(error as Error).message}</div>;
-  }
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -47,92 +40,83 @@ function QuestionTable() {
     setPage(0);
   };
 
-  function addQuestion(question: Question): void {
-    question.id =
-      questionData.length > 0
-        ? (questionData[questionData.length - 1].id || 0) + 1
-        : 0;
-    setQuestionData((qns) => {
-      updateLocalStorage([...qns, question]);
-      return [...qns, question];
-    });
-  }
-
-  function deleteQuestion(questionId: number): void {
-    console.log('delete question: ' + questionId);
-    if (user && user.email == 'admin@gmail.com') {
-      console.log(questionData);
-      setQuestionData(questionData.filter((x) => x.id !== questionId));
-      updateLocalStorage(questionData.filter((x) => x.id !== questionId));
-    } else {
-      // TODO: prettier UI here
-      console.log('not admin, cannot delete');
+  const addQuestion = async (question: QuestionSchema) => {
+    console.log(question);
+    try {
+      const response = await createQuestion(question);
+      console.log('Question created successfully', response);
+      setData([...data, question]);
+    } catch (error) {
+      console.error('Error creating question', error);
     }
-  }
+  };
 
-  function updateLocalStorage(questions: Question[]): void {
-    localStorage.setItem('questions', JSON.stringify(questions));
-  }
-
-  function getLocalStorageQuestions(): Question[] {
-    return JSON.parse(localStorage.getItem('questions') || 'null') || [];
-  }
-
+  const deleteQuestion = async (id: number) => {
+    try {
+      const response = await deleteQuestionApi(id);
+      console.log('Question deleted successfully', response);
+      setData(data.filter((question) => question.id != id));
+    } catch (error) {
+      console.error('Error deleting question', error);
+    }
+  };
   return (
-    <Paper className="full-screen-paper">
-      <AddQuestionModal
-        addQuestion={addQuestion}
-        questions={questionData}
-        open={addQuestionModalOpen}
-        setOpen={setAddQuestionModalOpen}
-      />
-      <Toolbar>
-        <Tooltip title="Add Question">
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            disabled={user ? user.email != 'admin@gmail.com' : true}
-            onClick={() => setAddQuestionModalOpen(true)}
-          >
-            {'Add Question'}
-          </Button>
-        </Tooltip>
-      </Toolbar>
-      <TableContainer>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Title</TableCell>
-              <TableCell>Categories</TableCell>
-              <TableCell>Complexity</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((question) => {
-                return (
-                  <QuestionTableRow
-                    question={question}
-                    deleteQuestion={deleteQuestion}
-                  />
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={questionData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+    <>
+      <Paper className="full-screen-paper">
+        <AddQuestionModal
+          addQuestion={addQuestion}
+          questions={data}
+          open={addQuestionModalOpen}
+          setOpen={setAddQuestionModalOpen}
+        />
+        <Toolbar>
+          <Tooltip title="Add Question">
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              disabled={user ? user.email != 'admin@gmail.com' : true}
+              onClick={() => setAddQuestionModalOpen(true)}
+            >
+              {'Add Question'}
+            </Button>
+          </Tooltip>
+        </Toolbar>
+        <TableContainer>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>Title</TableCell>
+                <TableCell>Categories</TableCell>
+                <TableCell>Complexity</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((question) => {
+                  return (
+                    <QuestionTableRow
+                      question={question}
+                      deleteQuestion={deleteQuestion}
+                    />
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </>
   );
 }
 

@@ -11,11 +11,11 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import { Question } from '../constants/models';
+import { QuestionSchema } from '../constants/api/apiSchema';
 
 function QuestionTableRow(props: {
-  question: Question;
-  deleteQuestion: (questionId: number) => void;
+  question: QuestionSchema;
+  deleteQuestion: (id: number) => void;
 }) {
   const { question, deleteQuestion } = props;
   const [open, setOpen] = React.useState(false);

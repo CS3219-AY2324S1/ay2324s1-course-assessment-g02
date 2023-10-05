@@ -3,7 +3,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
-import { Question } from './QuestionTable';
+import { QuestionSchema } from '../constants/api/apiSchema';
+import { Question } from '../constants/models';
 import {
   FormControl,
   FormLabel,
@@ -16,12 +17,13 @@ import {
   Checkbox
 } from '@mui/material';
 import { useState } from 'react';
+import { Category } from '../constants/models';
 
 interface QuestionModalProps {
-  addQuestion: (question: Question) => void;
+  addQuestion: (question: QuestionSchema) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
-  questions: Question[];
+  questions: QuestionSchema[];
 }
 
 function AddQuestionModal(props: QuestionModalProps) {
@@ -29,62 +31,44 @@ function AddQuestionModal(props: QuestionModalProps) {
   const questions = props.questions;
   const handleClose = () => props.setOpen(false);
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [body, setBody] = useState('');
   const [categories, setCategories] = useState({
-    Strings: false,
-    'Data Structure': false,
-    Algorithms: false,
-    Arrays: false,
-    Recursion: false,
-    'Bit Manipulation': false,
-    Databases: false,
-    'Brain Teaser': false
+    TODO: false
   });
   const [complexity, setComplexity] = useState('Easy');
-  const [lcLink, setLcLink] = useState('');
   const [validation, setValidation] = useState({
     title: '',
-    description: ''
+    body: ''
   });
 
   // lol
-  const categoryLabels = [
-    'Strings',
-    'Data Structure',
-    'Algorithms',
-    'Arrays',
-    'Recursion',
-    'Bit Manipulation',
-    'Databases',
-    'Brain Teaser'
-  ];
+  const categoryLabels = ['TODO'];
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCategories({ ...categories, [e.target.name]: e.target.checked });
   };
 
   const submitQuestion = () => {
-    if (!title && !description) {
+    if (!title && !body) {
       // lol cos setstate is async
-      setValidation({ title: '', description: '' });
+      setValidation({ title: '', body: '' });
     } else if (!title) {
       setValidation({ ...validation, title: "Title can't be empty" });
-    } else if (!description) {
+    } else if (!body) {
       setValidation({
         ...validation,
-        description: "Description can't be empty"
+        body: "Body can't be empty"
       });
     }
-    if (!title || !description) {
+    if (!title || !body) {
       return;
     }
 
-    const newQuestion: Question = {
+    const newQuestion: QuestionSchema = {
       title: title,
-      description: description,
-      categories: categoryLabels.filter((x) => (categories as any)[x]),
-      complexity: complexity as 'Easy' | 'Medium' | 'Hard',
-      link: lcLink
+      body: body,
+      categories: [],
+      complexity: complexity as 'Easy' | 'Medium' | 'Hard'
     };
 
     for (let question of questions) {
@@ -127,26 +111,17 @@ function AddQuestionModal(props: QuestionModalProps) {
             />
           </FormControl>
           <FormControl>
-            <FormLabel error={!!validation.description}>
-              Question Description*
-            </FormLabel>
+            <FormLabel error={!!validation.body}>Question Body*</FormLabel>
             <TextField
-              value={description}
+              value={body}
               onChange={(e) => {
-                setDescription(e.target.value);
-                setValidation({ ...validation, description: '' });
+                setBody(e.target.value);
+                setValidation({ ...validation, body: '' });
               }}
-              error={!!validation.description}
-              helperText={validation.description}
+              error={!!validation.body}
+              helperText={validation.body}
               multiline
               minRows={4}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Leetcode Link</FormLabel>
-            <TextField
-              value={lcLink}
-              onChange={(e) => setLcLink(e.target.value)}
             />
           </FormControl>
           <FormControl component="fieldset" variant="standard">
