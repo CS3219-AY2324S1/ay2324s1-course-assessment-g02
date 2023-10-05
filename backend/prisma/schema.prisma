@@ -11,15 +11,18 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+
 // User:
-// userId: (PK)
+// id: (PK), u8se imake it easier to view other people's profiles
+// userId: (UUID) not null, links to supabase auth table
 // Username
 // Email - Authentication service unique
 // Password hashed
 // Proficiency
 // Language
 model User {
-  userId       String        @id @db.Uuid
+  id           Int           @id @unique @default(autoincrement())
+  userId       String        @unique @db.Uuid
   email        String        @unique
   username     String?       @unique
   password     String?
