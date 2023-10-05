@@ -31,8 +31,43 @@ model User {
   userFriends2 UserFriends[] @relation("user2")
   attemptedQuestion1 AttemptedQuestion[] @relation("user1")
   attemptedQuestion2 AttemptedQuestion[] @relation("user2")
+  preferredComplexity Complexity @default(Easy)
+  preferredLanguage Language @default(Python)
   badges Badges[]
   @@map("Users")
+}
+
+enum Language {
+  C
+  Cpp
+  Java
+  Python
+  Javascript
+  Typescript
+  Rust
+  Go
+  Ruby
+  Swift
+  Kotlin
+  Scala
+  Haskell
+  Clojure
+  Lua
+  Perl
+  PHP
+  R
+  Dart
+  Julia
+  Cobol
+  Fortran
+  Lisp
+  Prolog
+  Bash
+  Assembly
+  SQL
+  HTML
+  CSS
+  Other
 }
 
 // UserFriends (NX):
