@@ -4,7 +4,6 @@ import path from 'path';
 import prisma from '../../../lib/prisma';
 
 const MAX_NUM_QUESTIONS = 100;
-const BLANK_QUESTION_BODY = '';
 const QUESTIONS_CSV_FILES_PATH = './src/data/questions/csv';
 
 interface QuestionCSVRow {
@@ -13,12 +12,6 @@ interface QuestionCSVRow {
   difficulty: string;
   topicTags: string[];
 }
-
-interface QuestionBodyCSVRow {
-  QID: string;
-  Body: string;
-}
-
 interface CategoriesCSVRow {
   topicTags: string[];
 }
@@ -28,12 +21,11 @@ export async function parseCSVToCategories(): Promise<CategoriesCSVRow[]> {
   await prisma.$connect();
   return new Promise((resolve, reject) => {
     const tagsData: CategoriesCSVRow[] = [];
-    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'questions.csv');
+    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'categories.csv');
     const categoriesSet = new Set<string>();
     fs.createReadStream(csvFilePath)
       .pipe(csv())
       .on('data', async (row) => {
-        console.log(row.topicTags);
         if (!row.topicTags || row.topicTags === '') {
           return;
         }
@@ -83,12 +75,15 @@ function isValidQuestionRow(row: QuestionCSVRow): boolean {
 }
 
 // Should be called after parseCSVToCategories
-export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
+export async function parseCSVToQuestions(): Promise<QuestionCSVRow[]> {
   await prisma.$connect();
   let numQuestionsAdded = 0;
   return new Promise((resolve, reject) => {
     const questionsData: QuestionCSVRow[] = [];
-    const csvFilePath = path.join(QUESTIONS_CSV_FILES_PATH, 'questions.csv');
+    const csvFilePath = path.join(
+      QUESTIONS_CSV_FILES_PATH,
+      'compiledQuestions.csv'
+    );
 
     fs.createReadStream(csvFilePath)
       .pipe(csv())
@@ -109,18 +104,17 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
             categoryNames = row.topicTags.split(',');
             console.log(categoryNames);
           }
-          console.log(row);
+
           await prisma.question.create({
             data: {
-              id: Number(row.QID),
               title: row.title,
+              body: row.Body,
               complexity: row.difficulty,
               categories: {
                 connect: categoryNames.map((categoryName) => ({
                   name: categoryName
                 }))
-              },
-              body: BLANK_QUESTION_BODY
+              }
             }
           });
           console.log(numQuestionsAdded);
@@ -130,64 +124,9 @@ export async function parseCSVToQuestionsData(): Promise<QuestionCSVRow[]> {
         }
       })
       .on('end', async () => {
-        // console.log(questionsData);
         await prisma.$disconnect();
 
         resolve(questionsData);
-      })
-      .on('error', (error) => {
-        reject(error);
-      });
-  });
-}
-
-// Should be called after parseCSVToQuestionsData
-export async function parseCSVToQuestionBodies(): Promise<
-  QuestionBodyCSVRow[]
-> {
-  await prisma.$connect();
-  return new Promise((resolve, reject) => {
-    const bodiesData: QuestionBodyCSVRow[] = [];
-    const csvFilePath = path.join(
-      QUESTIONS_CSV_FILES_PATH,
-      'questionsbody.csv'
-    );
-
-    fs.createReadStream(csvFilePath)
-      .pipe(csv())
-      .on('data', async (row) => {
-        if (row.QID === '' || row.Body === '') {
-          return;
-        }
-        console.log(row);
-        // check if QID exists in questions table
-        const question = await prisma.question.findUnique({
-          where: {
-            id: Number(row.QID)
-          }
-        });
-        if (!question) {
-          return;
-        }
-
-        try {
-          await prisma.question.update({
-            where: {
-              id: Number(row.QID)
-            },
-            data: {
-              body: row.Body
-            }
-          });
-        } catch (error) {
-          reject(error);
-        }
-      })
-      .on('end', async () => {
-        // console.log(questionsData);
-        await prisma.$disconnect();
-
-        resolve(bodiesData);
       })
       .on('error', (error) => {
         reject(error);
