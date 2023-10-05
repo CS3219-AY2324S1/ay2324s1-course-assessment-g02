@@ -11,11 +11,13 @@ import { Auth } from '@supabase/auth-ui-react';
 import { Session } from '@supabase/supabase-js';
 import AuthPage from './pages/AuthPage';
 import { supabase } from './main';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [theme, setTheme] = useState(prefersDarkMode ? 'dark' : 'light');
   const navigate = useNavigate();
+  const queryClient = new QueryClient();
 
   const [session, setSession] = useState<Session | null>();
 
@@ -36,19 +38,23 @@ function App() {
   }
 
   return (
-    <Auth.UserContextProvider supabaseClient={supabase}>
-      <ThemeContext.Provider value={{ theme, setTheme }}>
-        <ThemeProvider theme={theme == 'light' ? hannahTheme : hannahThemeDark}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/questions" element={<QuestionsPage />} />
-            {/* TODO: Change this to dynamic routing */}
-            <Route path="/problems" element={<ProblemPage />} />
-          </Routes>
-        </ThemeProvider>
-      </ThemeContext.Provider>
-    </Auth.UserContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <Auth.UserContextProvider supabaseClient={supabase}>
+        <ThemeContext.Provider value={{ theme, setTheme }}>
+          <ThemeProvider
+            theme={theme == 'light' ? hannahTheme : hannahThemeDark}
+          >
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/questions" element={<QuestionsPage />} />
+              {/* TODO: Change this to dynamic routing */}
+              <Route path="/problems" element={<ProblemPage />} />
+            </Routes>
+          </ThemeProvider>
+        </ThemeContext.Provider>
+      </Auth.UserContextProvider>
+    </QueryClientProvider>
   );
 }
 

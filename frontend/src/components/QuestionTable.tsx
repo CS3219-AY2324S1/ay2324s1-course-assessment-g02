@@ -16,15 +16,19 @@ import { Auth } from '@supabase/auth-ui-react';
 import './QuestionTable.css';
 import { fetchQuestions } from '../api';
 import { useQuery } from 'react-query';
-import { QuestionMark } from '@mui/icons-material';
+
+export interface Category {
+  id: number;
+  name: string;
+}
 
 export interface Question {
   id?: number;
   title: string;
-  categories: string[];
+  categories: Category[];
   complexity: 'Easy' | 'Medium' | 'Hard';
   link: string;
-  description: string;
+  body: string;
 }
 
 const dummyQuestionData: Question[] = [
@@ -60,19 +64,11 @@ function QuestionTable() {
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
   const { user } = Auth.useUser();
 
-  const { data, error, isError } = useQuery('questions', () =>
-    fetch('http://localhost:3000/questions').then((res) => res.json())
+  const { data, error, isError, isLoading } = useQuery(
+    'questions',
+    fetchQuestions
   );
-  // return <>{data}</>;
-  return (
-    <>
-      <ul>
-        {data.map((question) => (
-          <li key={question.id}>{question.id} </li>
-        ))}
-      </ul>
-    </>
-  );
+  console.log(data);
   if (isLoading) {
     return <>Questions Loading</>;
   }

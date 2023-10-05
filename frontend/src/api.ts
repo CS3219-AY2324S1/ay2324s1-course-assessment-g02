@@ -1,10 +1,12 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const questionsUrl: string = `${process.env.VITE_APP_BACKEND_URL}/questions`;
+const questionsUrl: string = `${
+  import.meta.env.VITE_APP_BACKEND_URL
+}/questions`;
 
 export async function fetchQuestions() {
-  const response = await axios.get(questionsUrl);
-  return response.data;
+  const { data } = await axios.get(questionsUrl);
+  return data;
 }
 
 export const getQuestion = async (id: number): Promise<AxiosResponse> => {

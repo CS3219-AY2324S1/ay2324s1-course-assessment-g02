@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import { Question } from './QuestionTable';
+import { Question, Category } from './QuestionTable';
 
 function QuestionTableRow(props: {
   question: Question;
@@ -42,7 +42,7 @@ function QuestionTableRow(props: {
         <TableCell>
           <Stack direction="row" spacing={1}>
             {question.categories.map((category) => (
-              <Chip label={category} />
+              <Chip label={category.name} />
             ))}
           </Stack>
         </TableCell>
@@ -75,7 +75,7 @@ function QuestionTableRow(props: {
                 </Typography>
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: question.description.replace(/\n/g, '<br />')
+                    __html: question.body.replace(/\n/g, '<br />')
                   }}
                 />
               </Stack>
