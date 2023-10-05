@@ -25,7 +25,7 @@ export default class MatchService {
 
     if (map[id] !== null) {
       const matchDetails = map[id];
-      console.log(`${id} has been matched with ${matchDetails.partner}`);
+      console.log(`${id} is already in a session with ${matchDetails.partner}`);
       return {
         status: true,
         id,
