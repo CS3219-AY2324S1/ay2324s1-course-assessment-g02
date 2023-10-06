@@ -36,7 +36,7 @@ function App() {
       setSession(session);
     });
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

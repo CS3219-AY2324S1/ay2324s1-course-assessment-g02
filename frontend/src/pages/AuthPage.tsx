@@ -53,10 +53,33 @@ function AuthPage() {
         // console.log(user);
         navigate('/');
       }
-    });
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const navigate = useNavigate();
 
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+  // useEffect(() => {
+  //   // supabase.auth.getSession().then(({ data: { session } }) => {
+  //   //   setSession(session);
+  //   //   if (session) {
+  //   //     setIsLoggedIn(true);
+  //   //   }
+  //   // });
+
+  //   const {
+  //       data: { subscription }
+  //     } = supabase.auth.onAuthStateChange((event, session) => {
+  //       setSession(session);
+  //       if (session) {
+  //         setIsLoggedIn(true);
+  //       }
+  //       if (event == "SIGNED_IN") {
+  //         // console.log("signed in");
+  //         // console.log(user);
+  //         navigate("/");
+  //       }
+  //   });
+
+  //   return () => subscription.unsubscribe();
+  // }, [navigate]);
 
   return (
     <>
