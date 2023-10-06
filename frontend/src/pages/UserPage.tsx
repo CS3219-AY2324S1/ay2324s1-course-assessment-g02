@@ -1,60 +1,38 @@
-import React from 'react';
-import { Box } from '@mui/material';
-import QuestionTable from '../components/QuestionTable';
 import { Auth } from '@supabase/auth-ui-react';
-import MainNavigationBar from '../components/Navbar/MainNavigationBar';
 import { useState, useContext, useEffect } from 'react';
-import { Session } from '@supabase/supabase-js';
-import { supabase } from '../main';
-import CssBaseline from '@mui/material/CssBaseline';
-import { useNavigate } from 'react-router-dom';
-import { EditUserProfile } from '../components/EditUserProfile';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-
-const UserBox = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  width: 400,
-  padding: 10
-}));
+import { getIdFromUserId } from '../constants/api/userApi';
+import { useQuery } from 'react-query';
+import UserProfilePage from './UserProfilePage';
+import Loading from '../components/Loading';
 
 function UserPage() {
-  const [session, setSession] = useState<Session | null>();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [Id, setId] = useState<number>(0);
+  // const [user, setUser] = useState<any>(null);
+  const { user } = Auth.useUser();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) {
-        setIsLoggedIn(true);
+  const { data, error, isError, isLoading, refetch } = useQuery(
+    ['userData'],
+    () => getIdFromUserId(user ? user.id : ''),
+    {
+      enabled: true,
+      retry: 6,
+      cacheTime: 0,
+      onSuccess(res: any) {
+        setId(res.data);
+      },
+      onError: (error: any) => {
+        console.log(error);
       }
-    });
+    }
+  );
 
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session) {
-        setIsLoggedIn(true);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
-      <CssBaseline />
-      <MainNavigationBar isLoggedIn={isLoggedIn} />
-      <Box
-        display="flex"
-        height={'100vh'}
-        width={'100vw'}
-        alignItems="center"
-        justifyContent="center"
-      >
-        {/* <EditUserProfile /> */}
-      </Box>
+      <UserProfilePage id={Id} />
     </>
   );
 }

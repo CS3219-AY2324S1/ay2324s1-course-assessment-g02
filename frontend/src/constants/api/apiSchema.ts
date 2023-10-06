@@ -15,6 +15,9 @@ export interface QuestionSchema {
 
 export interface UserSchema {
   id: number;
+  username: string;
+  preferredComplexity: 'Easy' | 'Medium' | 'Hard';
+  preferredLanguage: string;
 }
 
 export interface UserIdSchema {

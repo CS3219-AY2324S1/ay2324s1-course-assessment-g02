@@ -13,6 +13,7 @@ import AuthPage from './pages/AuthPage';
 import { supabase } from './main';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import UserPage from './pages/UserPage';
+import UserProfilePage from './pages/UserProfilePage';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -34,6 +35,7 @@ function App() {
     });
     return () => subscription.unsubscribe();
   }, []);
+
   if (!session) {
     navigate('/auth');
   }
@@ -48,6 +50,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/user" element={<UserPage />} />
               <Route path="/user/:id" element={<UserPage />} />
               <Route path="/questions" element={<QuestionsPage />} />
               {/* TODO: Change this to dynamic routing */}
