@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   FormControl,
   FormLabel,
@@ -6,55 +5,63 @@ import {
   FormControlLabel,
   Radio,
   Paper,
-  TextField,
-  FormGroup,
-  Checkbox,
   Box,
   Button,
   InputLabel,
   Input,
   Select,
   MenuItem,
+  CssBaseline,
   Typography
 } from '@mui/material';
-import MainNavigationBar from '../components/Navbar/MainNavigationBar';
-import { useState, useContext, useEffect } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import { UserSchema } from '../constants/api/apiSchema';
-import { getUser } from '../constants/api/userApi';
+import MainNavigationBar from '../Navbar/MainNavigationBar';
+import { useState } from 'react';
+import { getUser } from '../../constants/api/userApi';
 import { useQuery } from 'react-query';
-import { ProgrammingLanguages } from '../constants/enums';
-import Loading from '../components/Loading';
-import { Auth } from '@supabase/auth-ui-react';
+import { ProgrammingLanguages } from '../../constants/enums';
+import Loading from '../Loading';
 
-const UserProfilePage = (props: { id: number }) => {
-  const { user } = Auth.useUser();
-  const isLoggedIn = true;
-
-  const [id, setId] = useState<number>(props.id);
+const useUserData = (id: number) => {
   const [userName, setUserName] = useState('');
   const [userPreferredComplexity, setUserPreferredComplexity] = useState('');
   const [userPreferredLanguage, setUserPreferredLanguage] = useState('');
-  const [complexity, setComplexity] = useState<string>('Easy');
-  const [toggleInputDisabled, setToggleInputDisabled] = useState<boolean>(true);
 
-  const { data, error, isError, isLoading } = useQuery(
-    ['userData', id],
-    () => getUser(id),
-    {
-      enabled: true,
-      retry: 2,
-      cacheTime: 0,
-      onSuccess(res: any) {
-        setUserName(res.data.username);
-        setUserPreferredComplexity(res.data.preferredComplexity);
-        setUserPreferredLanguage(res.data.preferredLanguage);
-      },
-      onError: (error: any) => {
-        console.log(error);
-      }
+  const { isError, isLoading } = useQuery(['userData', id], () => getUser(id), {
+    enabled: true,
+    retry: 2,
+    cacheTime: 0,
+    onSuccess(res) {
+      setUserName(res.data.username);
+      setUserPreferredComplexity(res.data.preferredComplexity);
+      setUserPreferredLanguage(res.data.preferredLanguage);
+      console.log(res.data.preferredLanguage);
+    },
+    onError: (error) => {
+      console.log(error);
     }
-  );
+  });
+
+  return {
+    userName,
+    userPreferredComplexity,
+    userPreferredLanguage,
+    isLoading,
+    isError,
+    setUserPreferredLanguage
+  };
+};
+
+const UserProfilePage = (props: { id: number }) => {
+  const [complexity, setComplexity] = useState<string>('Easy');
+
+  const {
+    userName,
+    userPreferredComplexity,
+    userPreferredLanguage,
+    isLoading,
+    isError,
+    setUserPreferredLanguage
+  } = useUserData(props.id);
 
   const updateUser = () => {
     return;
@@ -79,7 +86,7 @@ const UserProfilePage = (props: { id: number }) => {
     </>
   ) : (
     <>
-      <MainNavigationBar isLoggedIn={isLoggedIn} />
+      <MainNavigationBar />
       <CssBaseline />
       <Box
         display="flex"

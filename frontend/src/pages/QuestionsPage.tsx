@@ -1,24 +1,14 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import QuestionTable from '../components/QuestionTable';
-import { Auth } from '@supabase/auth-ui-react';
+import QuestionTable from '../components/Questions/QuestionTable';
 import MainNavigationBar from '../components/Navbar/MainNavigationBar';
-import { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { fetchQuestions } from '../constants/api/questionsApi';
 import { useQuery } from 'react-query';
 import Loading from '../components/Loading';
-import { useEffect } from 'react';
+import AuthProvider from '../components/Auth/AuthProvider';
 
-function QuestionsPage(): React.ReactElement {
-  const { user } = Auth.useUser();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    if (user) {
-      setIsLoggedIn(true);
-    }
-  });
-
+function QuestionPage(props: { user }): React.ReactElement {
   const {
     data: questionData,
     error,
@@ -30,24 +20,36 @@ function QuestionsPage(): React.ReactElement {
     return <div>Error! {(error as Error).message}</div>;
   }
 
-  return !isLoading ? (
-    // I know this implementation for loading is shit, shall fix this when I'm done with the rest
-    <>
+  if (isLoading)
+    return (
       <Box>
-        <CssBaseline />
-        <MainNavigationBar isLoggedIn={isLoggedIn} />
-        <QuestionTable questionData={questionData} />
-      </Box>
-    </>
-  ) : (
-    <>
-      <Box>
-        <CssBaseline />
-        <MainNavigationBar isLoggedIn={isLoggedIn} />
+        <MainNavigationBar />
         <Loading />
+      </Box>
+    );
+
+  return (
+    <>
+      <MainNavigationBar />
+      <Box
+        mb={2}
+        display="flex"
+        flexDirection="column"
+        height="93vh" // fixed the height
+        style={{
+          border: '2px solid black',
+          overflow: 'hidden',
+          overflowY: 'scroll'
+        }}
+      >
+        <QuestionTable questionData={questionData} user={props.user} />
       </Box>
     </>
   );
 }
+
+const QuestionsPage = (): JSX.Element => (
+  <AuthProvider>{(user) => <QuestionPage user={user} />}</AuthProvider>
+);
 
 export default QuestionsPage;

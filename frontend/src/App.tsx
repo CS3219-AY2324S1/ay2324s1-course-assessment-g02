@@ -12,8 +12,7 @@ import { Session } from '@supabase/supabase-js';
 import AuthPage from './pages/AuthPage';
 import { supabase } from './main';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import UserPage from './pages/UserPage';
-import UserProfilePage from './pages/UserProfilePage';
+import { UserPageMain, UserProfilesPage } from './pages/UserPage';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -26,6 +25,9 @@ function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (!session) {
+        navigate('/auth');
+      }
     });
 
     const {
@@ -34,11 +36,7 @@ function App() {
       setSession(session);
     });
     return () => subscription.unsubscribe();
-  }, []);
-
-  if (!session) {
-    navigate('/auth');
-  }
+  }, [navigate]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -50,8 +48,8 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/user" element={<UserPage />} />
-              <Route path="/user/:id" element={<UserPage />} />
+              <Route path="/user" element={<UserPageMain />} />
+              <Route path="/user/:id" element={<UserProfilesPage />} />
               <Route path="/questions" element={<QuestionsPage />} />
               {/* TODO: Change this to dynamic routing */}
               <Route path="/problems" element={<ProblemPage />} />

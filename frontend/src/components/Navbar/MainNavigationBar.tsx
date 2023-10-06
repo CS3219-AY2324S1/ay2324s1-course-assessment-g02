@@ -1,47 +1,24 @@
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { supabase } from '../../main';
-import { Auth } from '@supabase/auth-ui-react';
-import { useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, IconButton, Box } from '@mui/material';
+import { Typography, AppBar, IconButton, Toolbar, Box } from '@mui/material';
+import SignInOutButton from '../Auth/SignInOutButton';
 import { ThemeContext } from '../../contexts/theme-context';
 import { useContext } from 'react';
-import { Browser } from 'react-kawaii';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import LoggedInProvider from '../Auth/LoggedInProvider';
+import HomeButton from './HomeButton';
 
-const MainNavigationBar = ({ isLoggedIn }) => {
-  const iconMood = [
-    'sad',
-    'shocked',
-    'happy',
-    'blissful',
-    'lovestruck',
-    'excited',
-    'ko'
-  ];
+interface MainNavigationBarProps {
+  user;
+}
 
+const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
   const { theme, setTheme } = useContext(ThemeContext);
-  const { user } = Auth.useUser();
-  const navigate = useNavigate();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky" enableColorOnDark>
         <Toolbar variant="dense">
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2, mb: -0.5 }}
-            onClick={() => navigate('/')}
-          >
-            <Browser
-              size={24}
-              mood={iconMood[Math.floor(Math.random() * 7)]}
-              color="#fccb7e"
-            />
-          </IconButton>
+          <HomeButton />
           <Typography
             variant="h6"
             color="inherit"
@@ -63,36 +40,19 @@ const MainNavigationBar = ({ isLoggedIn }) => {
             variant="h6"
             sx={{ marginLeft: 'auto', my: 2 }}
           >
-            User: {user ? user.email : 'Not signed in'}
+            User: {props.user ? props.user.email : 'Not signed in'}
           </Typography>
-          {isLoggedIn ? (
-            <>
-              <Button color="inherit">Profile</Button>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  supabase.auth.signOut();
-                }}
-              >
-                Sign Out
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  navigate('/auth');
-                }}
-              >
-                Sign in
-              </Button>
-            </>
-          )}
+          <SignInOutButton user={props.user} />
         </Toolbar>
       </AppBar>
     </Box>
   );
 };
+
+const MainNavigationBar = (): JSX.Element => (
+  <LoggedInProvider>
+    {(userId) => <NavigationBar user={userId} />}
+  </LoggedInProvider>
+);
 
 export default MainNavigationBar;

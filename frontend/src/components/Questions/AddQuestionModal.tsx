@@ -3,8 +3,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
-import { QuestionSchema } from '../constants/api/apiSchema';
-import { Question } from '../constants/models';
+import { QuestionSchema } from '../../constants/api/apiSchema';
 import {
   FormControl,
   FormLabel,
@@ -17,16 +16,15 @@ import {
   Checkbox
 } from '@mui/material';
 import { useState } from 'react';
-import { Category } from '../constants/models';
 
-interface QuestionModalProps {
+interface AddQuestionModalProps {
   addQuestion: (question: QuestionSchema) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   questions: QuestionSchema[];
 }
 
-function AddQuestionModal(props: QuestionModalProps) {
+function AddQuestionModal(props: AddQuestionModalProps) {
   const addQuestion = props.addQuestion;
   const questions = props.questions;
   const handleClose = () => props.setOpen(false);
@@ -132,7 +130,7 @@ function AddQuestionModal(props: QuestionModalProps) {
                   control={
                     <Checkbox
                       name={category}
-                      checked={(categories as any)[category]}
+                      checked={categories[category]}
                       onChange={handleCategoryChange}
                     />
                   }
