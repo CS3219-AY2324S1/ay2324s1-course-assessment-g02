@@ -1,30 +1,32 @@
-import Button from '@mui/material/Button';
+import { IconButton } from '@mui/material';
 import { supabase } from '../../main';
 import { useNavigate } from 'react-router-dom';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const SignInOutButton = (props: { user }): JSX.Element => {
   const navigate = useNavigate();
   if (props.user) {
     return (
-      <Button
+      <IconButton
         color="inherit"
         onClick={() => {
           supabase.auth.signOut();
         }}
       >
-        Sign Out
-      </Button>
+        <LogoutIcon />
+      </IconButton>
     );
   } else {
     return (
-      <Button
+      <IconButton
         color="inherit"
         onClick={() => {
           navigate('/auth');
         }}
       >
-        Sign in
-      </Button>
+        <LoginIcon />
+      </IconButton>
     );
   }
 };
