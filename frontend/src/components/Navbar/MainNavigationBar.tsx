@@ -45,9 +45,7 @@ const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
 };
 
 const MainNavigationBar = (): JSX.Element => (
-  <LoggedInProvider>
-    {(userId) => <NavigationBar user={userId} />}
-  </LoggedInProvider>
+  <LoggedInProvider>{(user) => <NavigationBar user={user} />}</LoggedInProvider>
 );
 
 export default MainNavigationBar;

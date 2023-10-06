@@ -31,7 +31,7 @@ const UserButton = (props: { user }): JSX.Element => {
       >
         <Typography
           display="flex"
-          variant="button"
+          variant="h6"
           sx={{ marginLeft: 'auto', my: 2, textTransform: 'none' }}
         >
           Not signed in
