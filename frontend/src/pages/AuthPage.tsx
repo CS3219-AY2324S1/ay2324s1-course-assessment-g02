@@ -39,9 +39,9 @@ function AuthPage() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      // if (session) {
-      //   setIsLoggedIn(true);
-      // }
+      if (session) {
+        console.log('User is logged in');
+      }
     });
 
     const {

@@ -1,9 +1,7 @@
 import Playground from '../../components/Problems/Playground';
 import { Stack, Box, Paper } from '@mui/material';
 import ProblemDescription from '../../components/Problems/ProblemDescription';
-import { useEffect, useState } from 'react';
-import ProblemsNavbar from '../../components/Navbar/ProblemsNavbar';
-import CssBaseline from '@mui/material/CssBaseline';
+import { useEffect } from 'react';
 import MainNavigationBar from '../../components/Navbar/MainNavigationBar';
 
 const ProblemPage = () => {
@@ -12,11 +10,9 @@ const ProblemPage = () => {
     if (html) html.style.overflow = 'hidden';
   }, []);
 
-  const [isLoggedIn] = useState(true); // You can set this state based on your authentication logic
-
   return (
     <>
-      <ProblemsNavbar />
+      <MainNavigationBar />
       <Box>
         <Stack direction="row">
           <Paper

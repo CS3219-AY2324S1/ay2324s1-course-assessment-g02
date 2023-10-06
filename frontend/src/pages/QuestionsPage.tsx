@@ -2,7 +2,6 @@ import React from 'react';
 import { Box } from '@mui/material';
 import QuestionTable from '../components/Questions/QuestionTable';
 import MainNavigationBar from '../components/Navbar/MainNavigationBar';
-import CssBaseline from '@mui/material/CssBaseline';
 import { fetchQuestions } from '../constants/api/questionsApi';
 import { useQuery } from 'react-query';
 import Loading from '../components/Loading';

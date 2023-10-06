@@ -1,5 +1,4 @@
 import { Button, Typography } from '@mui/material';
-import { supabase } from '../../main';
 import { useNavigate } from 'react-router-dom';
 
 const UserButton = (props: { user }): JSX.Element => {

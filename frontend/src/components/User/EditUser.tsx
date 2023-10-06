@@ -47,20 +47,20 @@ const useUserData = (id: number) => {
     userPreferredLanguage,
     isLoading,
     isError,
-    setUserPreferredLanguage
+    setUserPreferredLanguage,
+    setUserPreferredComplexity
   };
 };
 
 const UserProfilePage = (props: { id: number }) => {
-  const [complexity, setComplexity] = useState<string>('Easy');
-
   const {
     userName,
     userPreferredComplexity,
     userPreferredLanguage,
     isLoading,
     isError,
-    setUserPreferredLanguage
+    setUserPreferredLanguage,
+    setUserPreferredComplexity
   } = useUserData(props.id);
 
   const updateUser = () => {
@@ -123,8 +123,8 @@ const UserProfilePage = (props: { id: number }) => {
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              value={complexity}
-              onChange={(e) => setComplexity(e.target.value)}
+              value={userPreferredComplexity}
+              onChange={(e) => setUserPreferredComplexity(e.target.value)}
               row
             >
               <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
