@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react';
 import { hannahTheme, hannahThemeDark } from './constants/themes';
 import { ThemeContext } from './contexts/theme-context';
 import { Auth } from '@supabase/auth-ui-react';
-import { Session } from '@supabase/supabase-js';
 import AuthPage from './pages/AuthPage';
 import { supabase } from './main';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { UserPageMain, UserProfilesPage } from './pages/UserPage';
+import MainNavigationBar from './components/Navbar/MainNavigationBar';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -20,22 +20,22 @@ function App() {
   const navigate = useNavigate();
   const queryClient = new QueryClient();
 
-  const [session, setSession] = useState<Session | null>();
-
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (!session) {
-        navigate('/auth');
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => { // waits for the session to load
+        console.log(event, session);
+        if (event == 'SIGNED_OUT') { // immediate redirection
+            navigate('/auth');
+          }
+        else if (!session) {
+          navigate('/auth');
+        }
       }
-    });
+    );
 
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
+    return () => {
+      authListener.subscription.unsubscribe();
+    }
   }, []);
 
   return (

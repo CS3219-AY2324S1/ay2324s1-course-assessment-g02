@@ -32,59 +32,24 @@ const Container = (props) => {
 
 function AuthPage() {
   const { theme } = useContext(ThemeContext);
-
-  const [session, setSession] = useState<Session | null>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (_event, session) => { // waits for the session to load
       if (session) {
-        console.log('User is logged in');
+        navigate('/');
       }
     });
 
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
-      if (event == 'SIGNED_IN') {
-        // console.log("signed in");
-        // console.log(user);
-        navigate('/');
-      }
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   // supabase.auth.getSession().then(({ data: { session } }) => {
-  //   //   setSession(session);
-  //   //   if (session) {
-  //   //     setIsLoggedIn(true);
-  //   //   }
-  //   // });
-
-  //   const {
-  //       data: { subscription }
-  //     } = supabase.auth.onAuthStateChange((event, session) => {
-  //       setSession(session);
-  //       if (session) {
-  //         setIsLoggedIn(true);
-  //       }
-  //       if (event == "SIGNED_IN") {
-  //         // console.log("signed in");
-  //         // console.log(user);
-  //         navigate("/");
-  //       }
-  //   });
-
-  //   return () => subscription.unsubscribe();
-  // }, [navigate]);
+    return () => {
+      authListener.subscription.unsubscribe();
+    }
+  }, []);
 
   return (
     <>
       <CssBaseline />
-      <MainNavigationBar />
       <Box
         display="flex"
         height={'100vh'}
