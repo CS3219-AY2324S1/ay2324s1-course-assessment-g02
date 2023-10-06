@@ -1,18 +1,14 @@
 import { Box, Typography } from '@mui/material';
-import { useState } from 'react';
-import { Auth } from '@supabase/auth-ui-react';
 import MainNavigationBar from '../components/Navbar/MainNavigationBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import { NavLink } from 'react-router-dom';
 
 function HomePage() {
-  const { user } = Auth.useUser();
-  const [isLoggedIn] = useState(true); // You can set this state based on your authentication logic
   return (
     <>
       <div>
         <CssBaseline />
-        <MainNavigationBar isLoggedIn={isLoggedIn} />
+        <MainNavigationBar />
         <Box
           display="flex"
           height={'100vh'}

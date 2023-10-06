@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { QuestionSchema } from './apiSchema.ts';
 
 const questionsUrl: string = `${
   import.meta.env.VITE_APP_BACKEND_URL
@@ -10,7 +11,7 @@ export async function fetchQuestions() {
 }
 
 export const getQuestion = async (id: number): Promise<AxiosResponse> => {
-  const response: AxiosResponse<ApiDataType> = await axios.get(
+  const response: AxiosResponse<QuestionSchema> = await axios.get(
     questionsUrl + id
   );
   return response;
@@ -23,5 +24,10 @@ export async function createQuestion(payload) {
 
 export async function updateQuestion(id: number, payload) {
   const response = await axios.put(`${questionsUrl}/${id}`, payload, {});
+  return response;
+}
+
+export async function deleteQuestionApi(id: number) {
+  const response = await axios.delete(`${questionsUrl}/${id}`);
   return response;
 }

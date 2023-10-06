@@ -23,7 +23,7 @@ const AuthBox = styled(Paper)(({ theme }) => ({
   padding: 10
 }));
 
-const Container = (props: any) => {
+const Container = (props) => {
   const { user } = Auth.useUser();
   const navigate = useNavigate();
   if (user) return navigate('/');
@@ -34,32 +34,34 @@ function AuthPage() {
   const { theme } = useContext(ThemeContext);
 
   const [session, setSession] = useState<Session | null>();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session) {
-        setIsLoggedIn(true);
+        console.log('User is logged in');
       }
     });
 
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      if (session) {
-        setIsLoggedIn(true);
+      if (event == 'SIGNED_IN') {
+        // console.log("signed in");
+        // console.log(user);
+        navigate('/');
       }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   return (
     <>
       <CssBaseline />
-      <MainNavigationBar isLoggedIn={isLoggedIn} />
+      <MainNavigationBar />
       <Box
         display="flex"
         height={'100vh'}

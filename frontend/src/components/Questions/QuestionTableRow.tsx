@@ -11,11 +11,11 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import { Question, Category } from './QuestionTable';
+import { QuestionSchema } from '../../constants/api/apiSchema';
 
 function QuestionTableRow(props: {
-  question: Question;
-  deleteQuestion: (questionId: number) => void;
+  question: QuestionSchema;
+  deleteQuestion: (id: number) => void;
 }) {
   const { question, deleteQuestion } = props;
   const [open, setOpen] = React.useState(false);
@@ -55,7 +55,7 @@ function QuestionTableRow(props: {
             color="error"
             onClick={(e) => {
               e.stopPropagation();
-              deleteQuestion(question.id || 0);
+              deleteQuestion(question.id);
             }}
           >
             Delete
@@ -67,9 +67,6 @@ function QuestionTableRow(props: {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Stack>
-                <div>
-                  Leetcode Link: <a href={question.link}>{question.link}</a>
-                </div>
                 <Typography variant="h6" gutterBottom component="div">
                   Description
                 </Typography>

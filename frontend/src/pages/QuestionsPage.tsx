@@ -1,28 +1,54 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import QuestionTable from '../components/QuestionTable';
-import { Auth } from '@supabase/auth-ui-react';
+import QuestionTable from '../components/Questions/QuestionTable';
 import MainNavigationBar from '../components/Navbar/MainNavigationBar';
-import { useState } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import { useNavigate } from 'react-router-dom';
+import { fetchQuestions } from '../constants/api/questionsApi';
+import { useQuery } from 'react-query';
+import Loading from '../components/Loading';
+import AuthProvider from '../components/Auth/AuthProvider';
 
-function QuestionsPage(): React.ReactElement {
-  const { user } = Auth.useUser();
-  const [isLoggedIn] = useState(false); // You can set this state based on your authentication logic
-  const navigate = useNavigate();
-  return user ? (
-    <>
+function QuestionPage(props: { user }): React.ReactElement {
+  const {
+    data: questionData,
+    error,
+    isError,
+    isLoading
+  } = useQuery('questions', fetchQuestions);
+
+  if (isError) {
+    return <div>Error! {(error as Error).message}</div>;
+  }
+
+  if (isLoading)
+    return (
       <Box>
-        <CssBaseline />
-        <MainNavigationBar isLoggedIn={isLoggedIn} />
+        <MainNavigationBar />
+        <Loading />
+      </Box>
+    );
 
-        <QuestionTable />
+  return (
+    <>
+      <MainNavigationBar />
+      <Box
+        mb={2}
+        display="flex"
+        flexDirection="column"
+        height="93vh" // fixed the height
+        style={{
+          border: '2px solid black',
+          overflow: 'hidden',
+          overflowY: 'scroll'
+        }}
+      >
+        <QuestionTable questionData={questionData} user={props.user} />
       </Box>
     </>
-  ) : (
-    <>{navigate('/auth')}</>
   );
 }
+
+const QuestionsPage = (): JSX.Element => (
+  <AuthProvider>{(user) => <QuestionPage user={user} />}</AuthProvider>
+);
 
 export default QuestionsPage;
