@@ -45,6 +45,7 @@ function App() {
           <ThemeProvider
             theme={theme == 'light' ? hannahTheme : hannahThemeDark}
           >
+            <MainNavigationBar />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/auth" element={<AuthPage />} />

@@ -14,7 +14,6 @@ import {
   CssBaseline,
   Typography
 } from '@mui/material';
-import MainNavigationBar from '../Navbar/MainNavigationBar';
 import { useState } from 'react';
 import { getUser } from '../../constants/api/userApi';
 import { useQuery } from 'react-query';
@@ -86,7 +85,6 @@ const UserProfilePage = (props: { id: number }) => {
     </>
   ) : (
     <>
-      <MainNavigationBar />
       <CssBaseline />
       <Box
         display="flex"
