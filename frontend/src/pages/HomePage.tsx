@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import MainNavigationBar from '../components/Navbar/MainNavigationBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import { NavLink } from 'react-router-dom';
 
@@ -8,7 +7,6 @@ function HomePage() {
     <>
       <div>
         <CssBaseline />
-        <MainNavigationBar />
         <Box
           display="flex"
           height={'100vh'}
