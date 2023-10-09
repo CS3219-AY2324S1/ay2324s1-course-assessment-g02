@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { QuestionSchema } from './apiSchema.ts';
 
 const questionsUrl: string = `${
-  import.meta.env.VITE_APP_BACKEND_URL
+  import.meta.env.VITE_APP_QUESTIONS_BACKEND_URL
 }/questions`;
 
 export async function fetchQuestions() {
