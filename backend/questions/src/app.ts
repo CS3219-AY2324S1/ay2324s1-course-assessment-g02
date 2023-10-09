@@ -6,7 +6,7 @@ import errorHandler from '../lib/errorHandler';
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 8081;
 const corsOpts = {
   origin: '*'
 };
