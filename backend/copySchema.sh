@@ -13,5 +13,12 @@ child_folder2="$parent_folder/users/prisma"
 # Copy the schema file to child folders
 cp "$schema_file" "$child_folder1/"
 cp "$schema_file" "$child_folder2/"
-
 echo "Schema file copied to child folders."
+
+# Run Prisma generate in the child folders
+(cd "$child_folder1" && npx prisma generate)
+cd "$parent_folder"
+
+(cd "$child_folder2" && npx prisma generate)
+cd "$parent_folder"
+echo "Prisma generate run in child folders."
