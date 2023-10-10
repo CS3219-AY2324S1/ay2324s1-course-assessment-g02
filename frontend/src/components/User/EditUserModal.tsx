@@ -70,10 +70,10 @@ const EditUserModal = (props: EditUserModalProps) => {
   };
 
   const updateUserDetails = async () => {
-    const repsonse = await updateUser(props.id, {
-      username: userName,
-      preferredComplexity: userPreferredComplexity,
-      preferredLanguage: userPreferredLanguage
+    await updateUser(props.id, {
+      username: tempUserName,
+      preferredComplexity: tempUserPreferredComplexity,
+      preferredLanguage: tempUserPreferredLanguage
     }).then(
       (res) => {
         console.log('User details update successfully', res);
