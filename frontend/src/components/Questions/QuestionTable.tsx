@@ -40,24 +40,28 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   };
 
   const addQuestion = async (question: QuestionSchema) => {
-    console.log(question);
-    try {
-      const response = await createQuestion(question);
-      console.log('Question created successfully', response);
-      setData([...data, question]);
-    } catch (error) {
-      console.error('Error creating question', error);
-    }
+    const response = await createQuestion(question).then(
+      (res) => {
+        question.id = res.data.question.id;
+        console.log('Question created succesfully', res);
+        setData([...data, question]);
+      },
+      (error) => {
+        console.error('Error creating question', error);
+      }
+    );
   };
 
   const deleteQuestion = async (id: number) => {
-    try {
-      const response = await deleteQuestionApi(id);
-      console.log('Question deleted successfully', response);
-      setData(data.filter((question) => question.id != id));
-    } catch (error) {
-      console.error('Error deleting question', error);
-    }
+    const response = await deleteQuestionApi(id).then(
+      (res) => {
+        console.log('Question deleted successfully', res);
+        setData(data.filter((question) => question.id != id));
+      },
+      (error) => {
+        console.error('Error deleting question', error);
+      }
+    );
   };
 
   return (
