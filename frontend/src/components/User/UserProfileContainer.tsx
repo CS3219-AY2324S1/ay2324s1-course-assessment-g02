@@ -18,22 +18,21 @@ const UserProfileContainer = (props: { id }) => {
   const [userImageSrc, setUserImageSrc] = useState('');
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
 
+  const userData = useUserData(props.id as number);
   const {
     userName,
     userPreferredComplexity,
     userPreferredLanguage,
     isLoading,
     isError
-  } = useUserData(props.id as number);
+  } = userData;
 
   if (isLoading) {
     return <Loading />;
   }
 
   return isError ? (
-    <>
-      <Loading />
-    </>
+    <Loading />
   ) : (
     <Paper
       sx={{
@@ -49,6 +48,7 @@ const UserProfileContainer = (props: { id }) => {
         id={props.id}
         open={editUserModalOpen}
         setOpen={setEditUserModalOpen}
+        userData={userData}
       />
       <Grid container spacing={2}>
         <Grid item>

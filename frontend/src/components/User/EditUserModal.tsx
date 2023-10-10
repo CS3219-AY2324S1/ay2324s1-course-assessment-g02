@@ -19,12 +19,14 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { ProgrammingLanguages } from '../../constants/enums';
 import Loading from '../Loading';
-import useUserData from './useUserData';
+import { useState } from 'react';
+import { updateUser } from '../../constants/api/userApi';
 
 interface EditUserModalProps {
   id: number;
   open: boolean;
   setOpen: (open: boolean) => void;
+  userData;
 }
 
 const EditUserModal = (props: EditUserModalProps) => {
@@ -34,26 +36,56 @@ const EditUserModal = (props: EditUserModalProps) => {
     userPreferredLanguage,
     isLoading,
     isError,
+    setUserName,
     setUserPreferredLanguage,
     setUserPreferredComplexity
-  } = useUserData(props.id);
-  const handleClose = () => props.setOpen(false);
+  } = props.userData;
+  const [tempUserName, setTempUserName] = useState(userName);
+  const [tempUserPreferredComplexity, setTempUserPreferredComplexity] =
+    useState(userPreferredComplexity);
+  const [tempUserPreferredLanguage, setTempUserPreferredLanguage] = useState(
+    userPreferredLanguage
+  );
 
-  const updateUser = () => {
-    return;
-  };
+  const handleClose = () => props.setOpen(false);
 
   if (isLoading) {
     return <Loading />;
   }
-
   const languageOptions = Object.values(ProgrammingLanguages).map((value) => ({
     value,
     label: value
   }));
 
+  const handleUserNameChange = (event) => {
+    setTempUserName(event.target.value);
+  };
+
   const handleLanguageChange = (event) => {
-    setUserPreferredLanguage(event.target.value);
+    setTempUserPreferredLanguage(event.target.value);
+  };
+
+  const handleComplexityChange = (event) => {
+    setTempUserPreferredComplexity(event.target.value);
+  };
+
+  const updateUserDetails = async () => {
+    const repsonse = await updateUser(props.id, {
+      username: userName,
+      preferredComplexity: userPreferredComplexity,
+      preferredLanguage: userPreferredLanguage
+    }).then(
+      (res) => {
+        console.log('User details update successfully', res);
+        setUserName(tempUserName);
+        setUserPreferredComplexity(tempUserPreferredComplexity);
+        setUserPreferredLanguage(tempUserPreferredLanguage);
+        props.setOpen(false);
+      },
+      (error) => {
+        console.error('Error updating user details', error);
+      }
+    );
   };
 
   return isError ? (
@@ -97,10 +129,9 @@ const EditUserModal = (props: EditUserModalProps) => {
           <FormControl>
             <FormLabel>User Name</FormLabel>
             <Input
-              value={userName ? userName : ''}
+              value={tempUserName ? tempUserName : ''}
               placeholder={'Pick a username'}
-              // Shall enable this next time
-              // disabled={toggleInputDisabled}
+              onChange={handleUserNameChange}
             />
           </FormControl>
           <FormControl>
@@ -110,8 +141,8 @@ const EditUserModal = (props: EditUserModalProps) => {
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              value={userPreferredComplexity}
-              onChange={(e) => setUserPreferredComplexity(e.target.value)}
+              value={tempUserPreferredComplexity}
+              onChange={handleComplexityChange}
               row
             >
               <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
@@ -131,7 +162,7 @@ const EditUserModal = (props: EditUserModalProps) => {
             <Select
               labelId="dropdown-label"
               id="dropdown"
-              value={userPreferredLanguage}
+              value={tempUserPreferredLanguage}
               onChange={handleLanguageChange}
               label="Select an option"
             >
@@ -143,7 +174,7 @@ const EditUserModal = (props: EditUserModalProps) => {
             </Select>
           </FormControl>
 
-          <Button variant={'contained'} onClick={updateUser}>
+          <Button variant={'contained'} onClick={updateUserDetails}>
             Submit
           </Button>
         </Paper>

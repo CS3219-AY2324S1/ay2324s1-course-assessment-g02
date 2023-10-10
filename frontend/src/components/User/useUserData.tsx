@@ -28,6 +28,7 @@ const useUserData = (id: number) => {
     userPreferredLanguage,
     isLoading,
     isError,
+    setUserName,
     setUserPreferredLanguage,
     setUserPreferredComplexity
   };
