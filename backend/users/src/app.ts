@@ -1,14 +1,12 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import dataRouter from './data/questions/dataRouter';
-import questionRouter from './questions/questionRouter';
 import userRouter from './users/userRouter';
 import errorHandler from '../lib/errorHandler';
 
 dotenv.config();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 8082;
 const corsOpts = {
   origin: '*'
 };
@@ -18,8 +16,6 @@ app.use(cors(corsOpts));
 app.use(express.json()); // Enable JSON request body parsing
 
 // Import routes
-app.use('/data', dataRouter);
-app.use('/questions', questionRouter);
 app.use('/users', userRouter);
 
 // Use this error handler for asyncHandler requests

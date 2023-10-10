@@ -1,7 +1,7 @@
 import fs from 'fs';
 import csv from 'csv-parser';
 import path from 'path';
-import prisma from '../../../lib/prisma';
+import prisma from '../lib/prisma';
 
 const MAX_NUM_QUESTIONS = 100;
 const QUESTIONS_CSV_FILES_PATH = './src/data/questions/csv';

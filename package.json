@@ -1,14 +1,10 @@
 {
-  "name": "leetcode",
+  "name": "PeerPrep",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "prisma": "^5.3.1"
-  },
-  "dependencies": {
-    "@prisma/client": "^5.3.1"
-  }
+  "devDependencies": {},
+  "dependencies": {}
 }
