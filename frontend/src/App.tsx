@@ -6,6 +6,7 @@ import { hannahTheme, hannahThemeDark } from './constants/themes';
 import { ThemeContext } from './contexts/theme-context';
 import { Session } from '@supabase/supabase-js';
 import { Auth } from '@supabase/auth-ui-react';
+import { CssBaseline } from '@mui/material';
 import { supabase } from './main';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { UserPageMain, UserProfilesPage } from './pages/UserPage';
@@ -50,6 +51,7 @@ function App() {
             theme={theme == 'light' ? hannahTheme : hannahThemeDark}
           >
             <MainNavigationBar />
+            <CssBaseline />
             <Box
               display="flex"
               height={'100vh'}

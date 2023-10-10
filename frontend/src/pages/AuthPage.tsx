@@ -2,9 +2,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Session } from '@supabase/supabase-js';
 import { supabase } from '../main';
-import CssBaseline from '@mui/material/CssBaseline';
 
 /* https://supabase.com/docs/guides/auth/auth-helpers/auth-ui */
 import { Auth } from '@supabase/auth-ui-react';
@@ -14,8 +12,7 @@ import {
   ThemeSupa
 } from '@supabase/auth-ui-shared';
 import { ThemeContext } from '../contexts/theme-context';
-import { useContext, useState, useEffect } from 'react';
-import MainNavigationBar from '../components/Navbar/MainNavigationBar';
+import { useContext, useEffect } from 'react';
 
 const AuthBox = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -36,20 +33,21 @@ function AuthPage() {
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => { // waits for the session to load
-      if (session) {
-        navigate('/');
+      async (_event, session) => {
+        // waits for the session to load
+        if (session) {
+          navigate('/');
+        }
       }
-    });
+    );
 
     return () => {
       authListener.subscription.unsubscribe();
-    }
+    };
   }, []);
 
   return (
     <>
-      <CssBaseline />
       <Box
         display="flex"
         height={'100vh'}

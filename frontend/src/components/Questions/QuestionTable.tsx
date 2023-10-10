@@ -40,7 +40,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   };
 
   const addQuestion = async (question: QuestionSchema) => {
-    const response = await createQuestion(question).then(
+    await createQuestion(question).then(
       (res) => {
         question.id = res.data.question.id;
         console.log('Question created succesfully', res);
@@ -53,7 +53,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   };
 
   const deleteQuestion = async (id: number) => {
-    const response = await deleteQuestionApi(id).then(
+    await deleteQuestionApi(id).then(
       (res) => {
         console.log('Question deleted successfully', res);
         setData(data.filter((question) => question.id != id));
