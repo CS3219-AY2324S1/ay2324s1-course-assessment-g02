@@ -1,29 +1,41 @@
-import { Box, Typography } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import { NavLink } from 'react-router-dom';
+import { Grid, Box, Typography } from '@mui/material';
+import { QuestionsPageButton } from '../components/Buttons/QuestionsPageButton';
+import { ProblemsPageButton } from '../components/Buttons/ProblemsPageButton';
 
 function HomePage() {
   return (
-    <>
-      <div>
-        <CssBaseline />
-        <Box
-          display="flex"
-          height={'100vh'}
-          width={'100vw'}
-          alignItems="center"
+    <Box
+      display="flex"
+      height={'100vh'}
+      width={'100vw'}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Grid
+        container
+        direction="column"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Grid item>
+          <Typography variant="h1">Welcome to PeerPrep!</Typography>
+        </Grid>
+        <Grid
+          container
+          spacing={3}
+          direction="row"
           justifyContent="center"
+          alignItems="center"
         >
-          <div>
-            <Typography variant="h1">Welcome to PeerPrep!</Typography>
-            <br />
-            <NavLink to="/problems">Go to Problems Page</NavLink>
-            <br />
-            <NavLink to="/questions">Go to Questions Page</NavLink>
-          </div>
-        </Box>
-      </div>
-    </>
+          <Grid item xs="auto">
+            <ProblemsPageButton />
+          </Grid>
+          <Grid item xs="auto">
+            <QuestionsPageButton />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 
