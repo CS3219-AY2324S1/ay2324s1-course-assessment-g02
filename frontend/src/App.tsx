@@ -17,6 +17,7 @@ import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
+import Loading from './components/Loading';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -24,14 +25,16 @@ function App() {
   const navigate = useNavigate();
   const queryClient = new QueryClient();
   const [session, setSession] = useState<Session | null>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         // waits for the session to load
         console.log(event, session);
+        setIsLoading(false);
         setSession(session);
-        if (event == 'SIGNED_OUT') {
+        if (!isLoading && event == 'SIGNED_OUT') {
           // immediate redirection on signout
           navigate('/auth');
         }
@@ -43,7 +46,9 @@ function App() {
     };
   }, []);
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <QueryClientProvider client={queryClient}>
       <Auth.UserContextProvider supabaseClient={supabase}>
         <ThemeContext.Provider value={{ theme, setTheme }}>
