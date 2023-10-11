@@ -24,7 +24,6 @@ questionRouter.get(
         categories: true
       }
     });
-    console.log('getting questions');
     res.status(200).json(questions);
   })
 );

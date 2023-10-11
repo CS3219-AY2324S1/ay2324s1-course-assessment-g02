@@ -15,7 +15,7 @@ const useUserData = (id: number) => {
       setUserName(res.data.username);
       setUserPreferredComplexity(res.data.preferredComplexity);
       setUserPreferredLanguage(res.data.preferredLanguage);
-      console.log(res.data.preferredLanguage);
+      console.log('User data fetched successfully', res);
     },
     onError: (error) => {
       console.log(error);
