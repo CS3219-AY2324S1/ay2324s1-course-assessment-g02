@@ -13,10 +13,11 @@ const Img = styled('img')({
   maxHeight: '100%'
 });
 
-const UserProfileContainer = (props: { id }) => {
+const UserProfileContainer = (props: { id: number; currentUser: number }) => {
   // shift to useUserData in the future after implementing, wishful thinking for now
   const [userImageSrc, setUserImageSrc] = useState('');
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
+  const editable = props.currentUser === (props.id as number) ? true : false;
 
   const userData = useUserData(props.id as number);
   const {
@@ -82,6 +83,7 @@ const UserProfileContainer = (props: { id }) => {
             <IconButton
               aria-label="edit"
               onClick={() => setEditUserModalOpen(true)}
+              disabled={editable}
             >
               <EditIcon />
             </IconButton>

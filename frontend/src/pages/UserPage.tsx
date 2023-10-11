@@ -7,6 +7,7 @@ import Loading from '../components/Loading';
 import AuthProvider from '../components/Auth/AuthProvider';
 interface UserPageProps {
   userId: string;
+  id?;
 }
 
 const UserPage = (props: UserPageProps): JSX.Element => {
@@ -30,12 +31,18 @@ const UserPage = (props: UserPageProps): JSX.Element => {
 
   if (isLoading) return <Loading />;
 
-  return <UserProfileContainer id={id} />;
+  return (
+    <UserProfileContainer currentUser={id} id={props.id ? props.id : id} />
+  );
 };
 
 const UserProfilesPage = (): JSX.Element => {
   const { id } = useParams();
-  return <UserProfileContainer id={id} />;
+  return (
+    <AuthProvider>
+      {(user) => <UserPage userId={user.id} id={id} />}
+    </AuthProvider>
+  );
 };
 
 const UserPageMain = (): JSX.Element => (
