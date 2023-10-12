@@ -5,6 +5,7 @@ import useUserData from './useUserData';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
 import NotFound from '../NotFound';
+import Loading from '../Loading';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -20,12 +21,19 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
   const editable = props.currentUser === (props.id as number) ? true : false;
 
   const userData = useUserData(props.id as number);
-  const { userName, userPreferredComplexity, userPreferredLanguage, isError } =
-    userData;
+  const {
+    userName,
+    userPreferredComplexity,
+    isLoading,
+    userPreferredLanguage,
+    isError
+  } = userData;
 
-  return isError ? (
-    <NotFound />
-  ) : (
+  if (isLoading) return <Loading />;
+
+  if (isError) return <NotFound />;
+
+  return (
     <Paper
       sx={{
         p: 2,
