@@ -4,6 +4,7 @@ import { useState } from 'react';
 import useUserData from './useUserData';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
+import NotFound from '../NotFound';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -23,7 +24,7 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
     userData;
 
   return isError ? (
-    <Typography>Placeholder user not found</Typography>
+    <NotFound />
   ) : (
     <Paper
       sx={{

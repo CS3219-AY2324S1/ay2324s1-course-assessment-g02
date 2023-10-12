@@ -12,7 +12,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { UserPageMain, UserProfilesPage } from './pages/UserPage';
 // Components (for routes)
 import MainNavigationBar from './components/Navbar/MainNavigationBar';
-import NotFoundPage from './pages/NotFoundPage';
+import NotFound from './components/NotFound';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProblemPage from './pages/problems/ProblemPage';
@@ -79,7 +79,7 @@ function App() {
                   <Route path="/questions" element={<QuestionsPage />} />
                   {/* TODO: Change this to dynamic routing */}
                   <Route path="/problems" element={<ProblemPage />} />
-                  <Route path="*" element={<NotFoundPage />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               )}
             </Box>
