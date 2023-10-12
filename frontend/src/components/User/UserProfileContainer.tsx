@@ -1,7 +1,6 @@
 import { Paper, Grid, ButtonBase, Typography, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
-import Loading from '../Loading';
 import useUserData from './useUserData';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
@@ -20,20 +19,11 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
   const editable = props.currentUser === (props.id as number) ? true : false;
 
   const userData = useUserData(props.id as number);
-  const {
-    userName,
-    userPreferredComplexity,
-    userPreferredLanguage,
-    isLoading,
-    isError
-  } = userData;
-
-  if (isLoading) {
-    return <Loading />;
-  }
+  const { userName, userPreferredComplexity, userPreferredLanguage, isError } =
+    userData;
 
   return isError ? (
-    <Loading />
+    <Typography>Placeholder user not found</Typography>
   ) : (
     <Paper
       sx={{
@@ -83,7 +73,7 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
             <IconButton
               aria-label="edit"
               onClick={() => setEditUserModalOpen(true)}
-              disabled={editable}
+              disabled={!editable}
             >
               <EditIcon />
             </IconButton>
