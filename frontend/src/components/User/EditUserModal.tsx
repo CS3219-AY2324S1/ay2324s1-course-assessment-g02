@@ -11,72 +11,81 @@ import {
   Input,
   Select,
   MenuItem,
-  CssBaseline,
-  Typography
+  IconButton,
+  Typography,
+  Grid,
+  Modal
 } from '@mui/material';
-import { useState } from 'react';
-import { getUser } from '../../constants/api/userApi';
-import { useQuery } from 'react-query';
+import CloseIcon from '@mui/icons-material/Close';
 import { ProgrammingLanguages } from '../../constants/enums';
 import Loading from '../Loading';
+import { useState } from 'react';
+import { updateUser } from '../../constants/api/userApi';
 
-const useUserData = (id: number) => {
-  const [userName, setUserName] = useState('');
-  const [userPreferredComplexity, setUserPreferredComplexity] = useState('');
-  const [userPreferredLanguage, setUserPreferredLanguage] = useState('');
+interface EditUserModalProps {
+  id: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  userData;
+}
 
-  const { isError, isLoading } = useQuery(['userData', id], () => getUser(id), {
-    enabled: true,
-    retry: 2,
-    cacheTime: 0,
-    onSuccess(res) {
-      setUserName(res.data.username);
-      setUserPreferredComplexity(res.data.preferredComplexity);
-      setUserPreferredLanguage(res.data.preferredLanguage);
-      console.log(res.data.preferredLanguage);
-    },
-    onError: (error) => {
-      console.log(error);
-    }
-  });
-
-  return {
-    userName,
-    userPreferredComplexity,
-    userPreferredLanguage,
-    isLoading,
-    isError,
-    setUserPreferredLanguage,
-    setUserPreferredComplexity
-  };
-};
-
-const UserProfilePage = (props: { id: number }) => {
+const EditUserModal = (props: EditUserModalProps) => {
   const {
     userName,
     userPreferredComplexity,
     userPreferredLanguage,
     isLoading,
     isError,
+    setUserName,
     setUserPreferredLanguage,
     setUserPreferredComplexity
-  } = useUserData(props.id);
+  } = props.userData;
+  const [tempUserName, setTempUserName] = useState(userName);
+  const [tempUserPreferredComplexity, setTempUserPreferredComplexity] =
+    useState(userPreferredComplexity);
+  const [tempUserPreferredLanguage, setTempUserPreferredLanguage] = useState(
+    userPreferredLanguage
+  );
 
-  const updateUser = () => {
-    return;
-  };
+  const handleClose = () => props.setOpen(false);
 
   if (isLoading) {
     return <Loading />;
   }
-
   const languageOptions = Object.values(ProgrammingLanguages).map((value) => ({
     value,
     label: value
   }));
 
+  const handleUserNameChange = (event) => {
+    setTempUserName(event.target.value);
+  };
+
   const handleLanguageChange = (event) => {
-    setUserPreferredLanguage(event.target.value);
+    setTempUserPreferredLanguage(event.target.value);
+  };
+
+  const handleComplexityChange = (event) => {
+    setTempUserPreferredComplexity(event.target.value);
+  };
+
+  const updateUserDetails = async () => {
+    await updateUser(props.id, {
+      username: tempUserName,
+      preferredComplexity: tempUserPreferredComplexity,
+      preferredLanguage: tempUserPreferredLanguage
+    }).then(
+      (res) => {
+        console.log('User details update successfully', res);
+        setUserName(tempUserName);
+        setUserPreferredComplexity(tempUserPreferredComplexity);
+        setUserPreferredLanguage(tempUserPreferredLanguage);
+        props.setOpen(false);
+      },
+      (error) => {
+        console.error('Error updating user details', error);
+      }
+    );
   };
 
   return isError ? (
@@ -84,8 +93,7 @@ const UserProfilePage = (props: { id: number }) => {
       <Loading />
     </>
   ) : (
-    <>
-      <CssBaseline />
+    <Modal open={props.open} onClose={handleClose}>
       <Box
         display="flex"
         height={'100vh'}
@@ -103,15 +111,27 @@ const UserProfilePage = (props: { id: number }) => {
             minHeight: '500px'
           }}
         >
-          <Typography variant="h6">User Profile</Typography>
-
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+          >
+            <Grid item>
+              <Typography variant="h6">User Profile</Typography>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={handleClose}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
           <FormControl>
             <FormLabel>User Name</FormLabel>
             <Input
-              value={userName ? userName : ''}
+              value={tempUserName ? tempUserName : ''}
               placeholder={'Pick a username'}
-              // Shall enable this next time
-              // disabled={toggleInputDisabled}
+              onChange={handleUserNameChange}
             />
           </FormControl>
           <FormControl>
@@ -121,8 +141,8 @@ const UserProfilePage = (props: { id: number }) => {
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              value={userPreferredComplexity}
-              onChange={(e) => setUserPreferredComplexity(e.target.value)}
+              value={tempUserPreferredComplexity}
+              onChange={handleComplexityChange}
               row
             >
               <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
@@ -142,7 +162,7 @@ const UserProfilePage = (props: { id: number }) => {
             <Select
               labelId="dropdown-label"
               id="dropdown"
-              value={userPreferredLanguage}
+              value={tempUserPreferredLanguage}
               onChange={handleLanguageChange}
               label="Select an option"
             >
@@ -154,13 +174,13 @@ const UserProfilePage = (props: { id: number }) => {
             </Select>
           </FormControl>
 
-          <Button variant={'contained'} onClick={updateUser}>
+          <Button variant={'contained'} onClick={updateUserDetails}>
             Submit
           </Button>
         </Paper>
       </Box>
-    </>
+    </Modal>
   );
 };
 
-export default UserProfilePage;
+export default EditUserModal;

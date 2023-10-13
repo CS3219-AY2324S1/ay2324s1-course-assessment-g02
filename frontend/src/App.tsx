@@ -1,21 +1,23 @@
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { hannahTheme, hannahThemeDark } from './constants/themes';
 import { ThemeContext } from './contexts/theme-context';
 import { Session } from '@supabase/supabase-js';
 import { Auth } from '@supabase/auth-ui-react';
+import { CssBaseline } from '@mui/material';
 import { supabase } from './main';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { UserPageMain, UserProfilesPage } from './pages/UserPage';
 // Components (for routes)
 import MainNavigationBar from './components/Navbar/MainNavigationBar';
-import NotFoundPage from './pages/NotFoundPage';
+import NotFound from './components/NotFound';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
+import Loading from './components/Loading';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -23,24 +25,30 @@ function App() {
   const navigate = useNavigate();
   const queryClient = new QueryClient();
   const [session, setSession] = useState<Session | null>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => { // waits for the session to load
+      async (event, session) => {
+        // waits for the session to load
         console.log(event, session);
+        setIsLoading(false);
         setSession(session);
-        if (event == 'SIGNED_OUT') { // immediate redirection on signout
-            navigate('/auth');
+        if (!isLoading && event == 'SIGNED_OUT') {
+          // immediate redirection on signout
+          navigate('/auth');
         }
       }
     );
 
     return () => {
       authListener.subscription.unsubscribe();
-    }
+    };
   }, []);
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <QueryClientProvider client={queryClient}>
       <Auth.UserContextProvider supabaseClient={supabase}>
         <ThemeContext.Provider value={{ theme, setTheme }}>
@@ -48,24 +56,33 @@ function App() {
             theme={theme == 'light' ? hannahTheme : hannahThemeDark}
           >
             <MainNavigationBar />
-            {!session && (
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="*" element={<Navigate to='/auth' replace />} />
-              </Routes>
-            )}
-            {session && (
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/user" element={<UserPageMain />} />
-                <Route path="/user/:id" element={<UserProfilesPage />} />
-                <Route path="/questions" element={<QuestionsPage />} />
-                {/* TODO: Change this to dynamic routing */}
-                <Route path="/problems" element={<ProblemPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            )}
+            <CssBaseline />
+            <Box
+              display="flex"
+              height={'100vh'}
+              width={'100vw'}
+              alignItems="center"
+              justifyContent="center"
+            >
+              {!session && (
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route path="*" element={<Navigate to="/auth" replace />} />
+                </Routes>
+              )}
+              {session && (
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/user" element={<UserPageMain />} />
+                  <Route path="/user/:id" element={<UserProfilesPage />} />
+                  <Route path="/questions" element={<QuestionsPage />} />
+                  {/* TODO: Change this to dynamic routing */}
+                  <Route path="/problems" element={<ProblemPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              )}
+            </Box>
           </ThemeProvider>
         </ThemeContext.Provider>
       </Auth.UserContextProvider>

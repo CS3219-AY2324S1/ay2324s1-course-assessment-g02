@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { getIdFromUserId } from '../constants/api/userApi';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import UserProfilePage from '../components/User/EditUser';
+import UserProfileContainer from '../components/User/UserProfileContainer';
 import Loading from '../components/Loading';
 import AuthProvider from '../components/Auth/AuthProvider';
 interface UserPageProps {
   userId: string;
+  id?;
 }
 
 const UserPage = (props: UserPageProps): JSX.Element => {
@@ -30,15 +31,20 @@ const UserPage = (props: UserPageProps): JSX.Element => {
 
   if (isLoading) return <Loading />;
 
-  return <UserProfilePage id={id} />;
+  return (
+    <UserProfileContainer currentUser={id} id={props.id ? props.id : id} />
+  );
 };
 
 const UserProfilesPage = (): JSX.Element => {
   const { id } = useParams();
-  return <UserProfilePage id={id as number} />;
+  return (
+    <AuthProvider>
+      {(user) => <UserPage userId={user.id} id={id} />}
+    </AuthProvider>
+  );
 };
 
-// main page renderer
 const UserPageMain = (): JSX.Element => (
   <AuthProvider>{(user) => <UserPage userId={user.id} />}</AuthProvider>
 );

@@ -90,7 +90,7 @@ userRouter.post(
 userRouter.put(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    const { username, userId, email } = req.body;
+    const { username, preferredLanguage, preferredComplexity } = req.body;
     const id = Number(req.params.id);
 
     const existingUser = await prisma.user.findUnique({
@@ -106,8 +106,9 @@ userRouter.put(
       where: { id },
       data: {
         username: username || existingUser.username,
-        userId: userId || existingUser.userId,
-        email: email || existingUser.email
+        preferredLanguage: preferredLanguage || existingUser.preferredLanguage,
+        preferredComplexity:
+          preferredComplexity || existingUser.preferredComplexity
       }
     });
 
