@@ -14,6 +14,7 @@ const SocketChatPageTest = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   const { user } = Auth.useUser();
+
   useEffect(() => {
     function onConnect() {
       setIsConnected(true);
