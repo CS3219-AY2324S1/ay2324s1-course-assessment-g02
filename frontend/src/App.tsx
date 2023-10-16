@@ -1,6 +1,6 @@
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
-import { useMediaQuery, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { hannahTheme, hannahThemeDark } from './constants/themes';
 import { ThemeContext } from './contexts/theme-context';
@@ -18,11 +18,11 @@ import HomePage from './pages/HomePage';
 import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
 import Loading from './components/Loading';
+import { useDarkMode }  from './components/Navbar/useDarkMode';
 import SocketChatPageTest from './pages/problems/SocketChatPageTest';
 
 function App() {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [theme, setTheme] = useState(prefersDarkMode ? 'dark' : 'light');
+  const {theme, toggleTheme, componentMounted} = useDarkMode();
   const navigate = useNavigate();
   const queryClient = new QueryClient();
   const [session, setSession] = useState<Session | null>();
@@ -47,12 +47,12 @@ function App() {
     };
   }, []);
 
-  return isLoading ? (
+  return isLoading || !componentMounted ? (
     <Loading />
   ) : (
     <QueryClientProvider client={queryClient}>
       <Auth.UserContextProvider supabaseClient={supabase}>
-        <ThemeContext.Provider value={{ theme, setTheme }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
           <ThemeProvider
             theme={theme == 'light' ? hannahTheme : hannahThemeDark}
           >
