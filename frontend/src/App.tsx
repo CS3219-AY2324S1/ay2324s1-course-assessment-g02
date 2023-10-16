@@ -1,6 +1,6 @@
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
-import { useMediaQuery, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { hannahTheme, hannahThemeDark } from './constants/themes';
 import { ThemeContext } from './contexts/theme-context';
