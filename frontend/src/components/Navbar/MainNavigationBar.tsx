@@ -14,7 +14,7 @@ interface MainNavigationBarProps {
 }
 
 const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -33,7 +33,7 @@ const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
             </Typography>
           </Button>
           <Box sx={{ flexGrow: 9 }} />
-          <LightDarkButton theme={theme} setTheme={setTheme} />
+          <LightDarkButton theme={theme} toggleTheme={toggleTheme} />
           <Box sx={{ flexGrow: 0.1 }} />
           <UserButton user={props.user} />
           <Box sx={{ flexGrow: 0.1 }} />
