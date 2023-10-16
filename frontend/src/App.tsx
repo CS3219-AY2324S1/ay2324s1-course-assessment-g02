@@ -18,6 +18,7 @@ import HomePage from './pages/HomePage';
 import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
 import Loading from './components/Loading';
+import SocketChatPageTest from './pages/problems/SocketChatPageTest';
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -74,6 +75,8 @@ function App() {
               {session && (
                 <Routes>
                   <Route path="/" element={<HomePage />} />
+                  {/* TODO: REMOVE TEST PATH SOCKET */}
+                  <Route path="/socket" element={<SocketChatPageTest />} />
                   <Route path="/user" element={<UserPageMain />} />
                   <Route path="/user/:id" element={<UserProfilesPage />} />
                   <Route path="/questions" element={<QuestionsPage />} />
