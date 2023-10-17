@@ -146,40 +146,6 @@ questionRouter.delete(
   })
 );
 
-// This route should be above the /attempts/:id route to avoid conflict
-// Get all question attempts for a user
-questionRouter.get(
-  '/attempts/users/:id',
-  asyncHandler(async (req: Request, res: Response) => {
-    const id = Number(req.params.id);
-    const user = await prisma.user.findUnique({
-      where: { id: id },
-      include: {
-        attemptedQuestion1: {
-          include: {
-            question: true
-          }
-        },
-        attemptedQuestion2: {
-          include: {
-            question: true
-          }
-        }
-      }
-    });
-    if (!user) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-    const combinedAttempts = [
-      ...user.attemptedQuestion1,
-      ...user.attemptedQuestion2
-    ];
-
-    res.status(200).json(combinedAttempts);
-  })
-);
-
 // Add question attempt
 questionRouter.post(
   '/attempts',
