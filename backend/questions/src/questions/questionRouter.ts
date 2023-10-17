@@ -30,6 +30,7 @@ questionRouter.get(
   })
 );
 
+// Get one question that fits query parameters
 questionRouter.get(
   '/random',
   asyncHandler(async (req: Request, res: Response) => {
