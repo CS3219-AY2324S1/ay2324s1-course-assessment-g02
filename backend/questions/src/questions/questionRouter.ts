@@ -199,12 +199,18 @@ questionRouter.post(
 questionRouter.put(
   '/attempts/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    const questionAttempt = await prisma.attemptedQuestion.findUnique({
-      where: { id: Number(req.params.id) }
-    });
+    const { code } = req.body;
+
     await prisma.attemptedQuestion.update({
       where: { id: Number(req.params.id) },
-      data: { completedAt: new Date() }
+      data: {
+        completedAt: new Date(),
+        code: code
+      }
+    });
+
+    const questionAttempt = await prisma.attemptedQuestion.findUnique({
+      where: { id: Number(req.params.id) }
     });
 
     res.status(200).json({
