@@ -17,6 +17,15 @@ interface QuestionUpdateData {
   ratings?: number;
 }
 
+// add function to validate complexity
+function validateComplexity(complexity: string): boolean {
+  return (
+    complexity === 'Easy' ||
+    complexity === 'Medium' ||
+    complexity === 'Hard'
+  );
+}
+
 // Get all questions
 questionRouter.get(
   '/',
@@ -35,11 +44,7 @@ questionRouter.get(
   '/random',
   asyncHandler(async (req: Request, res: Response) => {
     const complexity = req.query.complexity;
-    if (
-      complexity !== 'Easy' &&
-      complexity !== 'Medium' &&
-      complexity !== 'Hard'
-    ) {
+    if (!complexity || !validateComplexity(complexity as string)) {
       res.status(400).json({ message: 'Invalid complexity' });
       return;
     }
