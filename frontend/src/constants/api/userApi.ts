@@ -35,3 +35,8 @@ export async function updateUser(id: number, payload) {
   const response = await axios.put(`${usersUrl}/${id}`, payload, {});
   return response;
 }
+
+export async function deleteUser(id: number) {
+  const response = await axios.delete(`${usersUrl}${id}`);
+  return response;
+}

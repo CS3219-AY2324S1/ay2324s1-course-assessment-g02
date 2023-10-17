@@ -3,7 +3,9 @@ import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import useUserData from './useUserData';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditUserModal from './EditUserModal';
+import DeleteUserModal from './DeleteUserModal';
 import NotFound from '../NotFound';
 import Loading from '../Loading';
 
@@ -18,6 +20,7 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
   // shift to useUserData in the future after implementing, wishful thinking for now
   const [userImageSrc, setUserImageSrc] = useState('');
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
+  const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const editable = props.currentUser === (props.id as number) ? true : false;
 
   const userData = useUserData(props.id as number);
@@ -50,6 +53,11 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
         setOpen={setEditUserModalOpen}
         userData={userData}
       />
+      <DeleteUserModal
+        id={props.id}
+        open={deleteUserModalOpen}
+        setOpen={setDeleteUserModalOpen}
+      />
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 128, height: 128 }}>
@@ -72,11 +80,6 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
                 ID: {props.id}
               </Typography>
             </Grid>
-            <Grid item>
-              <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                Delete Account
-              </Typography>
-            </Grid>
           </Grid>
           <Grid item>
             <IconButton
@@ -87,6 +90,12 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
               <EditIcon />
             </IconButton>
           </Grid>
+          <Grid item>
+              <IconButton>
+                <DeleteIcon style={{ color: 'ff4848' }} onClick={() => setDeleteUserModalOpen(true)}/>
+                
+              </IconButton>
+            </Grid>
         </Grid>
       </Grid>
     </Paper>
