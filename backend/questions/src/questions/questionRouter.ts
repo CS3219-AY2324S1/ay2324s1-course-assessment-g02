@@ -151,12 +151,20 @@ questionRouter.delete(
 questionRouter.get(
   '/attempts/users/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    const id = Number(req.params.userId);
+    const id = Number(req.params.id);
     const user = await prisma.user.findUnique({
       where: { id: id },
       include: {
-        attemptedQuestion1: true,
-        attemptedQuestion2: true
+        attemptedQuestion1: {
+          include: {
+            question: true
+          }
+        },
+        attemptedQuestion2: {
+          include: {
+            question: true
+          }
+        }
       }
     });
     if (!user) {
@@ -176,14 +184,13 @@ questionRouter.get(
 questionRouter.post(
   '/attempts',
   asyncHandler(async (req: Request, res: Response) => {
-    const { questionId, userId1, userId2, code } = req.body;
+    const { questionId, userId1, userId2 } = req.body;
 
     const newAttempt = await prisma.attemptedQuestion.create({
       data: {
         questionId,
         userId1,
-        userId2,
-        code
+        userId2
       }
     });
 
