@@ -31,9 +31,9 @@ questionRouter.get(
 );
 
 questionRouter.get(
-  '/complexity/:complexity',
+  '/random',
   asyncHandler(async (req: Request, res: Response) => {
-    const complexity = req.params.complexity;
+    const complexity = req.query.complexity;
     if (
       complexity !== 'Easy' &&
       complexity !== 'Medium' &&
