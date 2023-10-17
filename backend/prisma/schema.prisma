@@ -157,6 +157,6 @@ model AttemptedQuestion {
   questionId Int
   attemptedAt    DateTime      @default(now())
   completedAt     DateTime      @updatedAt
-  code String
+  code String @default("")
 	@@map("AttemptedQuestions")
 }
