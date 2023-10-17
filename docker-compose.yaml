@@ -1,4 +1,3 @@
-# docker-compose for redis
 version: '3.8'
 
 services:
@@ -6,9 +5,75 @@ services:
     image: 'redis:alpine'
     restart: always
     ports:
-      - 6379:6379
+      - ${REDIS_PORT}:${REDIS_PORT}
     volumes:
       - redis-data:/data
 
+  matching-service:
+    build:
+      context: ./matching-service
+    restart: always
+    env_file:
+      - ./matching-service/.env.docker
+    ports:
+      - ${MATCH_PORT}:${MATCH_PORT}
+    depends_on:
+      - redis
+    networks:
+      - default
+
+  interview-service:
+    build:
+      context: ./interview-service
+    restart: always
+    env_file:
+      - ./interview-service/.env
+    ports:
+      - ${SOCKET_PORT}:${SOCKET_PORT}
+    networks:
+      - default
+
+  question-service:
+    build:
+      context: ./backend/questions
+    restart: always
+    env_file:
+      - ./backend/questions/.env
+    ports:
+      - ${QUESTION_PORT}:${QUESTION_PORT}
+    networks:
+      - default
+
+  user-service:
+    build:
+      context: ./backend/users
+    restart: always
+    env_file:
+      - ./backend/users/.env
+    ports:
+      - ${USER_PORT}:${USER_PORT}
+    networks:
+      - default
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    env_file:
+      - ./frontend/.env
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    networks:
+      - default
+    depends_on:
+      - user-service
+      - question-service
+      - matching-service
+
 volumes:
   redis-data:
+
+networks:
+  default:
+    name: peerprep
+    driver: bridge

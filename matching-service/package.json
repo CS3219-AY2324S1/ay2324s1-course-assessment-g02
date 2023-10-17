@@ -4,7 +4,6 @@
   "description": "",
   "main": "src/app.ts",
   "scripts": {
-    "redis": "redis-server",
     "build": "npx tsc",
     "start": "ts-node src/app.ts",
     "dev": "nodemon",
