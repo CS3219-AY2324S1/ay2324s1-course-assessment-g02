@@ -29,3 +29,9 @@ export enum ProgrammingLanguages {
   HTML = 'HTML',
   CSS = 'CSS'
 }
+
+export enum Difficulties {
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard'
+}
