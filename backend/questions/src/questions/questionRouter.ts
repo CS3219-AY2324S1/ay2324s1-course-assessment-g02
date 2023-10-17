@@ -30,6 +30,34 @@ questionRouter.get(
   })
 );
 
+questionRouter.get(
+  '/complexity/:complexity',
+  asyncHandler(async (req: Request, res: Response) => {
+    const complexity = req.params.complexity;
+    if (
+      complexity !== 'Easy' &&
+      complexity !== 'Medium' &&
+      complexity !== 'Hard'
+    ) {
+      res.status(400).json({ message: 'Invalid complexity' });
+      return;
+    }
+
+    const complexityEnum = complexity as Complexity;
+    const questions = await prisma.question.findMany({
+      where: {
+        complexity: complexityEnum
+      },
+      include: {
+        categories: true
+      }
+    });
+    // return one random question
+    const randomIndex = Math.floor(Math.random() * (questions.length - 1));
+    res.status(200).json(questions[randomIndex]);
+  })
+)
+
 // Get one question
 questionRouter.get(
   '/:id',
