@@ -226,12 +226,3 @@ questionRouter.put(
     });
   })
 );
-
-// Get all question attempts
-questionRouter.get(
-  '/attempts',
-  asyncHandler(async (req: Request, res: Response) => {
-    const questionAttempts = await prisma.attemptedQuestion.findMany({});
-    res.status(200).json(questionAttempts);
-  })
-);
