@@ -26,6 +26,10 @@ function validateComplexity(complexity: string): boolean {
   );
 }
 
+function validateRating(rating) {
+  return [1, 2, 3, 4, 5].includes(rating);
+}
+
 // Get all questions
 questionRouter.get(
   '/',
@@ -127,6 +131,10 @@ questionRouter.put(
 
     if (!existingQuestion) {
       res.status(404).json({ message: 'Question not found' });
+      return;
+    }
+    if (ratings == 0 || (ratings && !validateRating(ratings))) {
+      res.status(400).json({ message: 'Invalid rating' });
       return;
     }
 
