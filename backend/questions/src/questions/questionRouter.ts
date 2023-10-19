@@ -13,6 +13,21 @@ interface QuestionUpdateData {
   categories?: {
     set: { id: number }[]; // Array of category IDs for the 'set' operation
   };
+  avgRating?: number;
+  ratings?: number;
+}
+
+// add function to validate complexity
+function validateComplexity(complexity: string): boolean {
+  return (
+    complexity === 'Easy' ||
+    complexity === 'Medium' ||
+    complexity === 'Hard'
+  );
+}
+
+function validateRating(rating) {
+  return [1, 2, 3, 4, 5].includes(rating);
 }
 
 // Get all questions
@@ -27,6 +42,31 @@ questionRouter.get(
     res.status(200).json(questions);
   })
 );
+
+// Get one question that fits query parameters
+questionRouter.get(
+  '/random',
+  asyncHandler(async (req: Request, res: Response) => {
+    const complexity = req.query.complexity;
+    if (!complexity || !validateComplexity(complexity as string)) {
+      res.status(400).json({ message: 'Invalid complexity' });
+      return;
+    }
+
+    const complexityEnum = complexity as Complexity;
+    const questions = await prisma.question.findMany({
+      where: {
+        complexity: complexityEnum
+      },
+      include: {
+        categories: true
+      }
+    });
+    // return one random question
+    const randomIndex = Math.floor(Math.random() * (questions.length - 1));
+    res.status(200).json(questions[randomIndex]);
+  })
+)
 
 // Get one question
 questionRouter.get(
@@ -79,7 +119,7 @@ questionRouter.post(
 questionRouter.put(
   '/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    const { title, body, categories, complexity } = req.body;
+    const { title, body, categories, complexity, ratings } = req.body;
     const questionId = Number(req.params.id);
 
     const existingQuestion = await prisma.question.findUnique({
@@ -93,12 +133,21 @@ questionRouter.put(
       res.status(404).json({ message: 'Question not found' });
       return;
     }
+    if (ratings == 0 || (ratings && !validateRating(ratings))) {
+      res.status(400).json({ message: 'Invalid rating' });
+      return;
+    }
 
     // Prepare the data object for the update
     const updateData: QuestionUpdateData = {
       title: title || existingQuestion.title,
       body: body || existingQuestion.body,
-      complexity: complexity || existingQuestion.complexity
+      complexity: complexity || existingQuestion.complexity,
+      avgRating: ratings
+        ? (existingQuestion.ratings * existingQuestion.avgRating + ratings) /
+          (existingQuestion.ratings + 1)
+        : existingQuestion.avgRating,
+      ratings: ratings ? existingQuestion.ratings + 1 : existingQuestion.ratings
     };
 
     if (categories && categories.length > 0) {
@@ -136,5 +185,52 @@ questionRouter.delete(
     }
 
     res.status(200).json({ message: 'Question deleted successfully' });
+  })
+);
+
+// Add question attempt
+questionRouter.post(
+  '/attempts',
+  asyncHandler(async (req: Request, res: Response) => {
+    const { questionId, userId1, userId2 } = req.body;
+
+    const newAttempt = await prisma.attemptedQuestion.create({
+      data: {
+        questionId,
+        userId1,
+        userId2
+      }
+    });
+
+    // Respond with a success message
+    res.status(201).json({
+      message: 'Question attempt created successfully',
+      questionAttempt: newAttempt
+    });
+  })
+);
+
+// Complete question attempt
+questionRouter.put(
+  '/attempts/:id',
+  asyncHandler(async (req: Request, res: Response) => {
+    const { code } = req.body;
+
+    await prisma.attemptedQuestion.update({
+      where: { id: Number(req.params.id) },
+      data: {
+        completedAt: new Date(),
+        code: code
+      }
+    });
+
+    const questionAttempt = await prisma.attemptedQuestion.findUnique({
+      where: { id: Number(req.params.id) }
+    });
+
+    res.status(200).json({
+      message: 'Question attempt marked completed successfully',
+      questionAttempt: questionAttempt
+    });
   })
 );
