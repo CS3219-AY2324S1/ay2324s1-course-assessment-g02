@@ -1,7 +1,7 @@
 import { Paper, Grid, ButtonBase, Typography, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
-import useUserData from './useUserData';
+import useUserData from '../../hooks/useUserData';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
 import NotFound from '../NotFound';

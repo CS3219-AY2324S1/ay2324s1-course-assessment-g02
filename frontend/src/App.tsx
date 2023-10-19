@@ -17,12 +17,13 @@ import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
+import MatchPage from './pages/MatchPage';
 import Loading from './components/Loading';
-import { useDarkMode }  from './components/Navbar/useDarkMode';
+import { useDarkMode } from './hooks/useDarkMode';
 import SocketChatPageTest from './pages/problems/SocketChatPageTest';
 
 function App() {
-  const {theme, toggleTheme, componentMounted} = useDarkMode();
+  const { theme, toggleTheme, componentMounted } = useDarkMode();
   const navigate = useNavigate();
   const queryClient = new QueryClient();
   const [session, setSession] = useState<Session | null>();
@@ -80,6 +81,7 @@ function App() {
                   <Route path="/user" element={<UserPageMain />} />
                   <Route path="/user/:id" element={<UserProfilesPage />} />
                   <Route path="/questions" element={<QuestionsPage />} />
+                  <Route path="/match" element={<MatchPage />} />
                   {/* TODO: Change this to dynamic routing */}
                   <Route path="/problems" element={<ProblemPage />} />
                   <Route path="*" element={<NotFound />} />
