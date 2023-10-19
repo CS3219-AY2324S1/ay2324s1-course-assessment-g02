@@ -63,6 +63,39 @@ userRouter.get(
   })
 );
 
+// must be below /userId/:userId route
+userRouter.get(
+  '/:id/attempts',
+  asyncHandler(async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        attemptedQuestion1: {
+          include: {
+            question: true
+          }
+        },
+        attemptedQuestion2: {
+          include: {
+            question: true
+          }
+        }
+      }
+    });
+    if (!user) {
+      res.status(404).json({ message: 'user not found' });
+      return;
+    }
+    const combinedAttempts = [
+      ...user.attemptedQuestion1,
+      ...user.attemptedQuestion2
+    ];
+
+    res.status(200).json(combinedAttempts);
+  })
+);
+
 // Create user
 userRouter.post(
   '/',
