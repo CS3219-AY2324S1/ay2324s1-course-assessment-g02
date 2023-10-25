@@ -7,6 +7,7 @@ const matchService = new MatchService();
 
 router.get('/get', async (req, res) => {
   const { id } = req.query;
+  console.log(`Received request to get user session for user: ${id}`);
   const result = await matchService.checkUser(id as string);
   res.json(result);
 });
