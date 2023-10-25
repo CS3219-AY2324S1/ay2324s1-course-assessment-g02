@@ -12,11 +12,11 @@ import AuthProvider from '../components/Auth/AuthProvider';
 import Chat from '../components/Chat/Chat';
 import Loading from '../components/Loading';
 
-interface SocketChatPageTestProps {
+interface UnwrappedInterviewPageProps {
   user;
 }
 
-const SocketChatPageTest = (props: SocketChatPageTestProps) => {
+const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
   // const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   // const toggleSidebar = () => {
@@ -130,7 +130,7 @@ const InterviewPage = () => {
     <AuthProvider>
       {(user) => (
         <SessionProvider user={user}>
-          <SocketChatPageTest user={user} />
+          <UnwrappedInterviewPage user={user} />
         </SessionProvider>
       )}
     </AuthProvider>
