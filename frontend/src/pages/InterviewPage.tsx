@@ -1,5 +1,5 @@
 import Playground from '../components/Problems/Playground';
-import { Stack, Paper, Box } from '@mui/material';
+import { Paper, Box } from '@mui/material';
 import ProblemDescription from '../components/Problems/ProblemDescription';
 import { useEffect } from 'react';
 import {
@@ -7,8 +7,6 @@ import {
   useSession
 } from '../components/Socket/SessionContext';
 import AuthProvider from '../components/Auth/AuthProvider';
-// import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-// import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import Chat from '../components/Chat/Chat';
 import Loading from '../components/Loading';
 
@@ -17,12 +15,6 @@ interface UnwrappedInterviewPageProps {
 }
 
 const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
-  // const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-  // const toggleSidebar = () => {
-  //   setSidebarOpen(!isSidebarOpen);
-  // };
-
   const session = useSession();
   if (!session) {
     throw new Error('session still loading');
@@ -37,90 +29,35 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
   return !session || !isConnected ? (
     <Loading />
   ) : (
-    <Box flexDirection="row" display="flex">
-      <Stack direction="row">
-        <Box>
-          <Paper
-            elevation={5}
-            sx={{
-              height: '90vh',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              overflowY: 'scroll',
-              padding: '1em',
-              margin: '0.5em 0.25em 0.25em 0.5em'
-            }}
-          >
-            <ProblemDescription questionId={questionId} />
-          </Paper>
-        </Box>
+    <Box
+      display="flex"
+      flexDirection="row"
+      sx={{ width: '100%', height: '95vh' }}
+    >
+      <Box flexGrow={1} sx={{ margin: '0.5em', minWidth: '25%' }}>
         <Paper
           elevation={5}
-          sx={{
-            minWidth: '45%',
-            height: '90vh',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            overflowY: 'scroll',
-            padding: '1em',
-            margin: '0.5em 0.25em 0.25em 0.5em'
-          }}
+          sx={{ height: '100%', padding: '1em', overflowY: 'auto' }}
+        >
+          <ProblemDescription questionId={questionId} />
+        </Paper>
+      </Box>
+      <Box flexGrow={1} sx={{ margin: '0.5em', minWidth: '25%' }}>
+        <Paper
+          elevation={5}
+          sx={{ height: '100%', padding: '1em', overflowY: 'auto' }}
         >
           <Playground />
         </Paper>
-        {/* <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '90vh' // adjust this as needed
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={toggleSidebar}
-            sx={{
-              width: 'auto',
-              minWidth: 'auto',
-              height: '5%',
-              margin: '0.25em',
-              padding: '0.5em 0.2em', // reduced padding horizontally
-              alignItems: 'center',
-              justifyContent: 'center',
-              display: 'flex'
-            }}
-          >
-            {isSidebarOpen ? <ArrowRightIcon /> : <ArrowLeftIcon />}
-          </Button>
-        </Box> */}
+      </Box>
+      <Box flexGrow={1} sx={{ margin: '0.5em', minWidth: '25%' }}>
         <Paper
           elevation={5}
-          sx={{
-            minWidth: '20%',
-            height: '90vh',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            overflowY: 'scroll',
-            padding: '1em',
-            margin: '0.5em 0.25em 0.25em 0.5em'
-          }}
+          sx={{ height: '100%', padding: '1em', overflowY: 'auto' }}
         >
-          <Box
-            sx={{
-              // width: isSidebarOpen ? '30%' : 0,
-              transition: 'width 0.3s ease-in-out'
-            }}
-          >
-            {/* {isSidebarOpen && (
           <Chat isConnected={isConnected} userEmail={props.user.email} />
-        )} */}
-            <Chat isConnected={isConnected} userEmail={props.user.email} />
-          </Box>
         </Paper>
-      </Stack>
+      </Box>
     </Box>
   );
 };

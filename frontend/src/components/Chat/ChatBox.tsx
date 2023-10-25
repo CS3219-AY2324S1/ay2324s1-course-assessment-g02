@@ -36,7 +36,6 @@ const ChatBox = (props: ChatProps) => {
   }, []);
 
   useEffect(() => {
-    // Implement autoscroll when new messages come in
     lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
@@ -44,7 +43,7 @@ const ChatBox = (props: ChatProps) => {
     <Box
       sx={{
         backgroundColor: 'background.paper',
-        borderRadius: '8px',
+        borderRadius: '1em',
         height: '100%',
         padding: '0.5em'
       }}

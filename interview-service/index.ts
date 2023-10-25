@@ -46,6 +46,7 @@ socketIO.on('connection', async (socket: Socket) => {
 
   console.log(`⚡: ${userId} user just connected to ${sessionId}!`);
   const sessionQuestionId = await sessionStore.getQuestionId(sessionId);
+  console.log('sessionQuestionId', sessionQuestionId);
 
   socket.emit('session', {
     sessionId,

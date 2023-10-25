@@ -57,11 +57,11 @@ function App() {
           <ThemeProvider
             theme={theme == 'light' ? hannahTheme : hannahThemeDark}
           >
-            <MainNavigationBar />
             <CssBaseline />
+            <MainNavigationBar />
             <Box
               display="flex"
-              height={'90vh'}
+              minHeight={'95vh'}
               width={'100vw'}
               alignItems="center"
               justifyContent="center"

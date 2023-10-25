@@ -4,7 +4,8 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  Stack
+  Stack,
+  Paper
 } from '@mui/material';
 import Editor, { OnChange } from '@monaco-editor/react';
 import { useContext, useState, useEffect } from 'react';
@@ -19,7 +20,6 @@ const Playground = () => {
 
   useEffect(() => {
     // Listen for server updates to editor content
-    console.log('received code update');
     socket.on('updateEditor', (data) => {
       setEditorContent(data.code);
     });
@@ -30,7 +30,6 @@ const Playground = () => {
   }, []);
 
   const handleEditorChange: OnChange = (newValue) => {
-    // Emit socket.io event when editor content changes
     if (socket) {
       socket.emit('editorChange', {
         code: newValue
@@ -39,32 +38,41 @@ const Playground = () => {
   };
 
   return (
-    <>
-      <Stack>
-        <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 180 }} size="small">
+    <Paper
+      elevation={3}
+      sx={{ borderRadius: '1em', padding: '1em', height: '100%' }}
+    >
+      <Stack spacing={2}>
+        <FormControl
+          sx={{ m: 1, minWidth: '50%', maxWidth: '100%' }}
+          size="small"
+        >
           <InputLabel>Language</InputLabel>
           <Select
             value={language}
             label="Language"
             onChange={(e: SelectChangeEvent) => setLanguage(e.target.value)}
+            sx={{ borderRadius: '0.5em' }}
           >
             {languageOptions.map((lang) => (
-              <MenuItem value={lang}>{lang}</MenuItem>
+              <MenuItem value={lang} key={lang}>
+                {lang}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <div style={{ fontSize: 20 }}>
+        <div style={{ borderRadius: '1em', overflow: 'hidden' }}>
           <Editor
-            height="90vh"
+            height="80vh"
             defaultLanguage={language}
             language={language}
             value={editorContent}
-            theme={theme == 'light' ? 'light' : 'vs-dark'}
+            theme={theme === 'light' ? 'light' : 'vs-dark'}
             onChange={handleEditorChange}
           />
         </div>
       </Stack>
-    </>
+    </Paper>
   );
 };
 

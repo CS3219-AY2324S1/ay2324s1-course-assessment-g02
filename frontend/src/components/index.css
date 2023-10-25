@@ -1,6 +1,7 @@
 /* Styles for the Paper component to cover the container */
 .full-screen-paper {
-  padding: 20 20 20 20;
+  padding-left: 10px;
+  padding-right: 10px;
   width: 100vw;
   height: 100vh;
   display: 'flex';

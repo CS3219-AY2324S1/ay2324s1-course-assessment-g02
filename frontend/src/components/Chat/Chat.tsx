@@ -8,26 +8,28 @@ interface ChatProps {
 }
 
 const Chat = (props: ChatProps) => {
-  const isConnected = props.isConnected; // Replace with your logic
+  const isConnected = props.isConnected;
 
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '85vh'
+        height: '85vh',
+        borderRadius: '1em'
       }}
     >
       <Paper
         sx={{
-          flex: 1, // This makes it stretch to take available space
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           overflowY: 'scroll',
           padding: '1em',
           margin: '0.5em 0.25em 0.25em 0.5em',
-          justifyContent: 'flex-end' // Aligns content to the bottom
+          justifyContent: 'flex-end',
+          borderRadius: '1em'
         }}
       >
         <ChatBox isConnected={isConnected} userEmail={props.userEmail} />

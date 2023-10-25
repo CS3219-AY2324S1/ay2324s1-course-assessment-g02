@@ -11,6 +11,7 @@ export async function fetchQuestions() {
 }
 
 export const getQuestion = async (id: number): Promise<AxiosResponse> => {
+  console.log('getting question');
   const response: AxiosResponse<QuestionSchema> = await axios.get(
     questionsUrl + '/' + id
   );
