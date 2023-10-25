@@ -6,15 +6,37 @@ import {
   SelectChangeEvent,
   Stack
 } from '@mui/material';
-import Editor from '@monaco-editor/react';
-import { useContext, useState } from 'react';
+import Editor, { OnChange } from '@monaco-editor/react';
+import { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '../../contexts/theme-context';
+import { socket } from '../../services/socket.js';
 
 const Playground = () => {
-
   const { theme } = useContext(ThemeContext);
+  const [editorContent, setEditorContent] = useState('# Enter code here');
   const [language, setLanguage] = useState('python');
   const languageOptions = ['python', 'javascript', 'cpp'];
+
+  useEffect(() => {
+    // Listen for server updates to editor content
+    console.log('received code update');
+    socket.on('updateEditor', (data) => {
+      setEditorContent(data.code);
+    });
+
+    return () => {
+      socket.off('updateEditor');
+    };
+  }, []);
+
+  const handleEditorChange: OnChange = (newValue) => {
+    // Emit socket.io event when editor content changes
+    if (socket) {
+      socket.emit('editorChange', {
+        code: newValue
+      });
+    }
+  };
 
   return (
     <>
@@ -36,8 +58,9 @@ const Playground = () => {
             height="90vh"
             defaultLanguage={language}
             language={language}
-            defaultValue="# Enter code here"
+            value={editorContent}
             theme={theme == 'light' ? 'light' : 'vs-dark'}
+            onChange={handleEditorChange}
           />
         </div>
       </Stack>

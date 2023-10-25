@@ -1,16 +1,14 @@
 import { Chip, Divider, Stack, Typography, Box } from '@mui/material';
-import { Complexity } from '../../interfaces/question';
-import useQuestion from '../../hooks/useQuestion';
-import Loading from '../Loading';
+import {
+  Category,
+  Complexity,
+  Question,
+  dummyQuestion
+} from '../../interfaces/question';
 
-interface ProblemDescriptionProps {
-  questionId: number;
-}
+const ProblemDescription = () => {
+  const question: Question = dummyQuestion;
 
-const ProblemDescription = (props: ProblemDescriptionProps) => {
-  const { question, isLoading } = useQuestion(props.questionId);
-
-  console.log('question is', question);
   const complexityColorMap = new Map<
     Complexity,
     'success' | 'warning' | 'error'
@@ -20,9 +18,7 @@ const ProblemDescription = (props: ProblemDescriptionProps) => {
     [Complexity.Hard, 'error']
   ]);
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
       <Stack spacing={1}>
         <Typography variant="h6" gutterBottom component="div">
@@ -34,7 +30,7 @@ const ProblemDescription = (props: ProblemDescriptionProps) => {
             variant="outlined"
             color={complexityColorMap.get(question.complexity)}
           />
-          {question.categories.map((category: string) => (
+          {question.categories.map((category: Category) => (
             <Chip label={category} size="small" sx={{ alignSelf: 'center' }} />
           ))}
         </Stack>

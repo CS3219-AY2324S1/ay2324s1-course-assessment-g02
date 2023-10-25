@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import QuestionTable from '../components/Questions/QuestionTable';
-import { fetchQuestions } from '../constants/api/questionsApi';
+import { fetchQuestions } from '../services/questions';
 import { useQuery } from 'react-query';
 import Loading from '../components/Loading';
 import AuthProvider from '../components/Auth/AuthProvider';

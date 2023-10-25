@@ -20,7 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ProgrammingLanguages } from '../../constants/enums';
 import Loading from '../Loading';
 import { useState } from 'react';
-import { updateUser } from '../../constants/api/userApi';
+import { updateUser } from '../../services/user';
 
 interface EditUserModalProps {
   id: number;

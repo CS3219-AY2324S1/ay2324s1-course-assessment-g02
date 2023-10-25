@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getUser } from '../constants/api/userApi';
+import { getUser } from '../services/user';
 import { useQuery } from 'react-query';
 
 const useUserData = (id: number) => {

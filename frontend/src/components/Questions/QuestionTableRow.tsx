@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import { QuestionSchema } from '../../constants/api/apiSchema';
+import { QuestionSchema } from '../../services/apiSchema';
 
 function QuestionTableRow(props: {
   question: QuestionSchema;

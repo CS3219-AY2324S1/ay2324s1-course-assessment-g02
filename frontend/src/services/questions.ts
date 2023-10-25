@@ -12,7 +12,7 @@ export async function fetchQuestions() {
 
 export const getQuestion = async (id: number): Promise<AxiosResponse> => {
   const response: AxiosResponse<QuestionSchema> = await axios.get(
-    questionsUrl + id
+    questionsUrl + '/' + id
   );
   return response;
 };

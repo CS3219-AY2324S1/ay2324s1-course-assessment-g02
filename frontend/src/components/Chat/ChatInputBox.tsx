@@ -1,20 +1,13 @@
-
-import {
-  Box,
-  Button,
-  TextField,
-} from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { useState } from 'react';
-import { socket } from '../../socket.js';
+import { socket } from '../../services/socket.js';
 
 const ChatInputBox = () => {
   const [message, setMessage] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`Submitting message: ${message}`);
-    console.log(socket.auth)
-    const name = socket.auth ? socket.auth.email : 'Anonymous' // should always have a user
+    const name = socket.auth ? socket.auth.email : 'Anonymous'; // should always have a user
     if (message.length > 0) {
       socket.emit('chat message', {
         message: message,

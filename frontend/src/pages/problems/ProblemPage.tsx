@@ -1,6 +1,6 @@
 import Playground from '../../components/Problems/Playground';
 import { Stack, Box, Paper } from '@mui/material';
-import ProblemDescription from '../../components/Problems/ProblemDescription';
+import ProblemDescription from '../../components/Problems/TestProblemDescription';
 import { useEffect } from 'react';
 
 const ProblemPage = () => {

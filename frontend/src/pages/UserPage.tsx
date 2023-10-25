@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getIdFromUserId } from '../constants/api/userApi';
+import { getIdFromUserId } from '../services/user';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import UserProfileContainer from '../components/User/UserProfileContainer';

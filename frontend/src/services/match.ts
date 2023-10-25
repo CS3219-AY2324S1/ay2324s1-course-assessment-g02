@@ -3,7 +3,7 @@ import { MatchResponse } from '../interfaces/matchResponse';
 
 const matchUrl: string = `${import.meta.env.VITE_APP_MATCH_BACKEND_URL}/match/`;
 
-export const getMatch = async (
+export const findMatch = async (
   id: string,
   difficulty: string,
   language: string
@@ -16,6 +16,12 @@ export const getMatch = async (
     }
   });
   return res.data as MatchResponse;
+};
+
+export const getUserSession = async (id: string) => {
+  console.log('getting user session');
+  const res = await axios.get(matchUrl + 'get', { params: { id: id } });
+  return res;
 };
 
 export const deleteMatch = async (

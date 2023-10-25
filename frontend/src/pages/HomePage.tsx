@@ -1,7 +1,7 @@
 import { Grid, Box, Typography } from '@mui/material';
 import { QuestionsPageButton } from '../components/Buttons/QuestionsPageButton';
 import { ProblemsPageButton } from '../components/Buttons/ProblemsPageButton';
-import MatchPage from './MatchPage';
+import { MatchPageButton } from '../components/Buttons/MatchPageButton';
 
 function HomePage() {
   return (
@@ -35,7 +35,7 @@ function HomePage() {
             <QuestionsPageButton />
           </Grid>
           <Grid item xs="auto">
-            <MatchPage />
+            <MatchPageButton />
           </Grid>
         </Grid>
       </Grid>

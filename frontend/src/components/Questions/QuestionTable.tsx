@@ -16,11 +16,8 @@ import React from 'react';
 import AddQuestionModal from './AddQuestionModal';
 import QuestionTableRow from './QuestionTableRow';
 import '../index.css';
-import { QuestionSchema } from '../../constants/api/apiSchema';
-import {
-  deleteQuestionApi,
-  createQuestion
-} from '../../constants/api/questionsApi';
+import { QuestionSchema } from '../../services/apiSchema';
+import { deleteQuestionApi, createQuestion } from '../../services/questions';
 
 function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   const [page, setPage] = useState(0);

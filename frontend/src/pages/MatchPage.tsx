@@ -6,8 +6,9 @@ import { ProgrammingLanguages, Difficulties } from '../constants/enums';
 import { sessionText } from '../constants/text';
 import LoadingIndicator from '../components/LoadingIndicator';
 import SelectionMenu from '../components/SelectionMenu';
-import { deleteMatch, getMatch } from '../services/match';
+import { deleteMatch, findMatch } from '../services/match';
 import AuthProvider from '../components/Auth/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const modalStyle = {
   position: 'absolute',
@@ -30,6 +31,7 @@ function MatchingPage(props: { user }): React.ReactElement {
   const [count, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const closeModal = () => {
     openModal(false);
@@ -48,8 +50,9 @@ function MatchingPage(props: { user }): React.ReactElement {
     openModal(false);
     setIsRetrying(false);
     setCount(0);
-    setIsSuccess(false);
-    setIsLoading(true);
+    setIsSuccess(true);
+    setIsLoading(false);
+    navigate('/interview');
   };
 
   useInterval(
@@ -64,7 +67,7 @@ function MatchingPage(props: { user }): React.ReactElement {
 
       console.log(`Counter: ${count}`);
 
-      getMatch(user.id, difficulty, language).then((response) => {
+      findMatch(user.id, difficulty, language).then((response) => {
         if (response.status) {
           setIsLoading(false);
           setIsSuccess(true);
