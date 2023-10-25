@@ -65,7 +65,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   };
 
   return (
-    <Paper elevation={2} className="full-screen-paper">
+    <Paper elevation={3} className="full-screen-paper">
       <AddQuestionModal
         addQuestion={addQuestion}
         questions={data}
@@ -96,8 +96,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <TableContainer component={Paper}>
-        {' '}
+      <TableContainer component={Paper} sx={{ borderRadius: '1em' }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
