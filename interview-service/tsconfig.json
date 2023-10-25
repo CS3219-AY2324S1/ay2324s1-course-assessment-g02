@@ -26,6 +26,6 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["./*.ts"],
+  "include": ["./*.ts", "src/socket/sessionStore.ts", "index.ts"],
   "exclude": ["**/node_modules", "dist"]
 }
