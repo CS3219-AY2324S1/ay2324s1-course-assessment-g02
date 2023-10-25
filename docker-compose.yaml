@@ -27,7 +27,7 @@ services:
       context: ./interview-service
     restart: always
     env_file:
-      - ./interview-service/.env
+      - ./interview-service/.env.docker
     ports:
       - ${SOCKET_PORT}:${SOCKET_PORT}
     networks:

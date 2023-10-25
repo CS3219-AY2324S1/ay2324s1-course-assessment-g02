@@ -3,19 +3,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const questionsUrl = process.env.QUESTIONS_BACKEND_URL || 'localhost';
 const port = process.env.QUESTIONS_PORT || 3000;
 
 interface QuestionSchema {
   questionId: number;
 }
 
-const questionsUrl: string = `http://localhost:${port}/questions/random`;
-
 const getRandomQuestion = async (
   complexity: string
 ): Promise<AxiosResponse> => {
   const response: AxiosResponse<QuestionSchema> = await axios.get(
-    `${questionsUrl}?complexity=${complexity}`
+    `http://${questionsUrl}:${port}/questions/random?complexity=${complexity}`
   );
   console.log('response', response);
   return response;
