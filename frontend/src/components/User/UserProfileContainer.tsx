@@ -1,5 +1,4 @@
-import { Paper, Grid, ButtonBase, Typography, IconButton } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Paper, Grid, Typography, IconButton } from '@mui/material';
 import { useState } from 'react';
 import useUserData from '../../hooks/useUserData';
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,16 +6,8 @@ import EditUserModal from './EditUserModal';
 import NotFound from '../NotFound';
 import Loading from '../Loading';
 
-const Img = styled('img')({
-  margin: 'auto',
-  display: 'block',
-  maxWidth: '100%',
-  maxHeight: '100%'
-});
-
 const UserProfileContainer = (props: { id: number; currentUser: number }) => {
   // shift to useUserData in the future after implementing, wishful thinking for now
-  const [userImageSrc, setUserImageSrc] = useState('');
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
   const editable = props.currentUser === (props.id as number) ? true : false;
 
@@ -51,11 +42,6 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
         userData={userData}
       />
       <Grid container spacing={2}>
-        <Grid item>
-          <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img alt="complex" src={userImageSrc} />
-          </ButtonBase>
-        </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import QuestionTable from '../components/Questions/QuestionTable';
-import { fetchQuestions } from '../constants/api/questionsApi';
+import { fetchQuestions } from '../services/questions';
 import { useQuery } from 'react-query';
 import Loading from '../components/Loading';
 import AuthProvider from '../components/Auth/AuthProvider';
@@ -26,18 +26,20 @@ function QuestionPage(props: { user }): React.ReactElement {
     );
 
   return (
-    <Box
-      mb={2}
-      display="flex"
-      flexDirection="column"
-      height="93vh" // fixed the height
-      style={{
-        border: '2px solid black',
-        overflow: 'hidden',
-        overflowY: 'scroll'
-      }}
-    >
-      <QuestionTable questionData={questionData} user={props.user} />
+    <Box>
+      <Paper
+        elevation={5}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          padding: '2rem',
+          border: '2px solid black',
+          overflowY: 'scroll'
+        }}
+      >
+        <QuestionTable questionData={questionData} user={props.user} />
+      </Paper>
     </Box>
   );
 }

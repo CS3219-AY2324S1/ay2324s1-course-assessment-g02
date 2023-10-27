@@ -1,20 +1,13 @@
-
-import {
-  Box,
-  Button,
-  TextField,
-} from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { useState } from 'react';
-import { socket } from '../../socket.js';
+import { socket } from '../../services/socket.js';
 
 const ChatInputBox = () => {
   const [message, setMessage] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`Submitting message: ${message}`);
-    console.log(socket.auth)
-    const name = socket.auth ? socket.auth.email : 'Anonymous' // should always have a user
+    const name = socket.auth ? socket.auth.email : 'Anonymous';
     if (message.length > 0) {
       socket.emit('chat message', {
         message: message,
@@ -30,15 +23,25 @@ const ChatInputBox = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ borderRadius: '1em', display: 'flex' }}
+    >
       <TextField
         id="message"
         label="Message"
         variant="outlined"
         value={message}
         onChange={handleChange}
+        sx={{ borderRadius: '0.5em', flex: 1 }}
       />
-      <Button type="submit" variant="contained">
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{ borderRadius: '0.5em', marginLeft: '1em' }}
+      >
+        {' '}
         Send
       </Button>
     </Box>

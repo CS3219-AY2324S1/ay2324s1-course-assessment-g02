@@ -17,7 +17,7 @@ const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box display="flex">
       <AppBar position="sticky" enableColorOnDark>
         <Toolbar variant="dense">
           <HomeButton />

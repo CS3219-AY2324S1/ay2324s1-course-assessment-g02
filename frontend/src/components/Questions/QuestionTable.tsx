@@ -1,26 +1,26 @@
 import { useState } from 'react';
 import {
+  Box,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TableRow,
   TablePagination,
-  TableRow
+  Typography,
+  Toolbar,
+  Tooltip,
+  Button
 } from '@mui/material';
-
-import { Button, Toolbar, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import React from 'react';
 import AddQuestionModal from './AddQuestionModal';
 import QuestionTableRow from './QuestionTableRow';
 import '../index.css';
-import { QuestionSchema } from '../../constants/api/apiSchema';
-import {
-  deleteQuestionApi,
-  createQuestion
-} from '../../constants/api/questionsApi';
+import { QuestionSchema } from '../../services/apiSchema';
+import { deleteQuestionApi, createQuestion } from '../../services/questions';
 
 function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   const [page, setPage] = useState(0);
@@ -65,7 +65,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   };
 
   return (
-    <Paper className="full-screen-paper">
+    <Paper elevation={3} className="full-screen-paper">
       <AddQuestionModal
         addQuestion={addQuestion}
         questions={data}
@@ -75,12 +75,15 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
       <Toolbar>
         <Tooltip title="Add Question">
           <Button
-            variant="outlined"
+            variant="contained"
+            color="primary"
             startIcon={<AddIcon />}
-            disabled={props.user ? props.user.email != 'admin@gmail.com' : true}
+            disabled={
+              props.user ? props.user.email !== 'admin@gmail.com' : true
+            }
             onClick={() => setAddQuestionModalOpen(true)}
           >
-            {'Add Question'}
+            Add Question
           </Button>
         </Tooltip>
       </Toolbar>
@@ -93,15 +96,23 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <TableContainer>
+      <TableContainer component={Paper} sx={{ borderRadius: '1em' }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell />
-              <TableCell>Title</TableCell>
-              <TableCell>Categories</TableCell>
-              <TableCell>Complexity</TableCell>
-              <TableCell />
+              <TableCell></TableCell>
+              <TableCell>
+                <Typography variant="subtitle1">Title</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle1">Categories</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle1">Complexity</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle1">Actions</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

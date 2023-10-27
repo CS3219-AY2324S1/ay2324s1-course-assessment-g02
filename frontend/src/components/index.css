@@ -1,12 +1,14 @@
 /* Styles for the Paper component to cover the container */
 .full-screen-paper {
-  padding: 20 20 20 20;
+  padding-left: 20px;
+  padding-right: 20px;
   width: 100vw;
   height: 100vh;
   display: 'flex';
   overflow: 'hidden';
   overflow-y: 'scroll';
   flex-direction: 'column';
+  border-radius: '1em';
 }
 
 @keyframes spinner {

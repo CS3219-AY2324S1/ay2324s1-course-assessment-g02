@@ -31,10 +31,11 @@ export default class RedisCacheService {
     return this.client.get(key);
   }
 
-  async set(key: string, value: string, ttl: number = 7200): Promise<void> {
-    console.log(`Setting ${key} to ${value} with TTL ${ttl}`);
-    await this.client.set(key, value, {
-      EX: ttl // set the expiry time, default = 2 hours = 7200s
-    });
+  async set(key: string, value: string): Promise<void> {
+    await this.client.set(key, value);
+  }
+
+  async delete(key: string): Promise<void> {
+    await this.client.del(key);
   }
 }

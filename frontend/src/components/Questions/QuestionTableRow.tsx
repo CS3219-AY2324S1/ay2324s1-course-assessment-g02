@@ -1,4 +1,4 @@
-import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
+import React from 'react';
 import {
   TableRow,
   TableCell,
@@ -10,8 +10,8 @@ import {
   Box,
   Typography
 } from '@mui/material';
-import React from 'react';
-import { QuestionSchema } from '../../constants/api/apiSchema';
+import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
+import { QuestionSchema } from '../../services/apiSchema';
 
 function QuestionTableRow(props: {
   question: QuestionSchema;
@@ -24,6 +24,10 @@ function QuestionTableRow(props: {
     <React.Fragment>
       <TableRow
         hover
+        sx={{
+          '& > *': { borderBottom: 'unset' },
+          '&:hover': { backgroundColor: '#f5f5f5', borderRadius: '4px' }
+        }}
         role="checkbox"
         tabIndex={-1}
         key={question.id}
@@ -38,21 +42,32 @@ function QuestionTableRow(props: {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell>{question.title}</TableCell>
+        <TableCell>
+          <Typography variant="body2">{question.title}</Typography>
+        </TableCell>
         <TableCell>
           <Stack direction="row" spacing={1}>
             {question.categories.map((category) => (
-              <Chip label={category.name} />
+              <Chip
+                label={category.name}
+                variant="outlined"
+                sx={{ borderRadius: '12px' }}
+              />
             ))}
           </Stack>
         </TableCell>
         <TableCell>
-          <Chip label={question.complexity} />
+          <Chip
+            label={question.complexity}
+            variant="outlined"
+            sx={{ borderRadius: '12px' }}
+          />
         </TableCell>
         <TableCell align="center">
           <Button
             variant="outlined"
             color="error"
+            sx={{ borderRadius: '12px' }}
             onClick={(e) => {
               e.stopPropagation();
               deleteQuestion(question.id);
@@ -64,18 +79,21 @@ function QuestionTableRow(props: {
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+          <Collapse
+            in={open}
+            timeout="auto"
+            unmountOnExit
+            sx={{ borderRadius: '4px', backgroundColor: '#f5f5f5' }}
+          >
             <Box sx={{ margin: 1 }}>
-              <Stack>
-                <Typography variant="h6" gutterBottom component="div">
-                  Description
-                </Typography>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: question.body.replace(/\n/g, '<br />')
-                  }}
-                />
-              </Stack>
+              <Typography variant="h6" gutterBottom component="div">
+                Description
+              </Typography>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: question.body.replace(/\n/g, '<br />')
+                }}
+              />
             </Box>
           </Collapse>
         </TableCell>

@@ -18,9 +18,9 @@ import HomePage from './pages/HomePage';
 import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
 import MatchPage from './pages/MatchPage';
+import InterviewPage from './pages/InterviewPage';
 import Loading from './components/Loading';
 import { useDarkMode } from './hooks/useDarkMode';
-import SocketChatPageTest from './pages/problems/SocketChatPageTest';
 
 function App() {
   const { theme, toggleTheme, componentMounted } = useDarkMode();
@@ -57,11 +57,11 @@ function App() {
           <ThemeProvider
             theme={theme == 'light' ? hannahTheme : hannahThemeDark}
           >
-            <MainNavigationBar />
             <CssBaseline />
+            <MainNavigationBar />
             <Box
               display="flex"
-              height={'100vh'}
+              minHeight={'95vh'}
               width={'100vw'}
               alignItems="center"
               justifyContent="center"
@@ -77,12 +77,11 @@ function App() {
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   {/* TODO: REMOVE TEST PATH SOCKET */}
-                  <Route path="/socket" element={<SocketChatPageTest />} />
                   <Route path="/user" element={<UserPageMain />} />
                   <Route path="/user/:id" element={<UserProfilesPage />} />
                   <Route path="/questions" element={<QuestionsPage />} />
                   <Route path="/match" element={<MatchPage />} />
-                  {/* TODO: Change this to dynamic routing */}
+                  <Route path="/interview" element={<InterviewPage />} />
                   <Route path="/problems" element={<ProblemPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

@@ -2,7 +2,7 @@ export interface Question {
   id: number;
   title: string;
   complexity: Complexity;
-  categories: Category[];
+  categories: string[];
   description: string;
 }
 
