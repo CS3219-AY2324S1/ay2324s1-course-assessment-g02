@@ -94,4 +94,24 @@ export default class sessionStore {
     console.log('Deleting session:', `session:${sessionId}`);
     await this.redisService.delete(`session:${sessionId}`);
   }
+
+  async submitSessionCode(sessionId: string, code: string): Promise<void> {
+    const sessionData = await this.findSession(sessionId);
+    if (sessionData) {
+      const language = sessionData.language;
+      const difficulty = sessionData.difficulty;
+      if (difficulty !== undefined && language !== undefined) {
+        const languageDifficultyData = await this.redisService.get(`${difficulty}_${language}`);
+        if (languageDifficultyData) {
+          const languageDifficultyMap = JSON.parse(languageDifficultyData);
+          delete languageDifficultyMap[sessionData.id1];
+          delete languageDifficultyMap[sessionData.id2];
+          await this.redisService.set(`${difficulty}_${language}`, JSON.stringify(languageDifficultyMap));
+        }
+      }
+      await this.redisService.delete(`user:${sessionData.id1}`);
+      await this.redisService.delete(`user:${sessionData.id2}`);
+    }
+    await this.redisService.delete(`session:${sessionId}`);
+  }
 }
