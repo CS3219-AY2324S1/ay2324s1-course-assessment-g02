@@ -91,6 +91,13 @@ socketIO.on('connection', async (socket: Socket) => {
     sessionStore.saveSessionCode(sessionId, content.code);
   });
 
+  socket.on('submitCode', (code: string) => {
+    console.log('Code submission detected');
+    sessionStore.submitSessionCode(sessionId, code);
+    socket.emit('submitCodeSuccess');
+    socket.to(sessionId).emit('submitCodeSuccess');
+  });
+
   socket.on('disconnect', async () => {
     console.log('🔥: A user disconnected');
     const matchingSockets = await socketIO.in(userId).allSockets();

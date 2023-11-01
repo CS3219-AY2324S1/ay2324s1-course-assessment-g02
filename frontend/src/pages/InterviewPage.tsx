@@ -45,7 +45,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
       <Box flexGrow={1} sx={{ margin: '0.5em', minWidth: '25%' }}>
         <Paper
           elevation={5}
-          sx={{ height: '100%', padding: '1em', overflowY: 'auto' }}
+          sx={{ height: '100%', overflowY: 'auto' }}
         >
           <Playground />
         </Paper>

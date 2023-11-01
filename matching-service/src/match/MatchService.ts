@@ -72,7 +72,9 @@ export default class MatchService {
             id2: unmatchedId,
             sessionId,
             questionId: question.id,
-            startTime: Date.now()
+            startTime: Date.now(),
+            difficulty: difficulty,
+            language: language
           })
         );
       }
