@@ -65,13 +65,16 @@ const Playground = () => {
         open={codeSubmitDialogOpen}
         handleClose={handleSubmitDialogClose}
       />
-      <Paper
-        elevation={3}
-        sx={{ borderRadius: '1em', padding: '1em', height: '100%' }}
-      >
+      <Box sx={{ flex: 1, m: '1em' }}>
         <Stack spacing={2}>
           <FormControl
-            sx={{ m: 1, minWidth: '50%', maxWidth: '100%' }}
+            sx={{
+              minWidth: '50%',
+              maxWidth: '100%',
+              p: 0,
+              m: 0,
+              whiteSpace: 'pre-wrap'
+            }}
             size="small"
           >
             <InputLabel>Language</InputLabel>
@@ -102,7 +105,7 @@ const Playground = () => {
             Submit Code
           </Button>
         </Stack>
-      </Paper>
+      </Box>
     </>
   );
 };

@@ -58,34 +58,36 @@ function App() {
             theme={theme == 'light' ? hannahTheme : hannahThemeDark}
           >
             <CssBaseline />
-            <MainNavigationBar />
             <Box
               display="flex"
-              minHeight={'95vh'}
-              width={'100vw'}
-              alignItems="center"
-              justifyContent="center"
+              flexDirection="column"
+              height="100vh"
+              width="100vw"
             >
-              {!session && (
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="*" element={<Navigate to="/auth" replace />} />
-                </Routes>
-              )}
-              {session && (
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  {/* TODO: REMOVE TEST PATH SOCKET */}
-                  <Route path="/user" element={<UserPageMain />} />
-                  <Route path="/user/:id" element={<UserProfilesPage />} />
-                  <Route path="/questions" element={<QuestionsPage />} />
-                  <Route path="/match" element={<MatchPage />} />
-                  <Route path="/interview" element={<InterviewPage />} />
-                  <Route path="/problems" element={<ProblemPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              )}
+              <MainNavigationBar />
+
+              <Box flexGrow={1} display="flex" flexDirection="column">
+                {!session && (
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/auth" element={<AuthPage />} />
+                    <Route path="*" element={<Navigate to="/auth" replace />} />
+                  </Routes>
+                )}
+                {session && (
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    {/* TODO: REMOVE TEST PATH SOCKET */}
+                    <Route path="/user" element={<UserPageMain />} />
+                    <Route path="/user/:id" element={<UserProfilesPage />} />
+                    <Route path="/questions" element={<QuestionsPage />} />
+                    <Route path="/match" element={<MatchPage />} />
+                    <Route path="/interview" element={<InterviewPage />} />
+                    <Route path="/problems" element={<ProblemPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                )}
+              </Box>
             </Box>
           </ThemeProvider>
         </ThemeContext.Provider>

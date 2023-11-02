@@ -1,5 +1,5 @@
 import Playground from '../components/Problems/Playground';
-import { Paper, Box } from '@mui/material';
+import { Paper, Box, Stack } from '@mui/material';
 import ProblemDescription from '../components/Problems/ProblemDescription';
 import { useEffect } from 'react';
 import {
@@ -29,35 +29,56 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
   return !session || !isConnected ? (
     <Loading />
   ) : (
-    <Box
-      display="flex"
-      flexDirection="row"
-      sx={{ width: '100%', height: '95vh' }}
-    >
-      <Box flexGrow={1} sx={{ margin: '0.5em', minWidth: '25%' }}>
-        <Paper
-          elevation={5}
-          sx={{ height: '100%', padding: '1em', overflowY: 'auto' }}
-        >
-          <ProblemDescription questionId={questionId} />
-        </Paper>
-      </Box>
-      <Box flexGrow={1} sx={{ margin: '0.5em', minWidth: '25%' }}>
-        <Paper
-          elevation={5}
-          sx={{ height: '100%', overflowY: 'auto' }}
-        >
-          <Playground />
-        </Paper>
-      </Box>
-      <Box flexGrow={1} sx={{ margin: '0.5em', minWidth: '25%' }}>
-        <Paper
-          elevation={5}
-          sx={{ height: '100%', padding: '1em', overflowY: 'auto' }}
-        >
-          <Chat isConnected={isConnected} userEmail={props.user.email} />
-        </Paper>
-      </Box>
+    <Box display="flex" flexGrow={1}>
+      <Stack
+        direction="row"
+        spacing={0.5}
+        style={{
+          height: 'calc(100vh - 64px)',
+          width: '100%',
+          padding: '0.5em',
+          overflowY: 'scroll'
+        }}
+      >
+        <Box width="33.33%" sx={{ h: '100%', p: '0.5em' }}>
+          <Paper
+            elevation={5}
+            style={{
+              height: '100%',
+              overflowY: 'scroll',
+              borderRadius: '1em'
+            }}
+          >
+            <ProblemDescription questionId={questionId} />
+          </Paper>
+        </Box>
+
+        <Box width="33.33%" sx={{ h: '100%', p: '0.5em' }}>
+          <Paper
+            elevation={5}
+            style={{
+              height: '100%',
+              overflowY: 'scroll',
+              borderRadius: '1em'
+            }}
+          >
+            <Playground />
+          </Paper>
+        </Box>
+
+        <Box width="33.33%" sx={{ h: '100%', p: '0.5em' }}>
+          <Paper
+            elevation={5}
+            style={{
+              height: '100%',
+              overflowY: 'scroll',
+              borderRadius: '1em'
+            }}
+          >
+            <Chat isConnected={isConnected} userEmail={props.user.email} />
+          </Paper>
+        </Box>
+      </Stack>
     </Box>
   );
 };
