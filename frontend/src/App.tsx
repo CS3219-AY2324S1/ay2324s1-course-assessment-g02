@@ -66,7 +66,13 @@ function App() {
             >
               <MainNavigationBar />
 
-              <Box flexGrow={1} display="flex" flexDirection="column">
+              <Box
+                flexGrow={1}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+              >
                 {!session && (
                   <Routes>
                     <Route path="/" element={<HomePage />} />
