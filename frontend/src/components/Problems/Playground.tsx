@@ -15,6 +15,7 @@ import { ThemeContext } from '../../contexts/theme-context';
 import { socket } from '../../services/socket.js';
 import CodeSubmissionDialog from './CodeSubmissionDialog';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Playground = () => {
   const { theme } = useContext(ThemeContext);
@@ -31,7 +32,8 @@ const Playground = () => {
     });
 
     socket.on('submitCodeSuccess', () => {
-      setCodeSubmitDialogOpen(true);
+      toast('🍬 You Candy Crushed your Interview! 🍬');
+      navigate('/');
     });
 
     return () => {
@@ -48,6 +50,10 @@ const Playground = () => {
     }
   };
 
+  const handleCodeSubmitDialogOpen = () => {
+    setCodeSubmitDialogOpen(true);
+  };
+
   const handleCodeSubmit = () => {
     if (socket) {
       socket.emit('submitCode', editorContent);
@@ -56,13 +62,13 @@ const Playground = () => {
 
   const handleSubmitDialogClose = () => {
     setCodeSubmitDialogOpen(false);
-    navigate('/');
   };
 
   return (
     <>
       <CodeSubmissionDialog
         open={codeSubmitDialogOpen}
+        handleCodeSubmit={handleCodeSubmit}
         handleClose={handleSubmitDialogClose}
       />
       <Box sx={{ flex: 1, m: '1em' }}>
@@ -101,7 +107,7 @@ const Playground = () => {
               onChange={handleEditorChange}
             />
           </Box>
-          <Button variant="outlined" onClick={handleCodeSubmit}>
+          <Button variant="outlined" onClick={handleCodeSubmitDialogOpen}>
             Submit Code
           </Button>
         </Stack>
