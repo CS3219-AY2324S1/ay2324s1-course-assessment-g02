@@ -3,7 +3,7 @@ import { Typography, AppBar, Toolbar, Box, Button } from '@mui/material';
 import SignInOutButton from '../Auth/SignInOutButton';
 import { ThemeContext } from '../../contexts/theme-context';
 import { useContext } from 'react';
-import LoggedInProvider from '../Auth/LoggedInProvider';
+import AuthProvider from '../Auth/AuthProvider';
 import HomeButton from './HomeButton';
 import UserButton from './UserButton';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +43,9 @@ const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
 };
 
 const MainNavigationBar = (): JSX.Element => (
-  <LoggedInProvider>{(user) => <NavigationBar user={user} />}</LoggedInProvider>
+  <AuthProvider auth={false}>
+    {(user) => <NavigationBar user={user} />}
+  </AuthProvider>
 );
 
 export default MainNavigationBar;

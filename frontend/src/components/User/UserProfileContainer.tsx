@@ -1,28 +1,16 @@
 import { Paper, Grid, Typography, IconButton } from '@mui/material';
 import { useState } from 'react';
-import useUserData from '../../hooks/useUserData';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
-import NotFound from '../NotFound';
-import Loading from '../Loading';
 
-const UserProfileContainer = (props: { id: number; currentUser: number }) => {
-  // shift to useUserData in the future after implementing, wishful thinking for now
+const UserProfileContainer = (props: { currentUser: number; userData }) => {
+  const userData = props.userData;
+  const { id, userName, userPreferredLanguage, userPreferredComplexity } =
+    userData.user;
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
-  const editable = props.currentUser === (props.id as number) ? true : false;
-
-  const userData = useUserData(props.id as number);
-  const {
-    userName,
-    userPreferredComplexity,
-    isLoading,
-    userPreferredLanguage,
-    isError
-  } = userData;
-
-  if (isLoading) return <Loading />;
-
-  if (isError) return <NotFound />;
+  console.log(userData);
+  const editable =
+    props.currentUser === (userData.user.id as number) ? true : false;
 
   return (
     <Paper
@@ -36,7 +24,7 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
       }}
     >
       <EditUserModal
-        id={props.id}
+        id={id}
         open={editUserModalOpen}
         setOpen={setEditUserModalOpen}
         userData={userData}
@@ -55,7 +43,7 @@ const UserProfileContainer = (props: { id: number; currentUser: number }) => {
                 Preferred Question Complexity: {userPreferredComplexity}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                ID: {props.id}
+                ID: {id}
               </Typography>
             </Grid>
             <Grid item>

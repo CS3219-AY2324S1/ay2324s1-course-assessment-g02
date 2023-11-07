@@ -4,49 +4,65 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import UserProfileContainer from '../components/User/UserProfileContainer';
 import Loading from '../components/Loading';
+import NotFound from '../components/NotFound';
 import AuthProvider from '../components/Auth/AuthProvider';
+import GetUserIdProvider from '../components/Auth/GetUserIdProvider';
+import useUserData from '../hooks/useUserData';
+import { Stack } from '@mui/material';
+// import UserHistoryTable from 'components/User/UserHistoryTable';
+
 interface UserPageProps {
-  userId: string;
-  id?;
+  userId: number;
+  id;
 }
 
 const UserPage = (props: UserPageProps): JSX.Element => {
-  const [id, setId] = useState<number>(0);
+  // To get the authenticated user's id from database
+  // Get the user id of props.id
+  const userData = useUserData({ id: props.id });
+  const {
+    user,
+    isLoading: useUserIsLoading,
+    isError: useUserIsError
+  } = userData;
 
-  const { isLoading } = useQuery(
-    ['userData'],
-    () => getIdFromUserId(props.userId),
-    {
-      enabled: true,
-      retry: 2,
-      cacheTime: 0,
-      onSuccess(res) {
-        setId(res.data);
-      },
-      onError: (error) => {
-        console.log(error);
-      }
-    }
-  );
+  if (useUserIsLoading) return <Loading />;
 
-  if (isLoading) return <Loading />;
+  if (useUserIsError) return <NotFound />;
 
   return (
-    <UserProfileContainer currentUser={id} id={props.id ? props.id : id} />
+    // <Stack flexDirection='row'>
+    <UserProfileContainer userData={userData} currentUser={props.userId} />
   );
+  {
+    /* <UserHistoryTable userAttemptedQuestions={user.userAttemptedQuestions} /> */
+  }
+  {
+    /* </Stack> */
+  }
 };
 
 const UserProfilesPage = (): JSX.Element => {
   const { id } = useParams();
   return (
-    <AuthProvider>
-      {(user) => <UserPage userId={user.id} id={id} />}
+    <AuthProvider auth={true}>
+      {(user) => (
+        <GetUserIdProvider id={user.id}>
+          {(userId) => <UserPage userId={userId} id={id} />}
+        </GetUserIdProvider>
+      )}
     </AuthProvider>
   );
 };
 
 const UserPageMain = (): JSX.Element => (
-  <AuthProvider>{(user) => <UserPage userId={user.id} />}</AuthProvider>
+  <AuthProvider auth={true}>
+    {(user) => (
+      <GetUserIdProvider id={user.id}>
+        {(userId) => <UserPage userId={userId} id={userId} />}
+      </GetUserIdProvider>
+    )}
+  </AuthProvider>
 );
 
 export { UserPageMain, UserProfilesPage };
