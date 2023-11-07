@@ -5,7 +5,6 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  Paper,
   Button,
   Box
 } from '@mui/material';
@@ -34,6 +33,10 @@ const Playground = () => {
     socket.on('submitCodeSuccess', () => {
       toast('🍬 You Candy Crushed your Interview! 🍬');
       navigate('/');
+    });
+
+    socket.on('submitCodeFailure', () => {
+      toast.warn('Try submitting Again!');
     });
 
     return () => {
