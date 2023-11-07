@@ -11,11 +11,11 @@ userRouter.get(
   asyncHandler(async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({
       include: {
-        userFriends1: true,
-        userFriends2: true,
+        // userFriends1: true,
+        // userFriends2: true,
         attemptedQuestion1: true,
-        attemptedQuestion2: true,
-        badges: true
+        attemptedQuestion2: true
+        // badges: true
       }
     });
     res.status(200).json(users);
@@ -31,11 +31,33 @@ userRouter.get(
         id: Number(req.params.id)
       },
       include: {
-        userFriends1: true,
-        userFriends2: true,
-        attemptedQuestion1: true,
-        attemptedQuestion2: true,
-        badges: true
+        // userFriends1: true,
+        // userFriends2: true,
+        attemptedQuestion1: {
+          include: {
+            question: {
+              select: {
+                id: true,
+                title: true,
+                body: true,
+                complexity: true
+              }
+            }
+          }
+        },
+        attemptedQuestion2: {
+          include: {
+            question: {
+              select: {
+                id: true,
+                title: true,
+                body: true,
+                complexity: true
+              }
+            }
+          }
+        }
+        // badges: true
       }
     });
     if (!user) {

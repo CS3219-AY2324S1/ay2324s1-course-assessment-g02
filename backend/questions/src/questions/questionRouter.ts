@@ -20,9 +20,7 @@ interface QuestionUpdateData {
 // add function to validate complexity
 function validateComplexity(complexity: string): boolean {
   return (
-    complexity === 'Easy' ||
-    complexity === 'Medium' ||
-    complexity === 'Hard'
+    complexity === 'Easy' || complexity === 'Medium' || complexity === 'Hard'
   );
 }
 
@@ -66,7 +64,7 @@ questionRouter.get(
     const randomIndex = Math.floor(Math.random() * (questions.length - 1));
     res.status(200).json(questions[randomIndex]);
   })
-)
+);
 
 // Get one question
 questionRouter.get(
@@ -192,13 +190,16 @@ questionRouter.delete(
 questionRouter.post(
   '/attempts',
   asyncHandler(async (req: Request, res: Response) => {
-    const { questionId, userId1, userId2 } = req.body;
+    const { questionId, userId1, userId2, code, language } = req.body;
 
     const newAttempt = await prisma.attemptedQuestion.create({
       data: {
         questionId,
         userId1,
-        userId2
+        userId2,
+        code,
+        completedAt: new Date(),
+        language
       }
     });
 

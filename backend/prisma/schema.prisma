@@ -156,7 +156,8 @@ model AttemptedQuestion {
   question Question @relation(fields: [questionId], references: [id])
   questionId Int
   attemptedAt    DateTime      @default(now())
-  completedAt     DateTime?      
+  completedAt     DateTime?  
   code String?
+  language Language?
 	@@map("AttemptedQuestions")
 }
