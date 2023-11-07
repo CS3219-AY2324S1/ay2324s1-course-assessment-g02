@@ -71,6 +71,7 @@ function MatchingPage(props: { user }): React.ReactElement {
         if (response.status) {
           setIsLoading(false);
           setIsSuccess(true);
+          toast('🍭 Match found! 🍭');
           const sessionId = response.sessionId;
           sessionStorage.setItem(sessionId, JSON.stringify(response));
           console.log(`Found match for ${user.id}`);

@@ -68,3 +68,18 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Custom toast container styles */
+.custom-toast {
+  border-radius: 16px !important;
+  padding: 16px !important;
+}
+
+.custom-body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: #333;
+}
+
+.custom-progress {
+  background: #ff84cf !important;
+}

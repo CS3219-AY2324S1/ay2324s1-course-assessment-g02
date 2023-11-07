@@ -21,6 +21,9 @@ import MatchPage from './pages/MatchPage';
 import InterviewPage from './pages/InterviewPage';
 import Loading from './components/Loading';
 import { useDarkMode } from './hooks/useDarkMode';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './index.css';
 
 function App() {
   const { theme, toggleTheme, componentMounted } = useDarkMode();
@@ -64,6 +67,13 @@ function App() {
               height="100vh"
               width="100vw"
             >
+              <ToastContainer
+                position="top-right"
+                style={{ marginTop: '60px' }}
+                toastClassName="custom-toast"
+                bodyClassName="custom-body"
+                progressClassName="custom-progress"
+              />
               <MainNavigationBar />
 
               <Box
