@@ -1,5 +1,6 @@
 import { Box, Paper, Typography } from '@mui/material';
 import { ChatDirections, ChatMessageProps } from './types';
+import { formatDateAndTime } from '../../constants/formatDate';
 
 const ChatMessage = (props: ChatMessageProps) => {
   return (
@@ -14,18 +15,18 @@ const ChatMessage = (props: ChatMessageProps) => {
       }}
     >
       <Paper
-        elevation={3} // Add shadow
+        elevation={3}
         sx={{
           p: 2,
           backgroundColor:
-            props.direction === ChatDirections.left
+            props.direction === ChatDirections.right
               ? 'primary.light'
               : 'secondary.light',
           borderRadius:
             props.direction === ChatDirections.left
               ? '20px 20px 20px 5px'
               : '20px 20px 5px 20px',
-          maxWidth: '70%' // Limit message width
+          maxWidth: '70%'
         }}
       >
         <Typography
@@ -40,7 +41,7 @@ const ChatMessage = (props: ChatMessageProps) => {
             variant="caption"
             sx={{ fontSize: '0.6em', color: 'text.primary' }}
           >
-            {props.createdAt.toString().slice(0, 19)}
+            {formatDateAndTime(new Date(props.createdAt))}
           </Typography>
         )}
       </Paper>
