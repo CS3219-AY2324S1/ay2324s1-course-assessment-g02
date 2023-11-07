@@ -11,7 +11,12 @@ import {
   Typography,
   Toolbar,
   Tooltip,
-  Button
+  Button,
+  TableSortLabel,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import React from 'react';
@@ -20,12 +25,15 @@ import QuestionTableRow from './QuestionTableRow';
 import '../index.css';
 import { QuestionSchema } from '../../services/apiSchema';
 import { deleteQuestionApi, createQuestion } from '../../services/questions';
+import { Category } from '../../constants/enums';
 
 function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   const [page, setPage] = useState(0);
   const [data, setData] = useState(props.questionData);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
+  const [categoryFilter, setCategoryFilter] = useState('');
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -50,6 +58,34 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
       }
     );
   };
+
+  const handleSort = (key: string) => {
+    const isAsc = sortConfig.key === key && sortConfig.direction === 'asc';
+    setSortConfig({ key, direction: isAsc ? 'desc' : 'asc' });
+
+    const sortedData = [...data].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+    setData(sortedData);
+  };
+
+  const handleCategoryChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    setCategoryFilter(event.target.value as string);
+  };
+
+  const filteredData = data.filter(
+    (question) =>
+      categoryFilter === '' ||
+      question.categories.some((cat) => cat.name === categoryFilter)
+  );
 
   const deleteQuestion = async (id: number) => {
     await deleteQuestionApi(id).then(
@@ -95,6 +131,29 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
             Add Question
           </Button>
         </Tooltip>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="category-filter-label">Category</InputLabel>
+          <Select
+            labelId="category-filter-label"
+            id="category-filter"
+            value={categoryFilter}
+            label="Category"
+            onChange={handleCategoryChange}
+            renderValue={(selected) => {
+              if (selected === '') {
+                return <em>None</em>;
+              }
+              return selected;
+            }}
+          >
+            <MenuItem value="">All</MenuItem>
+            {Object.values(Category).map((categoryName) => (
+              <MenuItem key={categoryName} value={categoryName}>
+                {categoryName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
@@ -104,7 +163,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           sx={{
-            flexShrink: 0 // Prevent pagination from shrinking
+            flexShrink: 0
           }}
         />
       </Toolbar>
@@ -126,19 +185,47 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
                 </Typography>
               </TableCell>
               <TableCell width="30%">
-                <Typography variant="subtitle1" noWrap>
-                  Title
-                </Typography>
+                <TableSortLabel
+                  active={sortConfig.key === 'title'}
+                  direction={
+                    sortConfig.key === 'title' ? sortConfig.direction : 'asc'
+                  }
+                  onClick={() => handleSort('title')}
+                >
+                  <Typography variant="subtitle1" noWrap>
+                    Title
+                  </Typography>
+                </TableSortLabel>
               </TableCell>
               <TableCell width="25%">
-                <Typography variant="subtitle1" noWrap>
-                  Categories
-                </Typography>
+                <TableSortLabel
+                  active={sortConfig.key === 'categories'}
+                  direction={
+                    sortConfig.key === 'categories'
+                      ? sortConfig.direction
+                      : 'asc'
+                  }
+                  onClick={() => handleSort('categories')}
+                >
+                  <Typography variant="subtitle1" noWrap>
+                    Categories
+                  </Typography>
+                </TableSortLabel>
               </TableCell>
               <TableCell width="15%">
-                <Typography variant="subtitle1" noWrap>
-                  Complexity
-                </Typography>
+                <TableSortLabel
+                  active={sortConfig.key === 'complexity'}
+                  direction={
+                    sortConfig.key === 'complexity'
+                      ? sortConfig.direction
+                      : 'asc'
+                  }
+                  onClick={() => handleSort('complexity')}
+                >
+                  <Typography variant="subtitle1" noWrap>
+                    Complexity
+                  </Typography>
+                </TableSortLabel>
               </TableCell>
               <TableCell width="20%"></TableCell>
             </TableRow>
@@ -148,7 +235,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
               overflowY: 'scroll'
             }}
           >
-            {data
+            {filteredData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((question) => {
                 return (

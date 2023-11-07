@@ -1,8 +1,6 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-
 import { QuestionSchema } from '../../services/apiSchema';
 import {
   FormControl,
@@ -12,10 +10,16 @@ import {
   Radio,
   Paper,
   TextField,
-  FormGroup,
-  Checkbox
+  Select,
+  MenuItem,
+  InputLabel,
+  OutlinedInput,
+  Checkbox,
+  ListItemText,
+  MenuProps
 } from '@mui/material';
 import { useState } from 'react';
+import { Category } from '../../constants/enums';
 
 interface AddQuestionModalProps {
   addQuestion: (question: QuestionSchema) => void;
@@ -30,25 +34,24 @@ function AddQuestionModal(props: AddQuestionModalProps) {
   const handleClose = () => props.setOpen(false);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [categories, setCategories] = useState({
-    TODO: false
-  });
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [complexity, setComplexity] = useState('Easy');
   const [validation, setValidation] = useState({
     title: '',
     body: ''
   });
 
-  // lol
-  const categoryLabels = ['TODO'];
+  const categoryLabels = Object.values(Category).filter(
+    (value) => typeof value !== 'number'
+  );
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCategories({ ...categories, [e.target.name]: e.target.checked });
+  const handleCategoryChange = (event) => {
+    const value = event.target.value;
+    setSelectedCategories(value);
   };
 
   const submitQuestion = () => {
     if (!title && !body) {
-      // lol cos setstate is async
       setValidation({ title: '', body: '' });
     } else if (!title) {
       setValidation({ ...validation, title: "Title can't be empty" });
@@ -83,16 +86,29 @@ function AddQuestionModal(props: AddQuestionModalProps) {
     handleClose();
   };
 
+  const menuProps: Partial<MenuProps> = {
+    PaperProps: {
+      style: {
+        maxHeight: '300px',
+        overflow: 'auto',
+        position: 'absolute',
+        marginTop: '8px'
+      }
+    }
+  };
+
   return (
     <div>
       <Modal open={props.open} onClose={handleClose}>
         <Paper
-          style={{
-            display: 'grid',
-            gridRowGap: '20px',
-            padding: '20px',
-            margin: '10px 300px'
-          }}
+          style={
+            {
+              display: 'grid',
+              gridRowGap: '20px',
+              padding: '20px',
+              margin: '10px 300px'
+            } as React.CSSProperties
+          }
         >
           <Typography variant="h6">Add Question</Typography>
 
@@ -122,23 +138,27 @@ function AddQuestionModal(props: AddQuestionModalProps) {
               minRows={4}
             />
           </FormControl>
-          <FormControl component="fieldset" variant="standard">
-            <FormLabel>Categories</FormLabel>
-            <FormGroup row>
-              {categoryLabels.map((category: string) => (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      key={category}
-                      name={category}
-                      checked={categories[category]}
-                      onChange={handleCategoryChange}
-                    />
-                  }
-                  label={category}
-                />
+          <FormControl fullWidth>
+            <InputLabel id="categories-label">Categories</InputLabel>
+            <Select
+              labelId="categories-label"
+              id="categories-select"
+              multiple
+              value={selectedCategories}
+              onChange={handleCategoryChange}
+              input={<OutlinedInput label="Categories" />}
+              renderValue={(selected) => selected.join(', ')}
+              MenuProps={menuProps}
+            >
+              {categoryLabels.map((category) => (
+                <MenuItem key={category} value={category}>
+                  <Checkbox
+                    checked={selectedCategories.indexOf(category) > -1}
+                  />
+                  <ListItemText primary={category} />
+                </MenuItem>
               ))}
-            </FormGroup>
+            </Select>
           </FormControl>
           <FormControl>
             <FormLabel id="demo-controlled-radio-buttons-group">
