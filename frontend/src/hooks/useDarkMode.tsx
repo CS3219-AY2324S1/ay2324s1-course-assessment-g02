@@ -1,8 +1,4 @@
 import { useEffect, useState } from 'react';
-import {
-  defineMonacoLightTheme,
-  defineMonacoDarkTheme
-} from '../constants/monacoThemes';
 import { editor as MonacoEditor } from 'monaco-editor';
 
 export const useDarkMode = () => {
@@ -12,9 +8,6 @@ export const useDarkMode = () => {
     window.localStorage.setItem('theme', mode);
     setTheme(mode);
   };
-
-  defineMonacoDarkTheme();
-  defineMonacoLightTheme();
 
   const toggleTheme = () => {
     if (theme === 'light') {

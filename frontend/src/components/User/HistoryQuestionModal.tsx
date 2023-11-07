@@ -64,7 +64,7 @@ function HistoryQuestionModal(props: HistoryQuestionModalProps) {
             }}
           >
             <Paper elevation={2} sx={{ height: '100%', overflowY: 'auto' }}>
-              <ProblemDescription questionId={props.question.id} />
+              <ProblemDescription questionId={props.question.questionId} />
             </Paper>
             <Paper elevation={2} sx={{ height: '100%', overflowY: 'auto' }}>
               <Editor
