@@ -92,10 +92,16 @@ socketIO.on('connection', async (socket: Socket) => {
   });
 
   socket.on('submitCode', (code: string) => {
-    console.log('Code submission detected');
-    sessionStore.submitSessionCode(sessionId, code);
-    socket.emit('submitCodeSuccess');
-    socket.to(sessionId).emit('submitCodeSuccess');
+    console.log('Code submission requested');
+    try {
+      sessionStore.submitSessionCode(sessionId, code);
+      socket.emit('submitCodeSuccess');
+      socket.to(sessionId).emit('submitCodeSuccess');
+      console.log('Code submitted successfully');
+    } catch (err) {
+      console.error('Error submitting code', err);
+      socket.emit('submitCodeError', err);
+    }
   });
 
   socket.on('disconnect', async () => {
