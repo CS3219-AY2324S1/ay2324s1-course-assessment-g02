@@ -9,6 +9,9 @@ export interface AttemptedQuestionSchema {
   attemptedAt: Date;
   completedAt: Date;
   language: string;
+  question;
+  user1;
+  user2;
 }
 
 export interface QuestionSchema {

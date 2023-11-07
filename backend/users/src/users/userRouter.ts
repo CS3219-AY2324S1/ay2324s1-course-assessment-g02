@@ -42,6 +42,20 @@ userRouter.get(
                 body: true,
                 complexity: true
               }
+            },
+            user1: {
+              select: {
+                username: true,
+                email: true,
+                id: true
+              }
+            },
+            user2: {
+              select: {
+                username: true,
+                email: true,
+                id: true
+              }
             }
           }
         },
@@ -53,6 +67,20 @@ userRouter.get(
                 title: true,
                 body: true,
                 complexity: true
+              }
+            },
+            user1: {
+              select: {
+                username: true,
+                email: true,
+                id: true
+              }
+            },
+            user2: {
+              select: {
+                username: true,
+                email: true,
+                id: true
               }
             }
           }
