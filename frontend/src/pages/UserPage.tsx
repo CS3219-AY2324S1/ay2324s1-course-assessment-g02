@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import { getIdFromUserId } from '../services/user';
-import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import UserProfileContainer from '../components/User/UserProfileContainer';
 import Loading from '../components/Loading';
@@ -8,7 +5,6 @@ import NotFound from '../components/NotFound';
 import AuthProvider from '../components/Auth/AuthProvider';
 import GetUserIdProvider from '../components/Auth/GetUserIdProvider';
 import useUserData from '../hooks/useUserData';
-import { Stack } from '@mui/material';
 // import UserHistoryTable from 'components/User/UserHistoryTable';
 
 interface UserPageProps {
@@ -17,8 +13,6 @@ interface UserPageProps {
 }
 
 const UserPage = (props: UserPageProps): JSX.Element => {
-  // To get the authenticated user's id from database
-  // Get the user id of props.id
   const userData = useUserData({ id: props.id });
   const {
     user,

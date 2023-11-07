@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper } from '@mui/material';
+import { Box } from '@mui/material';
 import QuestionTable from '../components/Questions/QuestionTable';
 import { fetchQuestions } from '../services/questions';
 import { useQuery } from 'react-query';
@@ -27,25 +27,15 @@ function QuestionPage(props: { user }): React.ReactElement {
 
   return (
     <Box>
-      <Paper
-        elevation={5}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: '2rem',
-          border: '2px solid black',
-          overflowY: 'scroll'
-        }}
-      >
-        <QuestionTable questionData={questionData} user={props.user} />
-      </Paper>
+      <QuestionTable questionData={questionData} user={props.user} />
     </Box>
   );
 }
 
 const QuestionsPage = (): JSX.Element => (
-  <AuthProvider>{(user) => <QuestionPage user={user} />}</AuthProvider>
+  <AuthProvider auth={true}>
+    {(user) => <QuestionPage user={user} />}
+  </AuthProvider>
 );
 
 export default QuestionsPage;

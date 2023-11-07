@@ -129,6 +129,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      key={category}
                       name={category}
                       checked={categories[category]}
                       onChange={handleCategoryChange}

@@ -1,4 +1,5 @@
 import { Theme, createTheme } from '@mui/material/styles';
+import { Complexity } from '../interfaces/question';
 
 export const hannahTheme: Theme = createTheme({
   palette: {
@@ -23,3 +24,12 @@ export const hannahThemeDark: Theme = createTheme({
     }
   }
 });
+
+export const complexityColorMap = new Map<
+  Complexity,
+  'success' | 'warning' | 'error'
+>([
+  [Complexity.Easy, 'success'],
+  [Complexity.Medium, 'warning'],
+  [Complexity.Hard, 'error']
+]);

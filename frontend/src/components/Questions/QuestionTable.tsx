@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Box,
   Paper,
   Table,
   TableBody,
@@ -65,14 +64,24 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   };
 
   return (
-    <Paper elevation={3} className="full-screen-paper">
+    <Paper
+      elevation={3}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: 'calc(100vh - 64px)',
+        width: '100vw',
+        overflow: 'hidden'
+      }}
+    >
+      {' '}
       <AddQuestionModal
         addQuestion={addQuestion}
         questions={data}
         open={addQuestionModalOpen}
         setOpen={setAddQuestionModalOpen}
       />
-      <Toolbar>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Tooltip title="Add Question">
           <Button
             variant="contained"
@@ -86,36 +95,59 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
             Add Question
           </Button>
         </Tooltip>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            flexShrink: 0 // Prevent pagination from shrinking
+          }}
+        />
       </Toolbar>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-      <TableContainer component={Paper} sx={{ borderRadius: '1em' }}>
+      <TableContainer
+        component={Paper}
+        elevation={5}
+        sx={{
+          borderRadius: '1em',
+          flexGrow: 1,
+          overflowY: 'auto'
+        }}
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Title</Typography>
+              <TableCell width="10%">
+                <Typography variant="subtitle1" noWrap align="center">
+                  Id
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Categories</Typography>
+              <TableCell width="30%">
+                <Typography variant="subtitle1" noWrap>
+                  Title
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Complexity</Typography>
+              <TableCell width="25%">
+                <Typography variant="subtitle1" noWrap>
+                  Categories
+                </Typography>
               </TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Actions</Typography>
+              <TableCell width="15%">
+                <Typography variant="subtitle1" noWrap>
+                  Complexity
+                </Typography>
               </TableCell>
+              <TableCell width="20%"></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody
+            sx={{
+              overflowY: 'scroll'
+            }}
+          >
             {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((question) => {

@@ -1,5 +1,5 @@
 import { Chip, Divider, Paper, Typography, Box, Grid } from '@mui/material';
-import { Complexity } from '../../interfaces/question';
+import { complexityColorMap } from '../../constants/themes';
 import useQuestion from '../../hooks/useQuestion';
 import Loading from '../Loading';
 import { styled } from '@mui/material/styles';
@@ -11,21 +11,15 @@ interface ProblemDescriptionProps {
 const ProblemDescription = (props: ProblemDescriptionProps) => {
   const { question, isLoading } = useQuestion(props.questionId);
 
-  const complexityColorMap = new Map<
-    Complexity,
-    'success' | 'warning' | 'error'
-  >([
-    [Complexity.Easy, 'success'],
-    [Complexity.Medium, 'warning'],
-    [Complexity.Hard, 'error']
-  ]);
-
   const StyledDescription = styled('p')({
     overflowWrap: 'break-word',
     width: '100%',
     '& img': {
       maxWidth: '100%',
       height: 'auto'
+    },
+    '& pre': {
+      whiteSpace: 'pre-wrap'
     }
   });
 
@@ -80,7 +74,7 @@ const ProblemDescription = (props: ProblemDescriptionProps) => {
           <Grid item xs={12}>
             <StyledDescription
               dangerouslySetInnerHTML={{
-                __html: question.description
+                __html: question.description.replace(/\n\n/g, '')
               }}
             />
           </Grid>

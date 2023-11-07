@@ -12,16 +12,16 @@ export interface AttemptedQuestionSchema {
 }
 
 export interface QuestionSchema {
-  id: number;
+  id?: number;
   title: string;
   body: string;
   categories: Category[];
   complexity: string;
-  createdAt: Date;
-  updatedAt: Date;
-  avgRating: number;
-  ratings: number;
-  solves: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  avgRating?: number;
+  ratings?: number;
+  solves?: number;
 }
 
 export interface UserSchema {
