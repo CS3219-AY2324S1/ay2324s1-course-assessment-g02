@@ -5,10 +5,20 @@ export const hannahTheme: Theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#ff84cf'
+      main: '#ff84cf',
+      contrastText: '#ffffff'
     },
     secondary: {
-      main: '#ecae2a'
+      main: '#ecae2a',
+      contrastText: '#ffffff'
+    },
+    background: {
+      default: '#fff7fa',
+      paper: '#ffebf5'
+    },
+    text: {
+      primary: '#4e0d3a',
+      secondary: '#7a3b69'
     }
   }
 });
@@ -17,10 +27,20 @@ export const hannahThemeDark: Theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#ff84cf'
+      main: '#ff84cf',
+      contrastText: '#ffffff'
     },
     secondary: {
-      main: '#ecae2a'
+      main: '#ecae2a',
+      contrastText: '#33260d'
+    },
+    background: {
+      default: '#2d132c',
+      paper: '#3a1d37'
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#ffebf5'
     }
   }
 });
