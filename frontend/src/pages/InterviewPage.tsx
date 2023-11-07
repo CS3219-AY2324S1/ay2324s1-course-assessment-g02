@@ -20,7 +20,6 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
     throw new Error('session still loading');
   }
   const { isConnected, questionId } = session.session;
-
   useEffect(() => {
     const html = document.querySelector('html');
     if (html) html.style.overflow = 'hidden';
@@ -85,7 +84,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
 
 const InterviewPage = () => {
   return (
-    <AuthProvider>
+    <AuthProvider auth={true}>
       {(user) => (
         <SessionProvider user={user}>
           <UnwrappedInterviewPage user={user} />
