@@ -12,10 +12,8 @@ function UserHistoryTableRow(props: {
   const attempt = props.attemptedQuestion;
 
   const [open, setOpen] = useState(false);
-
   const candyBuddy =
-    attempt.user1.id === props.id ? attempt.user2 : attempt.user1;
-
+    attempt.user1.id == props.id ? attempt.user2 : attempt.user1;
   const candyBuddyName = candyBuddy.username
     ? candyBuddy.username
     : candyBuddy.email;
