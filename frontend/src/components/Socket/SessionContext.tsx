@@ -77,7 +77,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({
   }, [user, setSession]);
 
   useEffect(() => {
-    if (!isLoading || session.sessionId !== '') {
+    if (!isLoading && session.sessionId) {
       socket.auth = {
         userId: user.id,
         email: user.email,
@@ -85,15 +85,18 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({
       };
       socket.connect();
     }
-  });
 
-  return isLoading && session.sessionId === '' ? (
-    <Loading />
-  ) : session.sessionId === '' || isError ? (
-    <NotFound />
-  ) : (
+    // Disconnect the socket when the component unmounts or sessionId becomes invalid
+    return () => {
+      if (!session.sessionId) {
+        socket.disconnect();
+      }
+    };
+  }, [session.sessionId, isLoading, user.id, user.email]);
+
+  return (
     <SessionContext.Provider value={{ session, setSession }}>
-      {children}
+      {isLoading ? <Loading /> : isError ? <NotFound /> : children}
     </SessionContext.Provider>
   );
 };

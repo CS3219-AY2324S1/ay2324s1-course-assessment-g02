@@ -1,7 +1,7 @@
 import Playground from '../components/Problems/Playground';
 import { Paper, Box, Stack } from '@mui/material';
 import ProblemDescription from '../components/Problems/ProblemDescription';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SessionProvider,
   useSession
@@ -16,14 +16,17 @@ interface UnwrappedInterviewPageProps {
 
 const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
   const session = useSession();
+
   if (!session) {
     throw new Error('session still loading');
   }
+
   const { isConnected, questionId } = session.session;
+
   useEffect(() => {
     const html = document.querySelector('html');
     if (html) html.style.overflow = 'hidden';
-  }, []);
+  });
 
   return !session || !isConnected ? (
     <Loading />

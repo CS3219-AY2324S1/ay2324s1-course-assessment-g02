@@ -1,39 +1,17 @@
 export enum ProgrammingLanguages {
-  'C',
-  'Cpp',
-  'Java',
-  'Python',
-  'Javascript',
-  'Typescript',
-  'Rust',
-  'Go',
-  'Ruby',
-  'Swift',
-  'Kotlin',
-  'Scala',
-  'Haskell',
-  'Clojure',
-  'Lua',
-  'Perl',
-  'PHP',
-  'R',
-  'Dart',
-  'Julia',
-  'Cobol',
-  'Fortran',
-  'Lisp',
-  'Prolog',
-  'Bash',
-  'Assembly',
-  'SQL',
-  'HTML',
-  'CSS'
+  C = 'C',
+  Cpp = 'Cpp',
+  Java = 'Java',
+  Python = 'Python',
+  Javascript = 'Javascript',
+  Go = 'Go',
+  Ruby = 'Ruby'
 }
 
 export enum Difficulties {
-  'Easy',
-  'Medium',
-  'Hard'
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard'
 }
 
 export enum Category {

@@ -25,7 +25,7 @@ const modalStyle = {
 function MatchingPage(props: { user }): React.ReactElement {
   const { user } = props;
   const [difficulty, setDifficulty] = useState(Difficulties.Easy);
-  const [language, setLanguage] = useState(ProgrammingLanguages.Java);
+  const [language, setLanguage] = useState(ProgrammingLanguages.Python);
   const [open, openModal] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
   const [count, setCount] = useState(0);
@@ -178,7 +178,9 @@ function MatchingPage(props: { user }): React.ReactElement {
 }
 
 const MatchPage = (): JSX.Element => (
-  <AuthProvider>{(user) => <MatchingPage user={user} />}</AuthProvider>
+  <AuthProvider auth={true}>
+    {(user) => <MatchingPage user={user} />}
+  </AuthProvider>
 );
 
 export default MatchPage;
