@@ -16,7 +16,11 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  FormControl
+  FormControl,
+  Chip,
+  OutlinedInput,
+  Checkbox,
+  ListItemText
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import React from 'react';
@@ -25,7 +29,8 @@ import QuestionTableRow from './QuestionTableRow';
 import '../index.css';
 import { QuestionSchema } from '../../services/apiSchema';
 import { deleteQuestionApi, createQuestion } from '../../services/questions';
-import { Category } from '../../constants/enums';
+import { toast } from 'react-toastify';
+import { Categories } from '../../constants/enums';
 
 function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   const [page, setPage] = useState(0);
@@ -33,7 +38,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -52,6 +57,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         question.id = res.data.question.id;
         console.log('Question created succesfully', res);
         setData([...data, question]);
+        toast('Question created successfully', { type: 'success' });
       },
       (error) => {
         console.error('Error creating question', error);
@@ -64,27 +70,45 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
     setSortConfig({ key, direction: isAsc ? 'desc' : 'asc' });
 
     const sortedData = [...data].sort((a, b) => {
-      if (a[key] < b[key]) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
+      if (key === 'complexity') {
+        const order = ['Easy', 'Medium', 'Hard'];
+        return (
+          (order.indexOf(a[key]) - order.indexOf(b[key])) * (isAsc ? 1 : -1)
+        );
+      } else {
+        if (a[key] < b[key]) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (a[key] > b[key]) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
       }
-      if (a[key] > b[key]) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
-      }
-      return 0;
     });
     setData(sortedData);
   };
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setCategoryFilter(event.target.value as string);
+  const handleCategoryChange = (event) => {
+    const value = event.target.value;
+    setSelectedCategoryIds(value);
+  };
+
+  // to be fixxed
+  const handleDeleteCategory = (categoryId, event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setSelectedCategoryIds((prevSelectedIds) =>
+      prevSelectedIds.filter((id) => id !== categoryId)
+    );
   };
 
   const filteredData = data.filter(
     (question) =>
-      categoryFilter === '' ||
-      question.categories.some((cat) => cat.name === categoryFilter)
+      selectedCategoryIds.length === 0 ||
+      Object.keys(question.categories).some((key) =>
+        selectedCategoryIds.includes(parseInt(key))
+      )
   );
 
   const deleteQuestion = async (id: number) => {
@@ -117,7 +141,14 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         open={addQuestionModalOpen}
         setOpen={setAddQuestionModalOpen}
       />
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Toolbar
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          height: 'fit-content'
+        }}
+      >
         <Tooltip title="Add Question">
           <Button
             variant="contained"
@@ -131,29 +162,59 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
             Add Question
           </Button>
         </Tooltip>
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <FormControl
+          sx={{ m: 1, minWidth: 120, maxWidth: 300, height: 'fit-content' }}
+        >
           <InputLabel id="category-filter-label">Category</InputLabel>
           <Select
             labelId="category-filter-label"
             id="category-filter"
-            value={categoryFilter}
-            label="Category"
+            multiple
+            value={selectedCategoryIds}
             onChange={handleCategoryChange}
-            renderValue={(selected) => {
-              if (selected === '') {
-                return <em>None</em>;
+            input={<OutlinedInput id="select-multiple-chip" label="Category" />}
+            sx={{ height: 64, width: 400 }}
+            renderValue={(selected) => (
+              <div
+                style={{
+                  display: 'flex', // Keep chips in a row
+                  flexWrap: 'wrap', // Allow wrapping for multiple chips
+                  maxHeight: 48, // Set a max-height for the scrollable area
+                  overflowY: 'auto' // Add vertical scroll
+                }}
+              >
+                {selected.map((id) => (
+                  <Chip
+                    key={id}
+                    label={Categories[id]}
+                    variant="outlined"
+                    sx={{
+                      borderRadius: '12px',
+                      margin: '2px'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: '300px'
+                }
               }
-              return selected;
             }}
           >
-            <MenuItem value="">All</MenuItem>
-            {Object.values(Category).map((categoryName) => (
-              <MenuItem key={categoryName} value={categoryName}>
-                {categoryName}
+            {Object.entries(Categories).map(([id, name]) => (
+              <MenuItem key={id} value={parseInt(id)}>
+                <Checkbox
+                  checked={selectedCategoryIds.includes(parseInt(id))}
+                />
+                <ListItemText primary={name} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
+
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"

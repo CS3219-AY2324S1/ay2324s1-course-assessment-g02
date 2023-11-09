@@ -9,7 +9,6 @@ import SelectionMenu from '../../components/SelectionMenu';
 import { deleteMatch, findMatch } from '../../services/match';
 import { useAuth } from '../../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../../components/Loading';
 
 const modalStyle = {
   position: 'absolute',

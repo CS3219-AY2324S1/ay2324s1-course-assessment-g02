@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import { complexityColorMap } from '../../constants/themes';
@@ -11,7 +10,8 @@ import {
   FormLabel,
   Paper,
   Stack,
-  Chip
+  Chip,
+  Modal
 } from '@mui/material';
 
 interface QuestionModalProps {
@@ -85,10 +85,10 @@ function QuestionModal(props: QuestionModalProps) {
             />
           </Stack>
           <Stack direction="row" spacing={1}>
-            {categories.map((category) => (
+            {Object.entries(categories).map(([id, name]) => (
               <Chip
-                key={category.name}
-                label={category.name}
+                key={id}
+                label={name}
                 variant="outlined"
                 sx={{ borderRadius: '12px' }}
                 size="medium"

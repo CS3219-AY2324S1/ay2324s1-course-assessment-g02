@@ -1,5 +1,3 @@
-import { Category } from '../constants/models';
-
 export interface AttemptedQuestionSchema {
   id: number;
   questionId: number;
@@ -18,7 +16,7 @@ export interface QuestionSchema {
   id?: number;
   title: string;
   body: string;
-  categories: Category[];
+  categories: { [key: number]: string };
   complexity: string;
   createdAt?: Date;
   updatedAt?: Date;

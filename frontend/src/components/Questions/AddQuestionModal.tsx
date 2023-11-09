@@ -19,7 +19,7 @@ import {
   MenuProps
 } from '@mui/material';
 import { useState } from 'react';
-import { Category } from '../../constants/enums';
+import { Categories } from '../../constants/enums';
 
 interface AddQuestionModalProps {
   addQuestion: (question: QuestionSchema) => void;
@@ -34,20 +34,22 @@ function AddQuestionModal(props: AddQuestionModalProps) {
   const handleClose = () => props.setOpen(false);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<{
+    [key: number]: string;
+  }>({});
   const [complexity, setComplexity] = useState('Easy');
   const [validation, setValidation] = useState({
     title: '',
     body: ''
   });
 
-  const categoryLabels = Object.values(Category).filter(
-    (value) => typeof value !== 'number'
-  );
-
   const handleCategoryChange = (event) => {
-    const value = event.target.value;
-    setSelectedCategories(value);
+    const value = event.target.value as number[];
+    const newSelectedCategories = value.reduce((acc, id) => {
+      acc[id] = Categories[id];
+      return acc;
+    }, {} as { [key: number]: string });
+    setSelectedCategories(newSelectedCategories);
   };
 
   const submitQuestion = () => {
@@ -68,7 +70,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
     const newQuestion: QuestionSchema = {
       title: title,
       body: body,
-      categories: [],
+      categories: selectedCategories,
       complexity: complexity as 'Easy' | 'Medium' | 'Hard'
     };
 
@@ -98,94 +100,99 @@ function AddQuestionModal(props: AddQuestionModalProps) {
   };
 
   return (
-    <div>
-      <Modal open={props.open} onClose={handleClose}>
-        <Paper
-          style={
-            {
-              display: 'grid',
-              gridRowGap: '20px',
-              padding: '20px',
-              margin: '10px 300px'
-            } as React.CSSProperties
-          }
-        >
-          <Typography variant="h6">Add Question</Typography>
+    <Modal open={props.open} onClose={handleClose}>
+      <Paper
+        sx={
+          {
+            display: 'grid',
+            gridRowGap: '20px',
+            padding: '20px',
+            margin: '10px 40px'
+          } as React.CSSProperties
+        }
+      >
+        <Typography variant="h6">Add Question</Typography>
 
-          <FormControl>
-            <FormLabel error={!!validation.title}>Question Title*</FormLabel>
-            <TextField
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                setValidation({ ...validation, title: '' });
-              }}
-              error={!!validation.title}
-              helperText={validation.title}
+        <FormControl>
+          <FormLabel error={!!validation.title}>Question Title*</FormLabel>
+          <TextField
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setValidation({ ...validation, title: '' });
+            }}
+            error={!!validation.title}
+            helperText={validation.title}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel error={!!validation.body}>Question Body*</FormLabel>
+          <TextField
+            value={body}
+            onChange={(e) => {
+              setBody(e.target.value);
+              setValidation({ ...validation, body: '' });
+            }}
+            error={!!validation.body}
+            helperText={validation.body}
+            multiline
+            minRows={4}
+            maxRows={12}
+            sx={{ overflowY: 'auto' }}
+          />
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="categories-label">Categories</InputLabel>
+          <Select
+            labelId="categories-label"
+            id="categories-select"
+            multiple
+            value={Object.keys(selectedCategories)}
+            onChange={handleCategoryChange}
+            input={<OutlinedInput label="Categories" />}
+            renderValue={(selected) =>
+              selected.map((id) => Categories[id]).join(', ')
+            }
+            MenuProps={menuProps}
+          >
+            {Object.entries(Categories).map(([id, name]) => (
+              <MenuItem key={id} value={id}>
+                <Checkbox
+                  checked={Object.keys(selectedCategories).includes(
+                    id.toString()
+                  )}
+                />
+                <ListItemText primary={name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel id="demo-controlled-radio-buttons-group">
+            Complexity
+          </FormLabel>
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={complexity}
+            onChange={(e) => setComplexity(e.target.value)}
+            row
+          >
+            <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
+            <FormControlLabel
+              value="Medium"
+              control={<Radio />}
+              label="Medium"
             />
-          </FormControl>
-          <FormControl>
-            <FormLabel error={!!validation.body}>Question Body*</FormLabel>
-            <TextField
-              value={body}
-              onChange={(e) => {
-                setBody(e.target.value);
-                setValidation({ ...validation, body: '' });
-              }}
-              error={!!validation.body}
-              helperText={validation.body}
-              multiline
-              minRows={4}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="categories-label">Categories</InputLabel>
-            <Select
-              labelId="categories-label"
-              id="categories-select"
-              multiple
-              value={selectedCategories}
-              onChange={handleCategoryChange}
-              input={<OutlinedInput label="Categories" />}
-              renderValue={(selected) => selected.join(', ')}
-              MenuProps={menuProps}
-            >
-              {categoryLabels.map((category) => (
-                <MenuItem key={category} value={category}>
-                  <Checkbox
-                    checked={selectedCategories.indexOf(category) > -1}
-                  />
-                  <ListItemText primary={category} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl>
-            <FormLabel id="demo-controlled-radio-buttons-group">
-              Complexity
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={complexity}
-              onChange={(e) => setComplexity(e.target.value)}
-              row
-            >
-              <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
-              <FormControlLabel
-                value="Medium"
-                control={<Radio />}
-                label="Medium"
-              />
-              <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
-            </RadioGroup>
-          </FormControl>
-          <Button variant={'contained'} onClick={submitQuestion}>
-            Submit
-          </Button>
-        </Paper>
-      </Modal>
-    </div>
+            <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
+          </RadioGroup>
+        </FormControl>
+        <Button variant={'contained'} onClick={submitQuestion}>
+          Submit
+        </Button>
+      </Paper>
+    </Modal>
   );
 }
 

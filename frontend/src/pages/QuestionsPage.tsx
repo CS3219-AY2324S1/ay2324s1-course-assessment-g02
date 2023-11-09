@@ -15,6 +15,14 @@ function QuestionsPage(): React.ReactElement {
     isLoading
   } = useQuery('questions', fetchQuestions);
 
+  const transformedQuestions = questionData?.map((question) => ({
+    ...question,
+    categories: question.categories.reduce((acc, category) => {
+      acc[category.id] = category.name;
+      return acc;
+    }, {})
+  }));
+
   if (isError) {
     return <div>Error! {(error as Error).message}</div>;
   }
@@ -28,7 +36,7 @@ function QuestionsPage(): React.ReactElement {
 
   return (
     <Box>
-      <QuestionTable questionData={questionData} user={user} />
+      <QuestionTable questionData={transformedQuestions} user={user} />
     </Box>
   );
 }

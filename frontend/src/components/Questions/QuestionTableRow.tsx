@@ -10,6 +10,7 @@ import {
 import { complexityColorMap } from '../../constants/themes';
 import { QuestionSchema } from '../../services/apiSchema';
 import QuestionModal from './QuestionModal';
+import { Categories } from '../../constants/enums';
 
 function QuestionTableRow(props: {
   question: QuestionSchema;
@@ -44,10 +45,10 @@ function QuestionTableRow(props: {
             spacing={1}
             sx={{ flexWrap: 'wrap', gap: '4px' }}
           >
-            {question.categories.map((category) => (
+            {Object.entries(question.categories).map(([id, name]) => (
               <Chip
-                key={category.name}
-                label={category.name}
+                key={id}
+                label={name}
                 variant="outlined"
                 sx={{ borderRadius: '12px', marginBottom: '4px' }}
               />

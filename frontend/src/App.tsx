@@ -103,7 +103,6 @@ function App() {
                       <Route path="/questions" element={<QuestionsPage />} />
                       <Route path="/match" element={<MatchPage />} />
                       <Route path="/interview" element={<InterviewPage />} />
-                      <Route path="/problems" element={<ProblemPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   )}
