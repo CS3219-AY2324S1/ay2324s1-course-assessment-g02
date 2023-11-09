@@ -21,7 +21,6 @@ const UserPage = (props: UserPageProps): JSX.Element => {
     isError: useUserIsError
   } = userData;
 
-  console.log('userData', userData);
   if (useUserIsLoading) return <Loading />;
 
   if (useUserIsError) return <NotFound />;
@@ -52,9 +51,12 @@ const UserPage = (props: UserPageProps): JSX.Element => {
 };
 
 const UserProfilesPage = (): JSX.Element => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const { id } = useParams();
-  return (
+
+  return isLoading ? (
+    <Loading />
+  ) : (
     <GetUserIdProvider id={user.id}>
       {(userId) => <UserPage userId={userId} id={id} />}
     </GetUserIdProvider>
@@ -62,8 +64,10 @@ const UserProfilesPage = (): JSX.Element => {
 };
 
 const UserPageMain = (): JSX.Element => {
-  const { user } = useAuth();
-  return (
+  const { user, isLoading } = useAuth();
+  return isLoading ? (
+    <Loading />
+  ) : (
     <GetUserIdProvider id={user.id}>
       {(userId) => <UserPage userId={userId} id={userId} />}
     </GetUserIdProvider>

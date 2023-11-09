@@ -9,6 +9,7 @@ import SelectionMenu from '../../components/SelectionMenu';
 import { deleteMatch, findMatch } from '../../services/match';
 import { useAuth } from '../../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../components/Loading';
 
 const modalStyle = {
   position: 'absolute',
@@ -22,8 +23,8 @@ const modalStyle = {
   p: 4
 };
 
-function MatchModal(props: { open; setOpen }): React.ReactElement {
-  const { user } = useAuth();
+function MatchBox(props: { user; open; setOpen }): React.ReactElement {
+  const user = props.user;
   const [difficulty, setDifficulty] = useState(Difficulties.Easy);
   const [language, setLanguage] = useState(ProgrammingLanguages.Python);
   const [open, openModal] = useState(false);
@@ -68,6 +69,7 @@ function MatchModal(props: { open; setOpen }): React.ReactElement {
       console.log(`Counter: ${count}`);
 
       findMatch(user.id, difficulty, language).then((response) => {
+        console.log('response', response);
         if (response.status) {
           setIsLoading(false);
           setIsSuccess(true);
@@ -184,5 +186,14 @@ function MatchModal(props: { open; setOpen }): React.ReactElement {
     </Modal>
   );
 }
+
+const MatchModal = ({ open, setOpen }): React.ReactElement => {
+  const { user } = useAuth();
+  return (
+    <div>
+      <MatchBox user={user} open={open} setOpen={setOpen} />
+    </div>
+  );
+};
 
 export default MatchModal;

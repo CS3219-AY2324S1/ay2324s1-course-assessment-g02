@@ -9,6 +9,7 @@ import SelectionMenu from '../components/SelectionMenu';
 import { deleteMatch, findMatch } from '../services/match';
 import { useAuth } from '../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../components/Loading';
 
 const modalStyle = {
   position: 'absolute',
@@ -22,8 +23,7 @@ const modalStyle = {
   p: 4
 };
 
-function MatchPage(): React.ReactElement {
-  const { user } = useAuth();
+function MatchBox({ user }): React.ReactElement {
   const [difficulty, setDifficulty] = useState(Difficulties.Easy);
   const [language, setLanguage] = useState(ProgrammingLanguages.Python);
   const [open, openModal] = useState(false);
@@ -176,5 +176,8 @@ function MatchPage(): React.ReactElement {
     </Box>
   );
 }
-
+const MatchPage = () => {
+  const { user, isLoading } = useAuth();
+  return isLoading ? <Loading /> : <MatchBox user={user} />;
+};
 export default MatchPage;

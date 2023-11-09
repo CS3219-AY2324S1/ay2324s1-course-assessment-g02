@@ -95,8 +95,10 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
 };
 
 const InterviewPage = () => {
-  const { user } = useAuth();
-  return (
+  const { user, isLoading } = useAuth();
+  return isLoading ? (
+    <Loading />
+  ) : (
     <SessionProvider user={user}>
       <UnwrappedInterviewPage user={user} />
     </SessionProvider>
