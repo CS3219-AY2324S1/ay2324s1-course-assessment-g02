@@ -1,12 +1,12 @@
 import Playground from '../components/Problems/Playground';
 import { Paper, Box, Stack } from '@mui/material';
 import ProblemDescription from '../components/Problems/ProblemDescription';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   SessionProvider,
   useSession
 } from '../components/Socket/SessionContext';
-import AuthProvider from '../components/Auth/AuthProvider';
+import { useAuth } from '../components/Auth/AuthProvider';
 import Chat from '../components/Chat/Chat';
 import Loading from '../components/Loading';
 
@@ -33,7 +33,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
   ) : (
     <Box display="flex" flexGrow={1}>
       <Stack
-        direction="row"
+        direction={{ xs: 'column', sm: 'row' }}
         spacing={0.5}
         style={{
           height: 'calc(100vh - 64px)',
@@ -42,7 +42,10 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           overflowY: 'scroll'
         }}
       >
-        <Box width="33.33%" sx={{ h: '100%', p: '0.5em' }}>
+        <Box
+          width={{ xs: '100%', sm: '33.33%' }}
+          sx={{ h: '100%', p: '0.5em' }}
+        >
           <Paper
             elevation={5}
             style={{
@@ -55,7 +58,10 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           </Paper>
         </Box>
 
-        <Box width="33.33%" sx={{ h: '100%', p: '0.5em' }}>
+        <Box
+          width={{ xs: '100%', sm: '33.33%' }}
+          sx={{ h: '100%', p: '0.5em' }}
+        >
           <Paper
             elevation={5}
             style={{
@@ -68,7 +74,10 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           </Paper>
         </Box>
 
-        <Box width="33.33%" sx={{ h: '100%', p: '0.5em' }}>
+        <Box
+          width={{ xs: '100%', sm: '33.33%' }}
+          sx={{ h: '100%', p: '0.5em' }}
+        >
           <Paper
             elevation={5}
             style={{
@@ -86,14 +95,11 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
 };
 
 const InterviewPage = () => {
+  const { user } = useAuth();
   return (
-    <AuthProvider auth={true}>
-      {(user) => (
-        <SessionProvider user={user}>
-          <UnwrappedInterviewPage user={user} />
-        </SessionProvider>
-      )}
-    </AuthProvider>
+    <SessionProvider user={user}>
+      <UnwrappedInterviewPage user={user} />
+    </SessionProvider>
   );
 };
 

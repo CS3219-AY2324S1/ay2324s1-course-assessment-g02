@@ -3,17 +3,14 @@ import { Typography, AppBar, Toolbar, Box, Button } from '@mui/material';
 import SignInOutButton from '../Auth/SignInOutButton';
 import { ThemeContext } from '../../contexts/theme-context';
 import { useContext } from 'react';
-import AuthProvider from '../Auth/AuthProvider';
+import { useAuth } from '../Auth/AuthProvider';
 import HomeButton from './HomeButton';
 import UserButton from './UserButton';
 import { useNavigate } from 'react-router-dom';
 import LightDarkButton from './LightDarkButton';
 
-interface MainNavigationBarProps {
-  user;
-}
-
-const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
+const MainNavigationBar = (): JSX.Element => {
+  const { user } = useAuth();
   const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
   return (
@@ -34,18 +31,12 @@ const NavigationBar = (props: MainNavigationBarProps): JSX.Element => {
         <Box sx={{ flexGrow: 9 }} />
         <LightDarkButton theme={theme} toggleTheme={toggleTheme} />
         <Box sx={{ flexGrow: 0.1 }} />
-        <UserButton user={props.user} />
+        <UserButton user={user} />
         <Box sx={{ flexGrow: 0.1 }} />
-        <SignInOutButton user={props.user} />
+        <SignInOutButton user={user} />
       </Toolbar>
     </AppBar>
   );
 };
-
-const MainNavigationBar = (): JSX.Element => (
-  <AuthProvider auth={false}>
-    {(user) => <NavigationBar user={user} />}
-  </AuthProvider>
-);
 
 export default MainNavigationBar;

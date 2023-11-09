@@ -10,7 +10,7 @@ export const QuestionsPageButton = (): JSX.Element => {
       color="primary"
       onClick={() => navigate('/questions')}
     >
-      <Typography>Go to Questions Page</Typography>
+      <Typography>Questions Page</Typography>
     </Button>
   );
 };

@@ -1,16 +1,15 @@
 import { Button, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
-export const MatchPageButton = (): JSX.Element => {
-  const navigate = useNavigate();
-
+export const MatchPageButton = (props: {
+  setOpen: (open) => void;
+}): JSX.Element => {
   return (
     <Button
       variant="contained"
       color="primary"
-      onClick={() => navigate('/match')}
+      onClick={() => props.setOpen(true)}
     >
-      <Typography>Go to Match Page</Typography>
+      <Typography>Find A Match Now</Typography>
     </Button>
   );
 };

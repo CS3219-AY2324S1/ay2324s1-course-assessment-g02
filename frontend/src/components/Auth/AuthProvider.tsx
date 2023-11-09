@@ -1,26 +1,26 @@
+import React, { createContext, useContext, ReactNode } from 'react';
 import { Auth } from '@supabase/auth-ui-react';
-import { useState, useEffect } from 'react';
-import Loading from '../Loading';
 
-interface AuthProviderProps {
-  children: (user) => JSX.Element;
-  auth: boolean; // To decide if we are trying to get an authenticated user or not
+interface AuthContextType {
+  user;
 }
 
-const AuthProvider = (props: AuthProviderProps): JSX.Element => {
-  const { user } = Auth.useUser();
-  const [loading, setLoading] = useState(true);
+const AuthContext = createContext<AuthContextType | null>(null);
 
-  useEffect(() => {
-    if (user || !props.auth) {
-      setLoading(false);
-    }
-  }, [user, props.auth]);
-
-  if (loading) {
-    return <Loading />;
-  }
-  return props.children(user);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within a AuthProvider');
+  return context;
 };
 
-export default AuthProvider;
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const { user } = Auth.useUser();
+
+  return (
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+  );
+};

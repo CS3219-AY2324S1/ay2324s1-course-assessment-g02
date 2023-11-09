@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import UserProfileContainer from '../components/User/UserProfileContainer';
 import Loading from '../components/Loading';
 import NotFound from '../components/NotFound';
-import AuthProvider from '../components/Auth/AuthProvider';
+import { useAuth } from '../components/Auth/AuthProvider';
 import GetUserIdProvider from '../components/Auth/GetUserIdProvider';
 import useUserData from '../hooks/useUserData';
 import { Stack, Container, Box, Divider } from '@mui/material';
@@ -21,6 +21,7 @@ const UserPage = (props: UserPageProps): JSX.Element => {
     isError: useUserIsError
   } = userData;
 
+  console.log('userData', userData);
   if (useUserIsLoading) return <Loading />;
 
   if (useUserIsError) return <NotFound />;
@@ -51,26 +52,22 @@ const UserPage = (props: UserPageProps): JSX.Element => {
 };
 
 const UserProfilesPage = (): JSX.Element => {
+  const { user } = useAuth();
   const { id } = useParams();
   return (
-    <AuthProvider auth={true}>
-      {(user) => (
-        <GetUserIdProvider id={user.id}>
-          {(userId) => <UserPage userId={userId} id={id} />}
-        </GetUserIdProvider>
-      )}
-    </AuthProvider>
+    <GetUserIdProvider id={user.id}>
+      {(userId) => <UserPage userId={userId} id={id} />}
+    </GetUserIdProvider>
   );
 };
 
-const UserPageMain = (): JSX.Element => (
-  <AuthProvider auth={true}>
-    {(user) => (
-      <GetUserIdProvider id={user.id}>
-        {(userId) => <UserPage userId={userId} id={userId} />}
-      </GetUserIdProvider>
-    )}
-  </AuthProvider>
-);
+const UserPageMain = (): JSX.Element => {
+  const { user } = useAuth();
+  return (
+    <GetUserIdProvider id={user.id}>
+      {(userId) => <UserPage userId={userId} id={userId} />}
+    </GetUserIdProvider>
+  );
+};
 
 export { UserPageMain, UserProfilesPage };

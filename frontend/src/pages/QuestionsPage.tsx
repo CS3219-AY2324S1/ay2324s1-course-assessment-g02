@@ -4,9 +4,10 @@ import QuestionTable from '../components/Questions/QuestionTable';
 import { fetchQuestions } from '../services/questions';
 import { useQuery } from 'react-query';
 import Loading from '../components/Loading';
-import AuthProvider from '../components/Auth/AuthProvider';
+import { useAuth } from '../components/Auth/AuthProvider';
 
-function QuestionPage(props: { user }): React.ReactElement {
+function QuestionsPage(): React.ReactElement {
+  const { user } = useAuth();
   const {
     data: questionData,
     error,
@@ -27,15 +28,9 @@ function QuestionPage(props: { user }): React.ReactElement {
 
   return (
     <Box>
-      <QuestionTable questionData={questionData} user={props.user} />
+      <QuestionTable questionData={questionData} user={user} />
     </Box>
   );
 }
-
-const QuestionsPage = (): JSX.Element => (
-  <AuthProvider auth={true}>
-    {(user) => <QuestionPage user={user} />}
-  </AuthProvider>
-);
 
 export default QuestionsPage;
