@@ -28,11 +28,7 @@ import AddQuestionModal from './AddQuestionModal';
 import QuestionTableRow from './QuestionTableRow';
 import '../index.css';
 import { QuestionSchema } from '../../services/apiSchema';
-import {
-  deleteQuestionApi,
-  createQuestion,
-  updateQuestion
-} from '../../services/questions';
+import { deleteQuestionApi, updateQuestion } from '../../services/questions';
 import { toast } from 'react-toastify';
 import { Categories } from '../../constants/enums';
 
@@ -53,27 +49,6 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
-
-  const addQuestion = async (question) => {
-    await createQuestion({
-      ...question,
-      categories: Object.entries(question.categories).map(([key, value]) => ({
-        id: parseInt(key, 10),
-        name: value
-      }))
-    }).then(
-      (res) => {
-        question.id = res.data.question.id;
-        console.log('Question created succesfully', res);
-        setData([...data, question]);
-        toast('Question created successfully', { type: 'success' });
-      },
-      (error) => {
-        console.error('Error creating question', error);
-        toast.warn('Error creating question', { type: 'error' });
-      }
-    );
   };
 
   const editQuestion = async (question) => {
@@ -171,7 +146,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
     >
       {' '}
       <AddQuestionModal
-        addQuestion={addQuestion}
+        setData={setData}
         questions={data}
         open={addQuestionModalOpen}
         setOpen={setAddQuestionModalOpen}

@@ -20,16 +20,17 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Categories } from '../../constants/enums';
+import { toast } from 'react-toastify';
+import { createQuestion } from '../../services/questions';
 
 interface AddQuestionModalProps {
-  addQuestion: (question: QuestionSchema) => void;
+  setData: (data: QuestionSchema[]) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   questions: QuestionSchema[];
 }
 
 function AddQuestionModal(props: AddQuestionModalProps) {
-  const addQuestion = props.addQuestion;
   const questions = props.questions;
   const handleClose = () => props.setOpen(false);
   const [title, setTitle] = useState('');
@@ -43,6 +44,31 @@ function AddQuestionModal(props: AddQuestionModalProps) {
     body: ''
   });
 
+  const addQuestion = async (question) => {
+    await createQuestion({
+      ...question,
+      categories: Object.entries(question.categories).map(([key, value]) => ({
+        id: parseInt(key, 10),
+        name: value
+      }))
+    }).then(
+      (res) => {
+        question.id = res.data.question.id;
+        console.log('Question created succesfully', res);
+        props.setData([...questions, question]);
+        toast('Question created successfully', { type: 'success' });
+        setTitle('');
+        setBody('');
+        setSelectedCategories({});
+        setComplexity('Easy');
+      },
+      (error) => {
+        console.error('Error creating question', error);
+        toast.warn('Error creating question', { type: 'error' });
+      }
+    );
+  };
+
   const handleCategoryChange = (event) => {
     const value = event.target.value as number[];
     const newSelectedCategories = value.reduce((acc, id) => {
@@ -52,7 +78,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
     setSelectedCategories(newSelectedCategories);
   };
 
-  const submitQuestion = () => {
+  const submitQuestion = async () => {
     if (!title && !body) {
       setValidation({ title: '', body: '' });
     } else if (!title) {
@@ -85,7 +111,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
       }
     }
 
-    addQuestion(newQuestion);
+    await addQuestion(newQuestion);
 
     handleClose();
   };
