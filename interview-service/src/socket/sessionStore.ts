@@ -1,5 +1,9 @@
 import RedisCacheService from '../redis/redisCacheService';
 import { Message, SessionResponse } from './sessionResponse';
+import {
+  createQuestionAttempt,
+  attemptSchema
+} from '../questions/questionsService';
 
 export default class sessionStore {
   private readonly redisService: RedisCacheService;
@@ -93,5 +97,57 @@ export default class sessionStore {
   async deleteSession(sessionId: string): Promise<void> {
     console.log('Deleting session:', `session:${sessionId}`);
     await this.redisService.delete(`session:${sessionId}`);
+  }
+
+  async submitSessionCode(sessionId: string, code: string): Promise<void> {
+    const sessionData = await this.findSession(sessionId);
+
+    if (sessionData) {
+      const language = sessionData.language;
+      const difficulty = sessionData.difficulty;
+      // Store question attempt in database
+      const payload: attemptSchema = {
+        questionId: sessionData.questionId,
+        userId1: sessionData.id1,
+        userId2: sessionData.id2,
+        code: sessionData.code,
+        language: sessionData.language
+      };
+      console.log('Saving question attempt:', payload);
+      try {
+        const saveQuestionResponse = await createQuestionAttempt(payload);
+        if (saveQuestionResponse && 'error' in saveQuestionResponse) {
+          console.error(
+            'Error storing question attempt:',
+            saveQuestionResponse.error
+          );
+        } else {
+          console.log('Successfully stored question attempt');
+        }
+      } catch (error) {
+        console.error('Unexpected error storing question attempt:', error);
+      }
+      // Handle sessionData deletion in redis queue
+      if (difficulty !== undefined && language !== undefined) {
+        const languageDifficultyData = await this.redisService.get(
+          `${difficulty}_${language}`
+        );
+        if (languageDifficultyData) {
+          const languageDifficultyMap = JSON.parse(languageDifficultyData);
+          delete languageDifficultyMap[sessionData.id1];
+          delete languageDifficultyMap[sessionData.id2];
+          await this.redisService.set(
+            `${difficulty}_${language}`,
+            JSON.stringify(languageDifficultyMap)
+          );
+        }
+      }
+      await this.redisService.delete(`user:${sessionData.id1}`);
+      console.log('User:session deleted:', `user:${sessionData.id1}`);
+      await this.redisService.delete(`user:${sessionData.id2}`);
+      console.log('User:session deleted:', `user:${sessionData.id2}`);
+    }
+    await this.redisService.delete(`session:${sessionId}`);
+    console.log('Session deleted:', `session:${sessionId}`);
   }
 }

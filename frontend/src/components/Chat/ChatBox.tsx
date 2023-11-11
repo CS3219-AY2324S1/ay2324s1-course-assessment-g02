@@ -66,8 +66,8 @@ const ChatBox = (props: ChatProps) => {
         {messages.map(({ message, sender, createdAt }, _i) => {
           const direction =
             props.userEmail === sender
-              ? ChatDirections.left
-              : ChatDirections.right;
+              ? ChatDirections.right
+              : ChatDirections.left;
           return (
             <ChatMessage
               key={_i} // consider using unique ids

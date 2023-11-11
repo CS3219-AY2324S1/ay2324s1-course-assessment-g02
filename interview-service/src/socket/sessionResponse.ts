@@ -7,6 +7,8 @@ export interface SessionResponse {
   isConnected: boolean;
   startTime: number;
   messages: Message[];
+  difficulty: string;
+  language: string;
   code: string;
 }
 

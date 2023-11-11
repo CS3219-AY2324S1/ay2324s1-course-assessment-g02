@@ -158,5 +158,6 @@ model AttemptedQuestion {
   attemptedAt    DateTime      @default(now())
   completedAt     DateTime?      
   code String?
+  language Language?
 	@@map("AttemptedQuestions")
 }

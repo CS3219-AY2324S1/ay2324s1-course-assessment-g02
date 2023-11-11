@@ -1,6 +1,6 @@
 import ChatBox from './ChatBox';
 import ChatInputBox from './ChatInputBox';
-import { Paper, Box } from '@mui/material';
+import { Box } from '@mui/material';
 
 interface ChatProps {
   isConnected: boolean;
@@ -8,32 +8,28 @@ interface ChatProps {
 }
 
 const Chat = (props: ChatProps) => {
-  const isConnected = props.isConnected;
+  const { isConnected, userEmail } = props;
 
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '85vh',
-        borderRadius: '1em'
+        height: '100%',
+        borderRadius: '1em',
+        p: '0.5em'
       }}
     >
-      <Paper
+      <Box
         sx={{
           flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
           overflow: 'hidden',
           overflowY: 'scroll',
-          padding: '1em',
-          margin: '0.5em 0.25em 0.25em 0.5em',
-          justifyContent: 'flex-end',
-          borderRadius: '1em'
+          marginBottom: '8px'
         }}
       >
-        <ChatBox isConnected={isConnected} userEmail={props.userEmail} />
-      </Paper>
+        <ChatBox isConnected={isConnected} userEmail={userEmail} />
+      </Box>
       <ChatInputBox />
     </Box>
   );

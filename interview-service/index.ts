@@ -91,6 +91,19 @@ socketIO.on('connection', async (socket: Socket) => {
     sessionStore.saveSessionCode(sessionId, content.code);
   });
 
+  socket.on('submitCode', (code: string) => {
+    console.log('Code submission requested');
+    try {
+      sessionStore.submitSessionCode(sessionId, code);
+      socket.emit('submitCodeSuccess');
+      socket.to(sessionId).emit('submitCodeSuccess');
+      console.log('Code submitted successfully');
+    } catch (err) {
+      console.error('Error submitting code', err);
+      socket.emit('submitCodeError', err);
+    }
+  });
+
   socket.on('disconnect', async () => {
     console.log('🔥: A user disconnected');
     const matchingSockets = await socketIO.in(userId).allSockets();

@@ -9,18 +9,22 @@ import { Auth } from '@supabase/auth-ui-react';
 import { CssBaseline } from '@mui/material';
 import { supabase } from './main';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { UserPageMain, UserProfilesPage } from './pages/UserPage';
-// Components (for routes)
+import { AuthProvider } from './components/Auth/AuthProvider';
 import MainNavigationBar from './components/Navbar/MainNavigationBar';
+import Loading from './components/Loading';
+import { useDarkMode } from './hooks/useDarkMode';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './index.css';
+// Components (for routes)
 import NotFound from './components/NotFound';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
+import { UserPageMain, UserProfilesPage } from './pages/UserPage';
 import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
 import MatchPage from './pages/MatchPage';
 import InterviewPage from './pages/InterviewPage';
-import Loading from './components/Loading';
-import { useDarkMode } from './hooks/useDarkMode';
 
 function App() {
   const { theme, toggleTheme, componentMounted } = useDarkMode();
@@ -53,42 +57,60 @@ function App() {
   ) : (
     <QueryClientProvider client={queryClient}>
       <Auth.UserContextProvider supabaseClient={supabase}>
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
-          <ThemeProvider
-            theme={theme == 'light' ? hannahTheme : hannahThemeDark}
-          >
-            <CssBaseline />
-            <MainNavigationBar />
-            <Box
-              display="flex"
-              minHeight={'95vh'}
-              width={'100vw'}
-              alignItems="center"
-              justifyContent="center"
+        <AuthProvider>
+          <ThemeContext.Provider value={{ theme, toggleTheme }}>
+            <ThemeProvider
+              theme={theme == 'light' ? hannahTheme : hannahThemeDark}
             >
-              {!session && (
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="*" element={<Navigate to="/auth" replace />} />
-                </Routes>
-              )}
-              {session && (
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  {/* TODO: REMOVE TEST PATH SOCKET */}
-                  <Route path="/user" element={<UserPageMain />} />
-                  <Route path="/user/:id" element={<UserProfilesPage />} />
-                  <Route path="/questions" element={<QuestionsPage />} />
-                  <Route path="/match" element={<MatchPage />} />
-                  <Route path="/interview" element={<InterviewPage />} />
-                  <Route path="/problems" element={<ProblemPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              )}
-            </Box>
-          </ThemeProvider>
-        </ThemeContext.Provider>
+              <CssBaseline />
+              <Box
+                display="flex"
+                flexDirection="column"
+                height="100vh"
+                width="100vw"
+              >
+                <ToastContainer
+                  position="top-right"
+                  style={{ marginTop: '60px' }}
+                  toastClassName="custom-toast"
+                  bodyClassName="custom-body"
+                  progressClassName="custom-progress"
+                />
+                <MainNavigationBar />
+
+                <Box
+                  flexGrow={1}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {!session && (
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/auth" element={<AuthPage />} />
+                      <Route
+                        path="*"
+                        element={<Navigate to="/auth" replace />}
+                      />
+                    </Routes>
+                  )}
+                  {session && (
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/user" element={<UserPageMain />} />
+                      <Route path="/user/:id" element={<UserProfilesPage />} />
+                      <Route path="/questions" element={<QuestionsPage />} />
+                      <Route path="/match" element={<MatchPage />} />
+                      <Route path="/interview" element={<InterviewPage />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  )}
+                </Box>
+              </Box>
+            </ThemeProvider>
+          </ThemeContext.Provider>
+        </AuthProvider>
       </Auth.UserContextProvider>
     </QueryClientProvider>
   );

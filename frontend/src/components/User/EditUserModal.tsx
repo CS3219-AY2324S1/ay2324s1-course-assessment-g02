@@ -31,20 +31,18 @@ interface EditUserModalProps {
 
 const EditUserModal = (props: EditUserModalProps) => {
   const {
-    userName,
-    userPreferredComplexity,
-    userPreferredLanguage,
+    user,
     isLoading,
     isError,
     setUserName,
     setUserPreferredLanguage,
     setUserPreferredComplexity
   } = props.userData;
-  const [tempUserName, setTempUserName] = useState(userName);
+  const [tempUserName, setTempUserName] = useState(user.userName);
   const [tempUserPreferredComplexity, setTempUserPreferredComplexity] =
-    useState(userPreferredComplexity);
+    useState(user.userPreferredComplexity);
   const [tempUserPreferredLanguage, setTempUserPreferredLanguage] = useState(
-    userPreferredLanguage
+    user.userPreferredLanguage
   );
 
   const handleClose = () => props.setOpen(false);

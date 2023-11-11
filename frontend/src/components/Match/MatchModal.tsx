@@ -1,15 +1,14 @@
 import { Box, Button, Modal, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import useInterval from '../hooks/useInterval';
-import { ProgrammingLanguages, Difficulties } from '../constants/enums';
-import { sessionText } from '../constants/text';
-import LoadingIndicator from '../components/LoadingIndicator';
-import SelectionMenu from '../components/SelectionMenu';
-import { deleteMatch, findMatch } from '../services/match';
-import { useAuth } from '../components/Auth/AuthProvider';
+import useInterval from '../../hooks/useInterval';
+import { ProgrammingLanguages, Difficulties } from '../../constants/enums';
+import { sessionText } from '../../constants/text';
+import LoadingIndicator from '../../components/LoadingIndicator';
+import SelectionMenu from '../../components/SelectionMenu';
+import { deleteMatch, findMatch } from '../../services/match';
+import { useAuth } from '../../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../components/Loading';
 
 const modalStyle = {
   position: 'absolute',
@@ -23,7 +22,8 @@ const modalStyle = {
   p: 4
 };
 
-function MatchBox({ user }): React.ReactElement {
+function MatchBox(props: { user; open; setOpen }): React.ReactElement {
+  const user = props.user;
   const [difficulty, setDifficulty] = useState(Difficulties.Easy);
   const [language, setLanguage] = useState(ProgrammingLanguages.Python);
   const [open, openModal] = useState(false);
@@ -68,6 +68,7 @@ function MatchBox({ user }): React.ReactElement {
       console.log(`Counter: ${count}`);
 
       findMatch(user.id, difficulty, language).then((response) => {
+        console.log('response', response);
         if (response.status) {
           setIsLoading(false);
           setIsSuccess(true);
@@ -129,55 +130,69 @@ function MatchBox({ user }): React.ReactElement {
   };
 
   return (
-    <Box>
-      <Paper
-        style={{
-          minHeight: 300,
-          maxWidth: 500,
-          padding: 20,
-          borderRadius: 10
-        }}
-      >
-        <Typography color="primary">{sessionText}</Typography>
-        <DifficultyMenu />
-        <LanguageMenu />
-        <MatchButton />
-      </Paper>
-      <Modal
-        open={open}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={modalStyle}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex',
-            flexDirection: 'column'
+    <Modal open={props.open} onClose={() => props.setOpen(false)}>
+      <Box>
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 600,
+            bgcolor: 'background.paper',
+            borderRadius: 10,
+            boxShadow: 18,
+            p: 4
           }}
         >
-          <LoadingIndicator loading={isLoading} success={isSuccess} />
-          <Typography color="primary" style={{ margin: '10px 0px' }}>
-            Matching is in progress...
-          </Typography>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={closeModal}
+          <Typography color="primary">{sessionText}</Typography>
+          <DifficultyMenu />
+          <LanguageMenu />
+          <MatchButton />
+        </Paper>
+        <Modal
+          open={open}
+          onClose={closeModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={modalStyle}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
           >
-            Cancel
-          </Button>
-        </Box>
-      </Modal>
-    </Box>
+            <LoadingIndicator loading={isLoading} success={isSuccess} />
+            <Typography color="primary" style={{ margin: '10px 0px' }}>
+              Matching is in progress...
+            </Typography>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={closeModal}
+            >
+              Cancel
+            </Button>
+          </Box>
+        </Modal>
+      </Box>
+    </Modal>
   );
 }
-const MatchPage = () => {
-  const { user, isLoading } = useAuth();
-  return isLoading ? <Loading /> : <MatchBox user={user} />;
+
+const MatchModal = ({ open, setOpen }): React.ReactElement => {
+  const { user } = useAuth();
+  return (
+    <div>
+      <MatchBox user={user} open={open} setOpen={setOpen} />
+    </div>
+  );
 };
-export default MatchPage;
+
+export default MatchModal;

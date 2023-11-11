@@ -1,16 +1,40 @@
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect
+} from 'react';
 import { Auth } from '@supabase/auth-ui-react';
-import Loading from '../Loading';
 
-interface AuthProviderProps {
-  children: (user) => JSX.Element;
+interface AuthContextType {
+  user;
+  isLoading: boolean;
 }
 
-const AuthProvider = (props: AuthProviderProps): JSX.Element => {
-  const { user } = Auth.useUser();
+const AuthContext = createContext<AuthContextType | null>(null);
 
-  if (!user) return <Loading />;
-
-  return props.children(user);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  return context;
 };
 
-export default AuthProvider;
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const { user } = Auth.useUser();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(!user);
+  }, [user]);
+
+  return (
+    <AuthContext.Provider value={{ user, isLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
