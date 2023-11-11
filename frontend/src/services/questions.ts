@@ -1,9 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { QuestionSchema } from './apiSchema.ts';
 
-const questionsUrl: string = `${
-  import.meta.env.VITE_APP_QUESTIONS_BACKEND_URL
-}/questions`;
+const questionsUrl = `http://${import.meta.env.VITE_APP_HOST}:${import.meta.env.VITE_APP_QUESTIONS_BACKEND_PORT}/questions`;
 
 export async function fetchQuestions() {
   const { data } = await axios.get(questionsUrl);
