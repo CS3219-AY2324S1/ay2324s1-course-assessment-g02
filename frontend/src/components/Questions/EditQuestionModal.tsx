@@ -20,28 +20,32 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Categories } from '../../constants/enums';
+import { toast } from 'react-toastify';
 
-interface AddQuestionModalProps {
-  addQuestion: (question: QuestionSchema) => void;
+interface EditQuestionModalProps {
+  editQuestion: (question: QuestionSchema) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   questions: QuestionSchema[];
+  question: QuestionSchema;
 }
 
-function AddQuestionModal(props: AddQuestionModalProps) {
-  const addQuestion = props.addQuestion;
+function EditQuestionModal(props: EditQuestionModalProps) {
+  const editQuestion = props.editQuestion;
   const questions = props.questions;
+  const question = props.question;
   const handleClose = () => props.setOpen(false);
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [title, setTitle] = useState(question.title);
+  const [body, setBody] = useState(question.body);
   const [selectedCategories, setSelectedCategories] = useState<{
     [key: number]: string;
-  }>({});
-  const [complexity, setComplexity] = useState('Easy');
+  }>(question.categories);
+  const [complexity, setComplexity] = useState(question.complexity);
   const [validation, setValidation] = useState({
     title: '',
     body: ''
   });
+  const [hasChange, setHasChange] = useState(false);
 
   const handleCategoryChange = (event) => {
     const value = event.target.value as number[];
@@ -50,6 +54,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
       return acc;
     }, {} as { [key: number]: string });
     setSelectedCategories(newSelectedCategories);
+    setHasChange(true);
   };
 
   const submitQuestion = () => {
@@ -68,15 +73,21 @@ function AddQuestionModal(props: AddQuestionModalProps) {
       return;
     }
 
-    const newQuestion = {
+    if (!hasChange) {
+      toast.error('No changes detected');
+      return;
+    }
+
+    const updatedQuestion = {
+      id: question.id,
       title: title,
       body: body,
       categories: selectedCategories,
       complexity: complexity as 'Easy' | 'Medium' | 'Hard'
     };
 
-    for (let question of questions) {
-      if (question.title === newQuestion.title) {
+    for (let q of questions) {
+      if (q.id != question.id && q.title === updatedQuestion.title) {
         setValidation({
           ...validation,
           title: 'There already exists a question with the same title.'
@@ -85,7 +96,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
       }
     }
 
-    addQuestion(newQuestion);
+    editQuestion(updatedQuestion);
 
     handleClose();
   };
@@ -122,6 +133,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
             onChange={(e) => {
               setTitle(e.target.value);
               setValidation({ ...validation, title: '' });
+              setHasChange(true);
             }}
             error={!!validation.title}
             helperText={validation.title}
@@ -134,6 +146,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
             onChange={(e) => {
               setBody(e.target.value);
               setValidation({ ...validation, body: '' });
+              setHasChange(true);
             }}
             error={!!validation.body}
             helperText={validation.body}
@@ -178,7 +191,10 @@ function AddQuestionModal(props: AddQuestionModalProps) {
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
             value={complexity}
-            onChange={(e) => setComplexity(e.target.value)}
+            onChange={(e) => {
+              setComplexity(e.target.value);
+              setHasChange(true);
+            }}
             row
           >
             <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
@@ -198,4 +214,4 @@ function AddQuestionModal(props: AddQuestionModalProps) {
   );
 }
 
-export default AddQuestionModal;
+export default EditQuestionModal;

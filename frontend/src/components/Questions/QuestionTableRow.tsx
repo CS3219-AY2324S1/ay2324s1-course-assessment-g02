@@ -1,27 +1,44 @@
-import React from 'react';
+import { useState } from 'react';
 import {
   TableRow,
   TableCell,
   Stack,
   Chip,
-  Button,
+  IconButton,
   Typography
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { complexityColorMap } from '../../constants/themes';
 import { QuestionSchema } from '../../services/apiSchema';
 import QuestionModal from './QuestionModal';
-import { Categories } from '../../constants/enums';
+import EditQuestionModal from './EditQuestionModal';
 
 function QuestionTableRow(props: {
   question: QuestionSchema;
+  questions: QuestionSchema[];
   deleteQuestion: (id: number) => void;
+  editQuestion: (question: QuestionSchema) => void;
 }) {
-  const { question, deleteQuestion } = props;
-  const [open, setOpen] = React.useState(false);
+  const { question, questions, deleteQuestion, editQuestion } = props;
+  const [openQuestiomModal, setOpenQuestiomModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   return (
     <>
-      <QuestionModal question={question} open={open} setOpen={setOpen} />
+      <QuestionModal
+        question={question}
+        open={openQuestiomModal}
+        setOpen={setOpenQuestiomModal}
+      />
+      <EditQuestionModal
+        question={question}
+        editQuestion={editQuestion}
+        questions={questions}
+        open={openEditModal}
+        setOpen={setOpenEditModal}
+      />
+
       <TableRow
         hover
         sx={{
@@ -31,7 +48,7 @@ function QuestionTableRow(props: {
         role="checkbox"
         tabIndex={-1}
         key={question.id}
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpenQuestiomModal(!openQuestiomModal)}
       >
         <TableCell>
           <Typography align="center">{question.id}</Typography>
@@ -64,16 +81,26 @@ function QuestionTableRow(props: {
           />
         </TableCell>
         <TableCell align="center">
-          <Button
-            variant="outlined"
-            sx={{ borderRadius: '12px' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteQuestion(question.id);
-            }}
-          >
-            Delete
-          </Button>
+          <Stack direction="row" spacing={1}>
+            <IconButton
+              aria-label="edit"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenEditModal(true);
+              }}
+            >
+              <EditIcon sx={{ color: '#ff84cf' }} />
+            </IconButton>
+            <IconButton
+              aria-label="delete"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteQuestion(question.id);
+              }}
+            >
+              <DeleteIcon sx={{ color: 'red' }} />
+            </IconButton>
+          </Stack>
         </TableCell>
       </TableRow>
     </>
