@@ -11,6 +11,7 @@ export default class MatchService {
   }
 
   async getMatch(id: string, difficulty: string, language: string) {
+    console.log('creating match', id, difficulty, language);
     await this.createMatch(id, difficulty, language);
     return this.findMatch(id, difficulty, language);
   }
@@ -23,6 +24,7 @@ export default class MatchService {
     const key = `${difficulty}_${language}`;
     const data = await this.redisService.get(key);
     const map = JSON.parse(data || '{}'); // Initialize to an empty object if data is null
+    console.log('map', map[id]);
 
     if (map[id] !== null) {
       const matchDetails = map[id];
@@ -54,7 +56,9 @@ export default class MatchService {
       console.log(`Successfully matched ${id} with ${unmatchedId}`);
 
       // Send both users to a `user:${userId}`:sessionId in redis for lookup
+      console.log(`Setting user:${id} to ${sessionId}`);
       await this.redisService.set(`user:${id}`, sessionId);
+      console.log(`Setting user:${unmatchedId} to ${sessionId}`);
       await this.redisService.set(`user:${unmatchedId}`, sessionId);
 
       // Create a session in redis to be shared with sockets

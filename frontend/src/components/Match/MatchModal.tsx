@@ -9,6 +9,7 @@ import SelectionMenu from '../../components/SelectionMenu';
 import { deleteMatch, findMatch } from '../../services/match';
 import { useAuth } from '../../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import useUserSession from '../../hooks/useUserSession';
 
 const modalStyle = {
   position: 'absolute',
@@ -33,19 +34,30 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const closeModal = () => {
-    openModal(false);
-    setIsRetrying(false);
-    setCount(0);
+  const CloseModal = async () => {
     console.log(`Deleting match for ${user!.id}`);
-    deleteMatch(user.id, difficulty, language).then(() => {
-      console.log('Deleted match');
-    });
 
-    setIsSuccess(false);
-    setIsLoading(true);
+    const data = useUserSession(user.id);
+    const { session, isLoading } = data;
+
+    if (isLoading) {
+      console.log('Waiting for session data to load...');
+    } else {
+      openModal(false);
+      setIsRetrying(false);
+      setCount(0);
+      if (!session) {
+        // If there is no session, delete the match
+        deleteMatch(user.id, difficulty, language).then(() => {
+          console.log('Deleted match');
+        });
+      } else {
+        setIsSuccess(false);
+        setIsLoading(true);
+        navigate('/interview');
+      }
+    }
   };
-
   const successCloseModal = () => {
     openModal(false);
     setIsRetrying(false);
@@ -60,7 +72,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
       if (count === 6) {
         setIsLoading(false);
         setIsSuccess(false);
-        closeModal();
+        CloseModal();
         toast.warn('Failed to find matching user');
         return;
       }
@@ -152,7 +164,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
         </Paper>
         <Modal
           open={open}
-          onClose={closeModal}
+          onClose={CloseModal}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
@@ -175,7 +187,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
               variant="contained"
               color="primary"
               size="large"
-              onClick={closeModal}
+              onClick={CloseModal}
             >
               Cancel
             </Button>
