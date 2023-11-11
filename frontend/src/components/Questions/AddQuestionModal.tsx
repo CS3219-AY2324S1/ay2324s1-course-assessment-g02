@@ -67,7 +67,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
       return;
     }
 
-    const newQuestion: QuestionSchema = {
+    const newQuestion = {
       title: title,
       body: body,
       categories: selectedCategories,
@@ -85,6 +85,7 @@ function AddQuestionModal(props: AddQuestionModalProps) {
     }
 
     addQuestion(newQuestion);
+
     handleClose();
   };
 

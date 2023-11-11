@@ -51,8 +51,14 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
     setPage(0);
   };
 
-  const addQuestion = async (question: QuestionSchema) => {
-    await createQuestion(question).then(
+  const addQuestion = async (question) => {
+    await createQuestion({
+      ...question,
+      categories: Object.entries(question.categories).map(([key, value]) => ({
+        id: parseInt(key, 10),
+        name: value
+      }))
+    }).then(
       (res) => {
         question.id = res.data.question.id;
         console.log('Question created succesfully', res);
