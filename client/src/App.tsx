@@ -9,7 +9,7 @@ function App() {
         <AppBar position="sticky">
           <Toolbar>
             <Typography variant="h6" sx={{ my: 2 }}>
-              Assignment 1
+              Assignment 2
             </Typography>
           </Toolbar>
         </AppBar>

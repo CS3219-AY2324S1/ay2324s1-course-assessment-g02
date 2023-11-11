@@ -17,18 +17,18 @@ import {
 import { useState } from "react";
 
 interface QuestionModalProps {
-  addQuestion: (question: Question) => void;
+  updateQuestion: (question: Question) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
+  question: Question;
   questions: Question[];
 }
 
-function AddQuestionModal(props: QuestionModalProps) {
-  const addQuestion = props.addQuestion;
-  const questions = props.questions;
+function EditQuestionModal(props: QuestionModalProps) {
+  const { updateQuestion, questions, question } = props;
   const handleClose = () => props.setOpen(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(question.title);
+  const [description, setDescription] = useState(question.description);
   const [categories, setCategories] = useState({
     Strings: false,
     "Data Structure": false,
@@ -39,7 +39,7 @@ function AddQuestionModal(props: QuestionModalProps) {
     Databases: false,
     "Brain Teaser": false,
   });
-  const [complexity, setComplexity] = useState("Easy");
+  const [complexity, setComplexity] = useState(question.complexity);
   const [validation, setValidation] = useState({
     title: "",
     description: "",
@@ -78,15 +78,15 @@ function AddQuestionModal(props: QuestionModalProps) {
     }
 
     const newQuestion: Question = {
-      _id: "",
+      _id: question._id,
       title: title,
       description: description,
       categories: categoryLabels.filter((x) => (categories as any)[x]),
       complexity: complexity as "Easy" | "Medium" | "Hard",
     };
 
-    for (let question of questions) {
-      if (question.title === newQuestion.title) {
+    for (let qn of questions) {
+      if (qn.title === newQuestion.title && qn._id !== newQuestion._id) {
         setValidation({
           ...validation,
           title: "There already exists a question with the same title.",
@@ -95,7 +95,7 @@ function AddQuestionModal(props: QuestionModalProps) {
       }
     }
 
-    addQuestion(newQuestion);
+    updateQuestion(newQuestion);
     handleClose();
   };
 
@@ -178,7 +178,7 @@ function AddQuestionModal(props: QuestionModalProps) {
             </RadioGroup>
           </FormControl>
           <Button variant={"contained"} onClick={submitQuestion}>
-            Submit
+            Update
           </Button>
         </Paper>
       </Modal>
@@ -186,4 +186,4 @@ function AddQuestionModal(props: QuestionModalProps) {
   );
 }
 
-export default AddQuestionModal;
+export default EditQuestionModal;

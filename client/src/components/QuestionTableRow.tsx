@@ -10,23 +10,43 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { Question } from "./QuestionTable";
+import React, { Dispatch, SetStateAction } from "react";
+import { Question } from "../api/questions";
+import EditIcon from "@mui/icons-material/Edit";
+import EditQuestionModal from "./EditQuestionModal";
 
 function QuestionTableRow(props: {
   question: Question;
-  deleteQuestion: (questionId: number) => void;
+  questions: Question[];
+  deleteQuestion: (questionId: string) => void;
+  updateQuestion: (question: Question) => void;
+  editQuestionModalOpen: boolean;
+  setEditQuestionModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { question, deleteQuestion } = props;
+  const {
+    question,
+    questions,
+    deleteQuestion,
+    updateQuestion,
+    editQuestionModalOpen,
+    setEditQuestionModalOpen,
+  } = props;
   const [open, setOpen] = React.useState(false);
 
   return (
     <React.Fragment>
+      <EditQuestionModal
+        updateQuestion={updateQuestion}
+        open={editQuestionModalOpen}
+        setOpen={setEditQuestionModalOpen}
+        question={question}
+        questions={questions}
+      />
       <TableRow
         hover
         role="checkbox"
         tabIndex={-1}
-        key={question.id}
+        key={question._id}
         onClick={() => setOpen(!open)}
       >
         <TableCell>
@@ -55,10 +75,19 @@ function QuestionTableRow(props: {
             color="error"
             onClick={(e) => {
               e.stopPropagation();
-              deleteQuestion(question.id || 0);
+              deleteQuestion(question._id || "");
             }}
           >
             Delete
+          </Button>
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditQuestionModalOpen(true);
+              updateQuestion(question);
+            }}
+          >
+            <EditIcon />
           </Button>
         </TableCell>
       </TableRow>
@@ -67,9 +96,6 @@ function QuestionTableRow(props: {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Stack>
-                <div>
-                  Leetcode Link: <a href={question.link}>{question.link}</a>
-                </div>
                 <Typography variant="h6" gutterBottom component="div">
                   Description
                 </Typography>
