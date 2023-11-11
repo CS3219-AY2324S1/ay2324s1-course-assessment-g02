@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const userServiceUrl = `http://${import.meta.env.VITE_APP_HOST}:${
+const userServiceUrl = `http://${import.meta.env.VITE_APP_SUPABASE_HOST}:${
   import.meta.env.VITE_APP_SUPABASE_PORT
 }/user`;
 

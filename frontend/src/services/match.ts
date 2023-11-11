@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { MatchResponse } from '../interfaces/matchResponse';
 
-const matchUrl: string = `http://${import.meta.env.VITE_APP_HOST}:${import.meta.env.VITE_APP_MATCH_BACKEND_PORT}/match/`;
+const matchUrl: string = `http://${import.meta.env.VITE_APP_MATCH_HOST}:${
+  import.meta.env.VITE_APP_MATCH_BACKEND_PORT
+}/match/`;
 
 export const findMatch = async (
   id: string,

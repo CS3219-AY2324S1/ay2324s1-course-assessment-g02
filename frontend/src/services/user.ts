@@ -1,7 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 import { UserIdSchema, UserSchema } from './apiSchema.ts';
 
-const usersUrl = `http://${import.meta.env.VITE_APP_HOST}:${import.meta.env.VITE_APP_USERS_BACKEND_PORT}/users/`;
+const usersUrl = `http://${import.meta.env.VITE_APP_USERS_HOST}:${
+  import.meta.env.VITE_APP_USERS_BACKEND_PORT
+}/users/`;
 
 export async function fetchUsers() {
   const { data } = await axios.get(usersUrl);
