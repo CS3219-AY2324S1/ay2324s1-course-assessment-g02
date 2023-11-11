@@ -19,14 +19,12 @@ import {
   updateQuestion as updateQuestionApi,
 } from "../api/questions";
 import { Question } from "../api/questions";
-import EditQuestionModal from "./EditQuestionModal";
 
 function QuestionTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [questionData, setQuestionData] = useState<Question[]>([]);
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
-  const [editQuestionModalOpen, setEditQuestionModalOpen] = useState(false);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -110,8 +108,6 @@ function QuestionTable() {
                     question={question}
                     deleteQuestion={deleteQuestionId}
                     questions={questionData}
-                    editQuestionModalOpen={editQuestionModalOpen}
-                    setEditQuestionModalOpen={setEditQuestionModalOpen}
                     updateQuestion={updateQuestion}
                   />
                 );

@@ -20,19 +20,15 @@ function QuestionTableRow(props: {
   questions: Question[];
   deleteQuestion: (questionId: string) => void;
   updateQuestion: (question: Question) => void;
-  editQuestionModalOpen: boolean;
-  setEditQuestionModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const {
     question,
     questions,
     deleteQuestion,
     updateQuestion,
-    editQuestionModalOpen,
-    setEditQuestionModalOpen,
   } = props;
   const [open, setOpen] = React.useState(false);
-
+  const [ editQuestionModalOpen, setEditQuestionModalOpen ] = React.useState(false);
   return (
     <React.Fragment>
       <EditQuestionModal
