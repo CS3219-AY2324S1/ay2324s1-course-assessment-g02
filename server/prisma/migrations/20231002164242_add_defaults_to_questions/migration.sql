@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "Questions" ALTER COLUMN "attempts" SET DEFAULT 0,
-ALTER COLUMN "ratings" SET DEFAULT 0,
-ALTER COLUMN "solves" SET DEFAULT 0;
