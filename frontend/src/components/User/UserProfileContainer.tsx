@@ -2,12 +2,25 @@ import { Paper, Grid, Typography, IconButton } from '@mui/material';
 import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
+import ChangePasswordModal from './ChangePasswordModal';
+import DeleteUserModal from './DeleteUserModal';
+import { Stack } from '@mui/system';
 
-const UserProfileContainer = (props: { currentUser: number; userData }) => {
+const UserProfileContainer = (props: {
+  session;
+  user;
+  currentUser: number;
+  userData;
+}) => {
+  const session = props.session;
+  const user = props.user;
   const userData = props.userData;
   const { id, userName, userPreferredLanguage, userPreferredComplexity } =
     userData.user;
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
+
   const editable =
     props.currentUser === (userData.user.id as number) ? true : false;
 
@@ -71,12 +84,22 @@ const UserProfileContainer = (props: { currentUser: number; userData }) => {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography
-                sx={{ cursor: 'pointer', color: 'secondary.main' }}
-                variant="body1"
-              >
-                🍫 Delete Account
-              </Typography>
+              <Stack direction="row" spacing={1}>
+                <Typography
+                  sx={{ cursor: 'pointer', color: 'secondary.contrast' }}
+                  variant="body1"
+                  onClick={() => setChangePasswordModalOpen(true)}
+                >
+                  🔑 Change Password
+                </Typography>
+                <Typography
+                  sx={{ cursor: 'pointer', color: 'secondary.contrast' }}
+                  variant="body1"
+                  onClick={() => setDeleteDialogOpen(true)}
+                >
+                  🍫 Delete Account
+                </Typography>
+              </Stack>
             </Grid>
           </Grid>
           {editable && (
@@ -94,6 +117,18 @@ const UserProfileContainer = (props: { currentUser: number; userData }) => {
           )}
         </Grid>
       </Grid>
+      <DeleteUserModal
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        user={user}
+        session={session}
+      />
+      <ChangePasswordModal
+        open={changePasswordModalOpen}
+        setOpen={setChangePasswordModalOpen}
+        user={user}
+        session={session}
+      />
     </Paper>
   );
 };

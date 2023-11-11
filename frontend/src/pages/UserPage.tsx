@@ -11,6 +11,8 @@ import UserHistoryTable from '../components/User/UserHistoryTable';
 interface UserPageProps {
   userId: number;
   id;
+  session;
+  user;
 }
 
 const UserPage = (props: UserPageProps): JSX.Element => {
@@ -37,8 +39,10 @@ const UserPage = (props: UserPageProps): JSX.Element => {
           sx={{ height: '100%' }}
         >
           <UserProfileContainer
+            user={props.user}
             userData={userData}
             currentUser={props.userId}
+            session={props.session}
           />
           <UserHistoryTable
             userAttemptedQuestions={user.userAttemptedQuestions}
@@ -51,25 +55,29 @@ const UserPage = (props: UserPageProps): JSX.Element => {
 };
 
 const UserProfilesPage = (): JSX.Element => {
-  const { user, isLoading } = useAuth();
+  const { user, session, isLoading } = useAuth();
   const { id } = useParams();
 
   return isLoading ? (
     <Loading />
   ) : (
     <GetUserIdProvider id={user.id}>
-      {(userId) => <UserPage userId={userId} id={id} />}
+      {(userId) => (
+        <UserPage user={user} session={session} userId={userId} id={id} />
+      )}
     </GetUserIdProvider>
   );
 };
 
 const UserPageMain = (): JSX.Element => {
-  const { user, isLoading } = useAuth();
+  const { user, session, isLoading } = useAuth();
   return isLoading ? (
     <Loading />
   ) : (
     <GetUserIdProvider id={user.id}>
-      {(userId) => <UserPage userId={userId} id={userId} />}
+      {(userId) => (
+        <UserPage user={user} session={session} userId={userId} id={userId} />
+      )}
     </GetUserIdProvider>
   );
 };

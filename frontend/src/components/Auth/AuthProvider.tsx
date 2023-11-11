@@ -9,6 +9,7 @@ import { Auth } from '@supabase/auth-ui-react';
 
 interface AuthContextType {
   user;
+  session;
   isLoading: boolean;
 }
 
@@ -25,7 +26,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { user } = Auth.useUser();
+  const { user, session } = Auth.useUser();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading }}>
+    <AuthContext.Provider value={{ user, session, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
