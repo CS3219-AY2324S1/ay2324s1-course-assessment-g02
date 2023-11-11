@@ -22,7 +22,7 @@
     "isolatedModules": true
   },
   "include": [
-    "src"
+    "questions/src"
   ],
   "exclude": [
     "node_modules"

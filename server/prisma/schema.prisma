@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+// User:
+// id: (PK), u8se imake it easier to view other people's profiles
+// userId: (UUID) not null, links to supabase auth table
+// Username
+// Email - Authentication service unique
+// Password hashed
+// Proficiency
+// Language
+model User {
+  id           Int           @id @unique @default(autoincrement())
+  userId       String        @unique @db.Uuid
+  email        String        @unique
+  username     String?       @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  userFriends1 UserFriends[] @relation("user1")
+  userFriends2 UserFriends[] @relation("user2")
+  attemptedQuestion1 AttemptedQuestion[] @relation("user1")
+  attemptedQuestion2 AttemptedQuestion[] @relation("user2")
+  preferredComplexity Complexity @default(Easy)
+  preferredLanguage Language @default(Python)
+  badges Badges[]
+  @@map("Users")
+}
+
+enum Language {
+  C
+  Cpp
+  Java
+  Python
+  Javascript
+  Typescript
+  Rust
+  Go
+  Ruby
+  Swift
+  Kotlin
+  Scala
+  Haskell
+  Clojure
+  Lua
+  Perl
+  PHP
+  R
+  Dart
+  Julia
+  Cobol
+  Fortran
+  Lisp
+  Prolog
+  Bash
+  Assembly
+  SQL
+  HTML
+  CSS
+  Other
+}
+
+// UserFriends (NX):
+// ID (PK)
+// userId1 (FK)
+// userId2 (FK)
+model UserFriends {
+  id      Int  @id @default(autoincrement())
+  user1   User @relation("user1", fields: [userId1], references: [userId])
+  userId1 String @db.Uuid
+  user2   User @relation("user2", fields: [userId2], references: [userId])
+  userId2 String @db.Uuid
+}
+
+// Badges (NX):
+// ID (PK)
+// userId (FK)
+// badge: ENUM not null
+// badgeLink:  (image url) 
+model Badges {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [userId])
+  userId String @db.Uuid
+  badgeLink String
+  badge BadgeTypes
+}
+
+enum BadgeTypes {
+  Beginner
+  Intermediate
+  Advanced
+  Expert
+}
+
+// ID (PK)
+// title: text not null
+// description: text not null
+// categories: FK to Categories
+// complexity: ENUM not null
+// avgQuestionRating
+// numberOfRatings between 0 and 5
+// numberOfAttempts
+// numberOfSolves
+model Question {
+  id         Int          @id @default(autoincrement())
+  title      String
+  body       String
+  categories Category[]
+  complexity Complexity
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  avgRating  Float       @default(0)
+  ratings    Int        @default(0)
+  attempts   Int        @default(0)
+  solves     Int        @default(0)
+  attempt AttemptedQuestion[]
+	@@map("Questions")
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  questions Question[]
+  @@map("Categories")
+}
+
+enum Complexity {
+  Easy
+  Medium
+  Hard
+}
+
+// AttemptedQuestions (Activity history):
+// attemptId: (PK)
+// userId1: (FK) not null 
+// userId2: (FK) not null 
+// questionId (FK) not null
+// attempted_at DATETIME
+// completed_at DATETIME
+model AttemptedQuestion {
+  id Int       @id @default(autoincrement())
+  user1   User @relation("user1", fields: [userId1], references: [userId])
+  userId1 String @db.Uuid
+  user2   User @relation("user2", fields: [userId2], references: [userId])
+  userId2 String @db.Uuid
+  question Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  attemptedAt    DateTime      @default(now())
+  completedAt     DateTime?  
+  code String?
+  language Language?
+	@@map("AttemptedQuestions")
+}

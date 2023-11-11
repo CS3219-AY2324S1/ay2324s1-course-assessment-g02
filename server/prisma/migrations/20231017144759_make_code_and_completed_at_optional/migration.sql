@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "AttemptedQuestions" ALTER COLUMN "completedAt" DROP NOT NULL,
+ALTER COLUMN "code" DROP NOT NULL,
+ALTER COLUMN "code" DROP DEFAULT;

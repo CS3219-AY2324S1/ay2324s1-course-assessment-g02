@@ -1,4 +1,4 @@
-In the `server` directory,
+In the `questions` directory,
 1. run `npm install` to install dependencies
 
 For development,
