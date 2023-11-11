@@ -21,7 +21,6 @@ import NotFound from './components/NotFound';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import { UserPageMain, UserProfilesPage } from './pages/UserPage';
-import ProblemPage from './pages/problems/ProblemPage';
 import QuestionsPage from './pages/QuestionsPage';
 import MatchPage from './pages/MatchPage';
 import InterviewPage from './pages/InterviewPage';

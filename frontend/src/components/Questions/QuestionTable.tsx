@@ -28,7 +28,11 @@ import AddQuestionModal from './AddQuestionModal';
 import QuestionTableRow from './QuestionTableRow';
 import '../index.css';
 import { QuestionSchema } from '../../services/apiSchema';
-import { deleteQuestionApi, createQuestion } from '../../services/questions';
+import {
+  deleteQuestionApi,
+  createQuestion,
+  updateQuestion
+} from '../../services/questions';
 import { toast } from 'react-toastify';
 import { Categories } from '../../constants/enums';
 
@@ -67,6 +71,31 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
       },
       (error) => {
         console.error('Error creating question', error);
+        toast.warn('Error creating question', { type: 'error' });
+      }
+    );
+  };
+
+  const editQuestion = async (question) => {
+    await updateQuestion(question.id, {
+      ...question,
+      categories: Object.entries(question.categories).map(([key, value]) => ({
+        id: parseInt(key, 10),
+        name: value
+      }))
+    }).then(
+      () => {
+        const index = data.findIndex((q) => q.id === question.id);
+        const updatedData = [...data];
+        updatedData[index] = question;
+
+        setData(updatedData);
+
+        toast('Question updated successfully', { type: 'success' });
+      },
+      (error) => {
+        console.error('Error updating question', error);
+        toast.error('Error updating question', { type: 'error' });
       }
     );
   };
@@ -183,10 +212,10 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
             renderValue={(selected) => (
               <div
                 style={{
-                  display: 'flex', // Keep chips in a row
-                  flexWrap: 'wrap', // Allow wrapping for multiple chips
-                  maxHeight: 48, // Set a max-height for the scrollable area
-                  overflowY: 'auto' // Add vertical scroll
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  maxHeight: 48,
+                  overflowY: 'auto'
                 }}
               >
                 {selected.map((id) => (
@@ -251,7 +280,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
                   Id
                 </Typography>
               </TableCell>
-              <TableCell width="30%">
+              <TableCell width="35%">
                 <TableSortLabel
                   active={sortConfig.key === 'title'}
                   direction={
@@ -264,22 +293,12 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
                   </Typography>
                 </TableSortLabel>
               </TableCell>
-              <TableCell width="25%">
-                <TableSortLabel
-                  active={sortConfig.key === 'categories'}
-                  direction={
-                    sortConfig.key === 'categories'
-                      ? sortConfig.direction
-                      : 'asc'
-                  }
-                  onClick={() => handleSort('categories')}
-                >
-                  <Typography variant="subtitle1" noWrap>
-                    Categories
-                  </Typography>
-                </TableSortLabel>
+              <TableCell width="35%">
+                <Typography variant="subtitle1" noWrap>
+                  Categories
+                </Typography>
               </TableCell>
-              <TableCell width="15%">
+              <TableCell width="10%">
                 <TableSortLabel
                   active={sortConfig.key === 'complexity'}
                   direction={
@@ -294,7 +313,11 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
                   </Typography>
                 </TableSortLabel>
               </TableCell>
-              <TableCell width="20%"></TableCell>
+              <TableCell width="10%">
+                <Typography variant="subtitle1" noWrap>
+                  Actions
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody
@@ -308,7 +331,9 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
                 return (
                   <QuestionTableRow
                     question={question}
+                    questions={data}
                     deleteQuestion={deleteQuestion}
+                    editQuestion={editQuestion}
                   />
                 );
               })}
