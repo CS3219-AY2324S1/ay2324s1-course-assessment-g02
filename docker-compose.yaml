@@ -70,6 +70,17 @@ services:
       - question-service
       - matching-service
 
+  supabase-service:
+    build:
+      context: ./supabase-service
+    restart: always
+    env_file:
+      - ./supabase-service/.env
+    ports:
+      - ${SUPABASE_PORT}:${SUPABASE_PORT}
+    networks:
+      - default
+
 volumes:
   redis-data:
 
