@@ -1,28 +1,5 @@
 import { useState } from 'react';
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  Typography,
-  Toolbar,
-  Tooltip,
-  Button,
-  TableSortLabel,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Chip,
-  OutlinedInput,
-  Checkbox,
-  ListItemText
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Paper, Table, TableBody, TableContainer } from '@mui/material';
 import React from 'react';
 import AddQuestionModal from './AddQuestionModal';
 import QuestionTableRow from './QuestionTableRow';
@@ -30,7 +7,8 @@ import '../index.css';
 import { QuestionSchema } from '../../services/apiSchema';
 import { deleteQuestionApi, updateQuestion } from '../../services/questions';
 import { toast } from 'react-toastify';
-import { Categories } from '../../constants/enums';
+import { QuestionTableToolbar } from './QuestionTableToolbar';
+import { QuestionTableRowHeader } from './QuestionTableRowHeader';
 
 function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
   const [page, setPage] = useState(0);
@@ -98,21 +76,6 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
     setData(sortedData);
   };
 
-  const handleCategoryChange = (event) => {
-    const value = event.target.value;
-    setSelectedCategoryIds(value);
-  };
-
-  // to be fixxed
-  const handleDeleteCategory = (categoryId, event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    setSelectedCategoryIds((prevSelectedIds) =>
-      prevSelectedIds.filter((id) => id !== categoryId)
-    );
-  };
-
   const filteredData = data.filter(
     (question) =>
       selectedCategoryIds.length === 0 ||
@@ -144,100 +107,27 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         overflow: 'hidden'
       }}
     >
-      {' '}
       <AddQuestionModal
         setData={setData}
         questions={data}
         open={addQuestionModalOpen}
         setOpen={setAddQuestionModalOpen}
       />
-      <Toolbar
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          height: 'fit-content'
-        }}
-      >
-        <Tooltip title="Add Question">
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            disabled={
-              props.user ? props.user.email !== 'admin@gmail.com' : true
-            }
-            onClick={() => setAddQuestionModalOpen(true)}
-          >
-            Add Question
-          </Button>
-        </Tooltip>
-        <FormControl
-          sx={{ m: 1, minWidth: 120, maxWidth: 300, height: 'fit-content' }}
-        >
-          <InputLabel id="category-filter-label">Category</InputLabel>
-          <Select
-            labelId="category-filter-label"
-            id="category-filter"
-            multiple
-            value={selectedCategoryIds}
-            onChange={handleCategoryChange}
-            input={<OutlinedInput id="select-multiple-chip" label="Category" />}
-            sx={{ height: 64, width: 400 }}
-            renderValue={(selected) => (
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  maxHeight: 48,
-                  overflowY: 'auto'
-                }}
-              >
-                {selected.map((id) => (
-                  <Chip
-                    key={id}
-                    label={Categories[id]}
-                    variant="outlined"
-                    sx={{
-                      borderRadius: '12px',
-                      margin: '2px'
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: '300px'
-                }
-              }
-            }}
-          >
-            {Object.entries(Categories).map(([id, name]) => (
-              <MenuItem key={id} value={parseInt(id)}>
-                <Checkbox
-                  checked={selectedCategoryIds.includes(parseInt(id))}
-                />
-                <ListItemText primary={name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            flexShrink: 0
-          }}
-        />
-      </Toolbar>
+      <QuestionTableToolbar
+        user={props.user}
+        setAddQuestionModalOpen={setAddQuestionModalOpen}
+        data={data}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        handleChangePage={handleChangePage}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+      <QuestionTableRowHeader
+        sortConfig={sortConfig}
+        handleSort={handleSort}
+        setSelectedCategoryIds={setSelectedCategoryIds}
+        selectedCategoryIds={selectedCategoryIds}
+      />
       <TableContainer
         component={Paper}
         elevation={5}
@@ -248,53 +138,6 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         }}
       >
         <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell width="10%">
-                <Typography variant="subtitle1" noWrap align="center">
-                  Id
-                </Typography>
-              </TableCell>
-              <TableCell width="35%">
-                <TableSortLabel
-                  active={sortConfig.key === 'title'}
-                  direction={
-                    sortConfig.key === 'title' ? sortConfig.direction : 'asc'
-                  }
-                  onClick={() => handleSort('title')}
-                >
-                  <Typography variant="subtitle1" noWrap>
-                    Title
-                  </Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell width="35%">
-                <Typography variant="subtitle1" noWrap>
-                  Categories
-                </Typography>
-              </TableCell>
-              <TableCell width="10%">
-                <TableSortLabel
-                  active={sortConfig.key === 'complexity'}
-                  direction={
-                    sortConfig.key === 'complexity'
-                      ? sortConfig.direction
-                      : 'asc'
-                  }
-                  onClick={() => handleSort('complexity')}
-                >
-                  <Typography variant="subtitle1" noWrap>
-                    Complexity
-                  </Typography>
-                </TableSortLabel>
-              </TableCell>
-              <TableCell width="10%">
-                <Typography variant="subtitle1" noWrap>
-                  Actions
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
           <TableBody
             sx={{
               overflowY: 'scroll'
