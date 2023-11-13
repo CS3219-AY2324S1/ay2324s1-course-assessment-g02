@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { TableRow, TableCell, Chip, Typography } from '@mui/material';
+import { TableRow, TableCell, Chip, Typography, Button } from '@mui/material';
 import { AttemptedQuestionSchema } from '../../services/apiSchema';
 import { complexityColorMap } from '../../constants/themes';
 import HistoryQuestionModal from './HistoryQuestionModal';
 import { formatDateAndTime } from '../../constants/formatDate';
+import { Link } from 'react-router-dom';
 
 function UserHistoryTableRow(props: {
   attemptedQuestion: AttemptedQuestionSchema;
@@ -41,7 +42,14 @@ function UserHistoryTableRow(props: {
           <Typography variant="body2">{attempt.question.title}</Typography>
         </TableCell>
         <TableCell>
-          <Typography variant="body2">{candyBuddyName}</Typography>
+          <Button
+            component={Link}
+            to={`/user/${candyBuddy.id}`}
+            variant="outlined"
+            sx={{ borderRadius: '12px' }}
+          >
+            <Typography variant="body2">{candyBuddyName}</Typography>
+          </Button>
         </TableCell>
         <TableCell>
           <Chip
