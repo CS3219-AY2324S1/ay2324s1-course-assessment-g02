@@ -83,24 +83,26 @@ const UserProfileContainer = (props: {
                 🍬 ID: {id}
               </Typography>
             </Grid>
-            <Grid item>
-              <Stack direction="row" spacing={1}>
-                <Typography
-                  sx={{ cursor: 'pointer', color: 'secondary.contrast' }}
-                  variant="body1"
-                  onClick={() => setChangePasswordModalOpen(true)}
-                >
-                  🔑 Change Password
-                </Typography>
-                <Typography
-                  sx={{ cursor: 'pointer', color: 'secondary.contrast' }}
-                  variant="body1"
-                  onClick={() => setDeleteDialogOpen(true)}
-                >
-                  🍫 Delete Account
-                </Typography>
-              </Stack>
-            </Grid>
+            {editable && (
+              <Grid item>
+                <Stack direction="row" spacing={1}>
+                  <Typography
+                    sx={{ cursor: 'pointer', color: 'secondary.contrast' }}
+                    variant="body1"
+                    onClick={() => setChangePasswordModalOpen(true)}
+                  >
+                    🔑 Change Password
+                  </Typography>
+                  <Typography
+                    sx={{ cursor: 'pointer', color: 'secondary.contrast' }}
+                    variant="body1"
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
+                    🍫 Delete Account
+                  </Typography>
+                </Stack>
+              </Grid>
+            )}
           </Grid>
           {editable && (
             <Grid item>
