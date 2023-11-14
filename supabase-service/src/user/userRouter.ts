@@ -38,11 +38,14 @@ router.post('/delete-user', async (req: Request, res: Response) => {
     }
 
     const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
+
     if (error) {
+      console.log('error', error);
       return res.status(500).json({ error: error.message });
     }
     return res.status(200).json({ message: 'User deleted successfully' });
   } catch (err) {
+    console.log('Invalid or expired token', err);
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 });
