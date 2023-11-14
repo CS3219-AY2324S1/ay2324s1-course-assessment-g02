@@ -24,10 +24,12 @@ import { UserPageMain, UserProfilesPage } from './pages/UserPage';
 import QuestionsPage from './pages/QuestionsPage';
 import MatchPage from './pages/MatchPage';
 import InterviewPage from './pages/InterviewPage';
+import { useMonaco } from '@monaco-editor/react';
 
 function App() {
   const { theme, toggleTheme, componentMounted } = useDarkMode();
   const navigate = useNavigate();
+  const monaco = useMonaco(); // initialising here should mean monaco always exists in the app
   const queryClient = new QueryClient();
   const [session, setSession] = useState<Session | null>();
   const [isLoading, setIsLoading] = useState<boolean>(true);

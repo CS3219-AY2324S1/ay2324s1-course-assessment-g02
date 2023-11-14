@@ -8,7 +8,7 @@ import {
   Button,
   Box
 } from '@mui/material';
-import Editor, { OnChange } from '@monaco-editor/react';
+import Editor, { OnChange, useMonaco } from '@monaco-editor/react';
 import { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '../../contexts/theme-context';
 import { socket } from '../../services/socket.js';
@@ -19,6 +19,7 @@ import { ProgrammingLanguages } from '../../constants/enums.js';
 
 const Playground = () => {
   const { theme } = useContext(ThemeContext);
+  const monaco = useMonaco();
   const [editorContent, setEditorContent] = useState('# Enter code here');
   const [language, setLanguage] = useState('python');
   const languageOptions = Object.values(ProgrammingLanguages).map((lang) =>
@@ -109,7 +110,7 @@ const Playground = () => {
               defaultLanguage={language}
               language={language}
               value={editorContent}
-              theme={theme === 'light' ? 'light' : 'vs-dark'}
+              theme={theme === 'light' ? 'hannahLight' : 'hannahDark'}
               onChange={handleEditorChange}
               options={{
                 minimap: {
