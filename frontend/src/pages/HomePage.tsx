@@ -36,10 +36,10 @@ const UnAuthHomePageComponents = () => {
         spacing={2}
       >
         <Grid item>
-          <Typography variant="h1">Welcome to PeerPrep</Typography>
+          <Typography variant="h2">Welcome to PeerPrep</Typography>
         </Grid>
         <Grid>
-          <Typography variant="h5">
+          <Typography variant="h4">
             {`${emojis[0]} Candy crush your interview! ${emojis[1]}`}
           </Typography>
         </Grid>
@@ -94,10 +94,10 @@ const AuthHomePageComponents = (props: { userId; user }) => {
         spacing={2}
       >
         <Grid item>
-          <Typography variant="h1">Welcome to PeerPrep</Typography>
+          <Typography variant="h2">Welcome to PeerPrep</Typography>
         </Grid>
         <Grid>
-          <Typography variant="h3">
+          <Typography variant="h4">
             {`${emojis[0]} Candy crush your interview! ${emojis[1]}`}
           </Typography>
         </Grid>
