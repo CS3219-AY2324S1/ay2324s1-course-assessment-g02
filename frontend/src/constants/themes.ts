@@ -53,3 +53,20 @@ export const complexityColorMap = new Map<
   [Complexity.Medium, 'warning'],
   [Complexity.Hard, 'error']
 ]);
+
+export const getRandomCandyEmoji = (): string => {
+  const candyEmojis = [
+    '🍬',
+    '🍭',
+    '🍫',
+    '🍩',
+    '🍪',
+    '🧁',
+    '🍰',
+    '🍦',
+    '🍨',
+    '🍧'
+  ];
+  const randomIndex = Math.floor(Math.random() * candyEmojis.length);
+  return candyEmojis[randomIndex];
+};

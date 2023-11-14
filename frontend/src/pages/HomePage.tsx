@@ -5,6 +5,7 @@ import MatchModal from '../components/Match/MatchModal';
 import { useState } from 'react';
 import { useAuth } from '../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { getRandomCandyEmoji } from '../constants/themes';
 
 function HomePage() {
   const { user } = useAuth();
@@ -20,7 +21,6 @@ function HomePage() {
       navigate('/auth');
     }
   };
-
   return (
     <Box
       display="flex"
@@ -42,7 +42,7 @@ function HomePage() {
         </Grid>
         <Grid>
           <Typography variant="h3">
-            🍭 Candy crush your interview! 🍬
+            {`${getRandomCandyEmoji()} Candy crush your interview! ${getRandomCandyEmoji()}`}
           </Typography>
         </Grid>
         <Grid item></Grid>
