@@ -143,6 +143,7 @@ function MatchModal(props: {
         onClick={() => {
           openModal(true);
           setIsRetrying(true);
+          setIsLoading(true);
         }}
       >
         Start coding!
