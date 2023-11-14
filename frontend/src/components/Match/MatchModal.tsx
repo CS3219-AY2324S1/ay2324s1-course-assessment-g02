@@ -78,7 +78,7 @@ function MatchModal(props: {
 
   useInterval(
     () => {
-      if (count === 6) {
+      if (count === 30) {
         setIsLoading(false);
         setIsSuccess(false);
         CloseModal();
@@ -104,7 +104,7 @@ function MatchModal(props: {
         }
       });
     },
-    isRetrying ? 5000 : null
+    isRetrying ? 1000 : null
   );
 
   const DifficultyMenu = () => {
