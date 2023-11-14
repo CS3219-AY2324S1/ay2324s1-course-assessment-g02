@@ -3,18 +3,15 @@ import {
   Paper,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
-  TableRow,
   TablePagination,
-  Typography,
   Toolbar
 } from '@mui/material';
 import React from 'react';
 import '../index.css';
 import UserHistoryTableRow from './UserHistoryTableRow';
 import { AttemptedQuestionSchema } from '../../services/apiSchema';
+import { UserHistoryTableRowHeader } from './UserHistoryTableRowHeader';
 
 function UserHistoryTable(props: {
   id: number;
@@ -22,7 +19,61 @@ function UserHistoryTable(props: {
 }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const data: AttemptedQuestionSchema[] = props.userAttemptedQuestions;
+  const [data, setData] = useState(props.userAttemptedQuestions);
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
+
+  const handleSort = (key) => {
+    const isAsc = sortConfig.key === key && sortConfig.direction === 'asc';
+    setSortConfig({ key, direction: isAsc ? 'desc' : 'asc' });
+
+    const sortedData = [...data].sort((a, b) => {
+      let valueA, valueB;
+      const candyBuddyA = a.user1.id === props.id ? a.user2 : a.user1;
+      const candyBuddyB = b.user1.id === props.id ? b.user2 : b.user1;
+      const order = ['Easy', 'Medium', 'Hard'];
+
+      switch (key) {
+        case 'completedAt':
+          valueA = new Date(a.completedAt);
+          valueB = new Date(b.completedAt);
+          break;
+        case 'questionTitle':
+          valueA = a.question.title.toLowerCase();
+          valueB = b.question.title.toLowerCase();
+          break;
+        case 'candyBuddy':
+          valueA = candyBuddyA.username
+            ? candyBuddyA.username
+            : candyBuddyA.email;
+          valueB = candyBuddyB.username
+            ? candyBuddyB.username
+            : candyBuddyB.email;
+          break;
+        case 'language':
+          valueA = a.language.toLowerCase();
+          valueB = b.language.toLowerCase();
+          break;
+        case 'difficulty':
+          return (
+            (order.indexOf(a.question.complexity) -
+              order.indexOf(b.question.complexity)) *
+            (isAsc ? 1 : -1)
+          );
+        default:
+          return 0;
+      }
+
+      if (valueA < valueB) {
+        return isAsc ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return isAsc ? 1 : -1;
+      }
+      return 0;
+    });
+
+    setData(sortedData);
+  };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -36,14 +87,14 @@ function UserHistoryTable(props: {
   };
 
   return (
-    <Paper elevation={3} sx={{ height: '100%', width: '100%', mb: 2 }}>
+    <Paper elevation={3} sx={{ height: '50%', borderRadius: '12px' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={data.length}
-          rowsPerPage={rowsPerPage}
           page={page}
+          rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
@@ -53,35 +104,22 @@ function UserHistoryTable(props: {
         elevation={5}
         sx={{
           borderRadius: '1em',
-          height: '100%',
-          overflow: 'auto'
+          overflowY: 'auto',
+          height: '55vh',
+          width: '100%'
         }}
       >
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <Typography variant="subtitle1">Completed At</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Question Name</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Candy Buddy</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Language</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle1">Difficulty</Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody
-            sx={{
-              overflowY: 'scroll'
-            }}
-          >
+        <Table
+          stickyHeader
+          aria-label="sticky table"
+          width="100%"
+          sx={{ tableLayout: 'fixed' }}
+        >
+          <UserHistoryTableRowHeader
+            handleSort={handleSort}
+            sortConfig={sortConfig}
+          />
+          <TableBody>
             {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((question) => {

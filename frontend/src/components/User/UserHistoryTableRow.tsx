@@ -33,37 +33,76 @@ function UserHistoryTableRow(props: {
         key={attempt.id}
         onClick={() => setOpen(!open)}
       >
-        <TableCell>
-          <Typography align="center">
+        <TableCell width="15%">
+          <Typography variant="body2" sx={{ wordWrap: 'break-word' }}>
             {formatDateAndTime(new Date(attempt.completedAt))}
           </Typography>
         </TableCell>
-        <TableCell>
-          <Typography variant="body2">{attempt.question.title}</Typography>
+        <TableCell width="35%" sx={{}}>
+          <Typography
+            variant="body2"
+            sx={{
+              wordWrap: 'break-word'
+            }}
+          >
+            {attempt.question.title}
+          </Typography>
         </TableCell>
-        <TableCell>
+        <TableCell width="20%">
           <Button
             component={Link}
             to={`/user/${candyBuddy.id}`}
             variant="outlined"
-            sx={{ borderRadius: '12px' }}
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              fontSize: '0.875rem',
+              maxWidth: '100%',
+              wordBreak: 'break-word',
+              whiteSpace: 'normal',
+              textAlign: 'left'
+            }}
           >
             <Typography variant="body2">{candyBuddyName}</Typography>
           </Button>
         </TableCell>
-        <TableCell>
+        <TableCell
+          width="15%"
+          sx={{
+            maxWidth: '100%',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
+        >
           <Chip
             label={attempt.language}
             variant="outlined"
-            sx={{ borderRadius: '12px' }}
+            sx={{
+              borderRadius: '12px',
+              maxWidth: '100%',
+              whiteSpace: 'normal',
+              textAlign: 'left'
+            }}
           />
         </TableCell>
-        <TableCell>
+        <TableCell
+          width="15%"
+          sx={{
+            maxWidth: '100%',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
+        >
           <Chip
             label={attempt.question.complexity}
             variant="outlined"
             color={complexityColorMap.get(attempt.question.complexity)}
-            sx={{ borderRadius: '12px' }}
+            sx={{
+              borderRadius: '12px',
+              maxWidth: '100%',
+              whiteSpace: 'normal',
+              textAlign: 'left'
+            }}
           />
         </TableCell>
       </TableRow>

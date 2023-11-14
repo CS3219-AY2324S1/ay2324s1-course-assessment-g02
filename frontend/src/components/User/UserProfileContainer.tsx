@@ -5,6 +5,7 @@ import EditUserModal from './EditUserModal';
 import ChangePasswordModal from './ChangePasswordModal';
 import DeleteUserModal from './DeleteUserModal';
 import { Stack } from '@mui/system';
+import { getRandomCandyEmoji } from '../../constants/themes';
 
 const UserProfileContainer = (props: {
   session;
@@ -30,14 +31,10 @@ const UserProfileContainer = (props: {
         p: 2,
         minWidth: 400,
         maxWidth: 800,
+        height: '40vh-64px',
         flexGrow: 1,
         backgroundColor: 'background.paper',
-        borderRadius: '16px',
-        boxShadow: '0 4px 10px 0 rgba(0,0,0,0.2)',
-        '&:hover': {
-          boxShadow: '0 6px 12px 0 rgba(0,0,0,0.3)'
-        },
-        overflow: 'auto' // Scroll overflow
+        borderRadius: '16px'
       }}
     >
       <EditUserModal
@@ -46,9 +43,9 @@ const UserProfileContainer = (props: {
         setOpen={setEditUserModalOpen}
         userData={userData}
       />
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
+          <Grid item xs container direction="column" spacing={1}>
             <Grid item xs>
               <Typography
                 gutterBottom
@@ -57,7 +54,7 @@ const UserProfileContainer = (props: {
                 color="text.primary"
                 sx={{ fontSize: '1.25rem' }}
               >
-                🍬 Name: {userName}
+                {getRandomCandyEmoji()} Name: {userName}
               </Typography>
               <Typography
                 variant="body1"
@@ -65,7 +62,8 @@ const UserProfileContainer = (props: {
                 color="text.secondary"
                 sx={{ fontSize: '1rem' }}
               >
-                🍭 Preferred Language: {userPreferredLanguage}
+                {getRandomCandyEmoji()} Preferred Language:{' '}
+                {userPreferredLanguage}
               </Typography>
               <Typography
                 variant="body1"
@@ -73,14 +71,15 @@ const UserProfileContainer = (props: {
                 color="text.secondary"
                 sx={{ fontSize: '1rem' }}
               >
-                🍡 Preferred Complexity: {userPreferredComplexity}
+                {getRandomCandyEmoji()} Preferred Complexity:{' '}
+                {userPreferredComplexity}
               </Typography>
               <Typography
                 variant="body1"
                 color="text.secondary"
                 sx={{ fontSize: '1rem' }}
               >
-                🍬 ID: {id}
+                {getRandomCandyEmoji()} ID: {id}
               </Typography>
             </Grid>
             {editable && (

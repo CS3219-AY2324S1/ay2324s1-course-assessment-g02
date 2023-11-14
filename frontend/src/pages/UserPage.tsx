@@ -5,7 +5,7 @@ import NotFound from '../components/NotFound';
 import { useAuth } from '../components/Auth/AuthProvider';
 import GetUserIdProvider from '../components/Auth/GetUserIdProvider';
 import useUserData from '../hooks/useUserData';
-import { Stack, Container, Box, Divider } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import UserHistoryTable from '../components/User/UserHistoryTable';
 
 interface UserPageProps {
@@ -28,29 +28,30 @@ const UserPage = (props: UserPageProps): JSX.Element => {
   if (useUserIsError) return <NotFound />;
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ height: `calc(100vh - 64px)` }}>
-        <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          spacing={2}
-          divider={<Divider orientation="vertical" flexItem />}
-          justifyContent="space-between"
-          alignItems="flex-start"
-          sx={{ height: '100%' }}
-        >
+    <Box sx={{}}>
+      <Grid
+        container
+        spacing={0.5}
+        display="flex"
+        direction="column"
+        sx={{ mt: 0.5, mb: 0.5 }}
+      >
+        <Grid item xs={12} md={3} lg={2}>
           <UserProfileContainer
             user={props.user}
             userData={userData}
             currentUser={props.userId}
             session={props.session}
           />
+        </Grid>
+        <Grid item xs={12} md={9} lg={10}>
           <UserHistoryTable
             userAttemptedQuestions={user.userAttemptedQuestions}
             id={user.id}
           />
-        </Stack>
-      </Box>
-    </Container>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
