@@ -25,9 +25,9 @@ const SelectionMenu = (props) => {
           }
         }}
       >
-        {Object.keys(items).map((key) => (
-          <MenuItem key={key} value={items[key]}>
-            {key}
+        {items.map((item) => (
+          <MenuItem key={item} value={item}>
+            {item}
           </MenuItem>
         ))}
       </TextField>

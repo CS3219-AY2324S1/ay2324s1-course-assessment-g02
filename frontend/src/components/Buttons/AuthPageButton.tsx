@@ -1,16 +1,16 @@
 import { Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-export const ProblemsPageButton = (): JSX.Element => {
+export const AuthPageButton = (): JSX.Element => {
   const navigate = useNavigate();
 
   return (
     <Button
       variant="contained"
       color="primary"
-      onClick={() => navigate('/problems')}
+      onClick={() => navigate('/auth')}
     >
-      <Typography>Go to Problems Page</Typography>
+      <Typography>Sign In Now!</Typography>
     </Button>
   );
 };

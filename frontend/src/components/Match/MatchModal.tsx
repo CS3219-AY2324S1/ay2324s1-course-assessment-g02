@@ -4,10 +4,9 @@ import { toast } from 'react-toastify';
 import useInterval from '../../hooks/useInterval';
 import { ProgrammingLanguages, Difficulties } from '../../constants/enums';
 import { sessionText } from '../../constants/text';
-import LoadingIndicator from '../../components/LoadingIndicator';
-import SelectionMenu from '../../components/SelectionMenu';
+import LoadingIndicator from '..//LoadingIndicator';
+import SelectionMenu from '../SelectionMenu';
 import { deleteMatch, findMatch } from '../../services/match';
-import { useAuth } from '../../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import useUserSession from '../../hooks/useUserSession';
 
@@ -23,10 +22,19 @@ const modalStyle = {
   p: 4
 };
 
-function MatchBox(props: { user; open; setOpen }): React.ReactElement {
+function MatchModal(props: {
+  user;
+  sessionUser;
+  open;
+  setOpen;
+}): React.ReactElement {
+  const sessionuser = props.sessionUser;
+  const difficultyOptions = Object.values(Difficulties);
   const user = props.user;
-  const [difficulty, setDifficulty] = useState(Difficulties.Easy);
-  const [language, setLanguage] = useState(ProgrammingLanguages.Python);
+  const [difficulty, setDifficulty] = useState(user.userPreferredComplexity);
+  const [language, setLanguage] = useState(
+    user ? user.userPreferredLanguage : ProgrammingLanguages.Python
+  );
   const [open, openModal] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
   const [count, setCount] = useState(0);
@@ -35,9 +43,9 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
   const navigate = useNavigate();
 
   const CloseModal = async () => {
-    console.log(`Deleting match for ${user!.id}`);
+    console.log(`Deleting match for ${sessionuser!.id}`);
 
-    const data = useUserSession(user.id);
+    const data = useUserSession(sessionuser.id);
     const { session, isLoading } = data;
 
     if (isLoading) {
@@ -48,7 +56,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
       setCount(0);
       if (!session) {
         // If there is no session, delete the match
-        deleteMatch(user.id, difficulty, language).then(() => {
+        deleteMatch(sessionuser.id, difficulty, language).then(() => {
           console.log('Deleted match');
         });
       } else {
@@ -79,7 +87,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
 
       console.log(`Counter: ${count}`);
 
-      findMatch(user.id, difficulty, language).then((response) => {
+      findMatch(sessionuser.id, difficulty, language).then((response) => {
         console.log('response', response);
         if (response.status) {
           setIsLoading(false);
@@ -87,7 +95,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
           toast('🍭 Match found! 🍭');
           const sessionId = response.sessionId;
           sessionStorage.setItem(sessionId, JSON.stringify(response));
-          console.log(`Found match for ${user.id}`);
+          console.log(`Found match for ${sessionuser.id}`);
           console.log('Session ID: ' + sessionId);
           successCloseModal();
         } else {
@@ -102,7 +110,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
     return (
       <SelectionMenu
         header="Difficulty"
-        items={Difficulties}
+        items={difficultyOptions}
         value={difficulty}
         setValue={setDifficulty}
       />
@@ -113,7 +121,7 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
     return (
       <SelectionMenu
         header="Language"
-        items={ProgrammingLanguages}
+        items={Object.values(ProgrammingLanguages)}
         value={language}
         setValue={setLanguage}
       />
@@ -197,14 +205,5 @@ function MatchBox(props: { user; open; setOpen }): React.ReactElement {
     </Modal>
   );
 }
-
-const MatchModal = ({ open, setOpen }): React.ReactElement => {
-  const { user } = useAuth();
-  return (
-    <div>
-      <MatchBox user={user} open={open} setOpen={setOpen} />
-    </div>
-  );
-};
 
 export default MatchModal;
