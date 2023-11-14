@@ -51,10 +51,10 @@ function QuestionTableRow(props: {
         key={question.id}
         onClick={() => setOpenQuestiomModal(!openQuestiomModal)}
       >
-        <TableCell width="5%" align="center">
+        <TableCell align="center">
           <Typography>{question.id}</Typography>
         </TableCell>
-        <TableCell width="30%">
+        <TableCell>
           <Typography
             variant="body2"
             style={{
@@ -65,7 +65,7 @@ function QuestionTableRow(props: {
             {question.title}
           </Typography>
         </TableCell>
-        <TableCell width="40%" sx={{ display: 'flex', alignItems: 'left' }}>
+        <TableCell>
           <Stack
             direction="row"
             spacing={1}
@@ -81,7 +81,7 @@ function QuestionTableRow(props: {
             ))}
           </Stack>
         </TableCell>
-        <TableCell width="15%">
+        <TableCell>
           <Chip
             label={question.complexity}
             variant="outlined"
@@ -89,7 +89,7 @@ function QuestionTableRow(props: {
             sx={{ borderRadius: '12px' }}
           />
         </TableCell>
-        <TableCell width="10%" align="center">
+        <TableCell align="center">
           <Stack direction="row" spacing={0.5}>
             <IconButton
               aria-label="edit"
