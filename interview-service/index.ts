@@ -12,8 +12,7 @@ const httpServer = http.createServer(app);
 
 const socketIO = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:5173',
-    credentials: true // not sure if needed; but if in the client need in server
+    origin: '*'
   }
 });
 
