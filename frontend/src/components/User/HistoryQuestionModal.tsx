@@ -2,7 +2,7 @@ import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import ProblemDescription from '../Problems/ProblemDescription';
 import { ThemeContext } from '../../contexts/theme-context';
-import { Editor } from '@monaco-editor/react';
+import { Editor, useMonaco } from '@monaco-editor/react';
 import { AttemptedQuestionSchema } from '../../services/apiSchema';
 import { IconButton, Paper, Stack } from '@mui/material';
 import { useContext } from 'react';
@@ -15,6 +15,7 @@ interface HistoryQuestionModalProps {
 
 function HistoryQuestionModal(props: HistoryQuestionModalProps) {
   const { theme } = useContext(ThemeContext);
+  const monaco = useMonaco();
   const handleClose = () => props.setOpen(false);
 
   return (
@@ -71,7 +72,7 @@ function HistoryQuestionModal(props: HistoryQuestionModalProps) {
                 value={props.question.code}
                 language={props.question.language}
                 theme={theme === 'light' ? 'hannahLight' : 'hannahDark'}
-                options={{ readOnly: true }}
+                options={{ readOnly: true, minimap: { enabled: false } }}
               />
             </Paper>
           </Stack>
