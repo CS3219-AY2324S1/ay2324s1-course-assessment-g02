@@ -19,8 +19,9 @@ function QuestionTableRow(props: {
   questions: QuestionSchema[];
   deleteQuestion: (id: number) => void;
   editQuestion: (question: QuestionSchema) => void;
+  editable: boolean;
 }) {
-  const { question, questions, deleteQuestion, editQuestion } = props;
+  const { question, questions, deleteQuestion, editQuestion, editable } = props;
   const [openQuestiomModal, setOpenQuestiomModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
 
@@ -50,19 +51,25 @@ function QuestionTableRow(props: {
         key={question.id}
         onClick={() => setOpenQuestiomModal(!openQuestiomModal)}
       >
-        <TableCell width="5%">
-          <Typography align="center">{question.id}</Typography>
+        <TableCell width="5%" align="center">
+          <Typography>{question.id}</Typography>
         </TableCell>
-        <TableCell width="25%">
-          <Typography variant="body2" style={{ wordWrap: 'break-word' }}>
+        <TableCell width="30%">
+          <Typography
+            variant="body2"
+            style={{
+              wordWrap: 'break-word',
+              width: 'fixed'
+            }}
+          >
             {question.title}
           </Typography>
         </TableCell>
-        <TableCell width="40%">
+        <TableCell width="40%" sx={{ display: 'flex', alignItems: 'left' }}>
           <Stack
             direction="row"
             spacing={1}
-            sx={{ flexWrap: 'wrap', gap: '4px' }}
+            sx={{ flexWrap: 'wrap', gap: '4px', width: 'fixed' }}
           >
             {Object.entries(question.categories).map(([id, name]) => (
               <Chip
@@ -74,7 +81,7 @@ function QuestionTableRow(props: {
             ))}
           </Stack>
         </TableCell>
-        <TableCell width="20%">
+        <TableCell width="15%">
           <Chip
             label={question.complexity}
             variant="outlined"
@@ -82,16 +89,17 @@ function QuestionTableRow(props: {
             sx={{ borderRadius: '12px' }}
           />
         </TableCell>
-        <TableCell align="center" width="10%">
-          <Stack direction="row" spacing={1}>
+        <TableCell width="10%" align="center">
+          <Stack direction="row" spacing={0.5}>
             <IconButton
               aria-label="edit"
               onClick={(e) => {
                 e.stopPropagation();
                 setOpenEditModal(true);
               }}
+              disabled={!editable}
             >
-              <EditIcon sx={{ color: '#ff84cf' }} />
+              <EditIcon sx={{ color: editable ? '#ff84cf' : '#e0ced7' }} />
             </IconButton>
             <IconButton
               aria-label="delete"
@@ -99,8 +107,9 @@ function QuestionTableRow(props: {
                 e.stopPropagation();
                 deleteQuestion(question.id);
               }}
+              disabled={!editable}
             >
-              <DeleteIcon sx={{ color: 'red' }} />
+              <DeleteIcon sx={{ color: editable ? 'red' : '#e0ced7' }} />
             </IconButton>
           </Stack>
         </TableCell>

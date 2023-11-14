@@ -10,13 +10,18 @@ import { toast } from 'react-toastify';
 import { QuestionTableToolbar } from './QuestionTableToolbar';
 import { QuestionTableRowHeader } from './QuestionTableRowHeader';
 
-function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
+function QuestionTable(props: {
+  questionData: QuestionSchema[];
+  user;
+  editable: boolean;
+}) {
   const [page, setPage] = useState(0);
   const [data, setData] = useState(props.questionData);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
   const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
+  const editable = props.user ? props.user.email === 'admin@gmail.com' : false;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -114,7 +119,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         setOpen={setAddQuestionModalOpen}
       />
       <QuestionTableToolbar
-        user={props.user}
+        editable={editable}
         setAddQuestionModalOpen={setAddQuestionModalOpen}
         data={data}
         rowsPerPage={rowsPerPage}
@@ -122,22 +127,21 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
       />
-      <QuestionTableRowHeader
-        sortConfig={sortConfig}
-        handleSort={handleSort}
-        setSelectedCategoryIds={setSelectedCategoryIds}
-        selectedCategoryIds={selectedCategoryIds}
-      />
       <TableContainer
         component={Paper}
         elevation={5}
         sx={{
           borderRadius: '1em',
-          flexGrow: 1,
           overflowY: 'auto'
         }}
       >
         <Table stickyHeader aria-label="sticky table">
+          <QuestionTableRowHeader
+            sortConfig={sortConfig}
+            handleSort={handleSort}
+            setSelectedCategoryIds={setSelectedCategoryIds}
+            selectedCategoryIds={selectedCategoryIds}
+          />
           <TableBody
             sx={{
               overflowY: 'scroll'
@@ -152,6 +156,7 @@ function QuestionTable(props: { questionData: QuestionSchema[]; user }) {
                     questions={data}
                     deleteQuestion={deleteQuestion}
                     editQuestion={editQuestion}
+                    editable={editable}
                   />
                 );
               })}

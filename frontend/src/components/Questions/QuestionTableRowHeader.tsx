@@ -58,7 +58,7 @@ export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
     <>
       <TableHead>
         <TableRow>
-          <TableCell width="5%">
+          <TableCell width="5%" align="center">
             <Button
               onClick={() => handleSort('id')}
               variant="outlined"
@@ -76,7 +76,7 @@ export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
               </TableSortLabel>
             </Button>
           </TableCell>
-          <TableCell width="25%">
+          <TableCell width="30%">
             <Button
               onClick={() => handleSort('title')}
               variant="outlined"
@@ -94,14 +94,7 @@ export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
               </TableSortLabel>
             </Button>
           </TableCell>
-          <TableCell
-            width="40%"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
+          <TableCell width="40%" align="left">
             <Button
               onClick={handleCategoryHeaderClick}
               variant="outlined"
@@ -113,13 +106,12 @@ export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
               {selectedCategoryIds.length > 0 ? <FilterListIcon /> : null}
             </Button>
           </TableCell>
-          <TableCell width="20%">
+          <TableCell width="15%">
             <Button
               onClick={() => handleSort('complexity')}
               variant="outlined"
               sx={{
-                borderRadius: '12px',
-                justifyContent: 'start'
+                borderRadius: '12px'
               }}
             >
               <TableSortLabel
@@ -134,7 +126,7 @@ export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
               </TableSortLabel>
             </Button>
           </TableCell>
-          <TableCell width="10%">
+          <TableCell width="10%" align="center">
             <Paper
               elevation={1}
               variant="outlined"

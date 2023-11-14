@@ -2,7 +2,7 @@ import { Toolbar, Tooltip, Button, Grid, TablePagination } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 interface QuestionTableHeaderProps {
-  user;
+  editable: boolean;
   setAddQuestionModalOpen: (open: boolean) => void;
   data;
   rowsPerPage;
@@ -34,9 +34,7 @@ export const QuestionTableToolbar = (props: QuestionTableHeaderProps) => {
               variant="contained"
               color="primary"
               startIcon={<AddIcon />}
-              disabled={
-                props.user ? props.user.email !== 'admin@gmail.com' : true
-              }
+              disabled={!props.editable}
               onClick={() => props.setAddQuestionModalOpen(true)}
             >
               Add Question
