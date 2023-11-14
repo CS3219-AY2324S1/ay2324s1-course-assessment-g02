@@ -22,6 +22,7 @@ interface QuestionTableRowHeaderProps {
   handleSort;
   setSelectedCategoryIds;
   selectedCategoryIds;
+  editable;
 }
 
 export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
@@ -29,7 +30,8 @@ export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
     sortConfig,
     handleSort,
     setSelectedCategoryIds,
-    selectedCategoryIds
+    selectedCategoryIds,
+    editable
   } = props;
 
   const [categoryPopperAnchorEl, setCategoryPopperAnchorEl] = useState(null);
@@ -126,22 +128,24 @@ export const QuestionTableRowHeader = (props: QuestionTableRowHeaderProps) => {
               </TableSortLabel>
             </Button>
           </TableCell>
-          <TableCell width="10%" align="center">
-            <Paper
-              elevation={1}
-              variant="outlined"
-              sx={{
-                borderRadius: '12px',
-                borderColor: 'primary.main',
-                padding: '6px 16px',
-                textAlign: 'center'
-              }}
-            >
-              <Typography variant="subtitle2" noWrap color="primary">
-                ACTIONS
-              </Typography>
-            </Paper>
-          </TableCell>
+          {editable && (
+            <TableCell width="10%" align="center">
+              <Paper
+                elevation={1}
+                variant="outlined"
+                sx={{
+                  borderRadius: '12px',
+                  borderColor: 'primary.main',
+                  padding: '6px 16px',
+                  textAlign: 'center'
+                }}
+              >
+                <Typography variant="subtitle2" noWrap color="primary">
+                  ACTIONS
+                </Typography>
+              </Paper>
+            </TableCell>
+          )}
         </TableRow>
       </TableHead>
       <Popper

@@ -141,6 +141,7 @@ function QuestionTable(props: {
             handleSort={handleSort}
             setSelectedCategoryIds={setSelectedCategoryIds}
             selectedCategoryIds={selectedCategoryIds}
+            editable={editable}
           />
           <TableBody
             sx={{

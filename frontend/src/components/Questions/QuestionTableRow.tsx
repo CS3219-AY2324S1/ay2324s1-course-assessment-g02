@@ -89,30 +89,32 @@ function QuestionTableRow(props: {
             sx={{ borderRadius: '12px' }}
           />
         </TableCell>
-        <TableCell align="center">
-          <Stack direction="row" spacing={0.5}>
-            <IconButton
-              aria-label="edit"
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpenEditModal(true);
-              }}
-              disabled={!editable}
-            >
-              <EditIcon sx={{ color: editable ? '#ff84cf' : '#e0ced7' }} />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteQuestion(question.id);
-              }}
-              disabled={!editable}
-            >
-              <DeleteIcon sx={{ color: editable ? 'red' : '#e0ced7' }} />
-            </IconButton>
-          </Stack>
-        </TableCell>
+        {editable && (
+          <TableCell align="center">
+            <Stack direction="row" spacing={0.5}>
+              <IconButton
+                aria-label="edit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenEditModal(true);
+                }}
+                disabled={!editable}
+              >
+                <EditIcon sx={{ color: editable ? '#ff84cf' : '#e0ced7' }} />
+              </IconButton>
+              <IconButton
+                aria-label="delete"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteQuestion(question.id);
+                }}
+                disabled={!editable}
+              >
+                <DeleteIcon sx={{ color: editable ? 'red' : '#e0ced7' }} />
+              </IconButton>
+            </Stack>
+          </TableCell>
+        )}
       </TableRow>
     </>
   );

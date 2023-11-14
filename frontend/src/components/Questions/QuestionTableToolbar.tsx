@@ -29,17 +29,19 @@ export const QuestionTableToolbar = (props: QuestionTableHeaderProps) => {
         sx={{ width: '100%' }}
       >
         <Grid item>
-          <Tooltip title="Add Question">
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              disabled={!props.editable}
-              onClick={() => props.setAddQuestionModalOpen(true)}
-            >
-              Add Question
-            </Button>
-          </Tooltip>
+          {props.editable && (
+            <Tooltip title="Add Question">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                disabled={!props.editable}
+                onClick={() => props.setAddQuestionModalOpen(true)}
+              >
+                Add Question
+              </Button>
+            </Tooltip>
+          )}
         </Grid>
 
         <Grid item sx={{ display: 'flex', alignItems: 'center' }}></Grid>
