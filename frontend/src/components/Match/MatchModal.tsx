@@ -41,12 +41,13 @@ function MatchModal(props: {
   const [isLoading, setIsLoading] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
+  const data = useUserSession(sessionuser.id);
 
   const CloseModal = async () => {
     console.log(`Deleting match for ${sessionuser!.id}`);
 
-    const data = useUserSession(sessionuser.id);
     const { session, isLoading } = data;
+    console.log(session);
 
     if (isLoading) {
       console.log('Waiting for session data to load...');
@@ -54,7 +55,7 @@ function MatchModal(props: {
       openModal(false);
       setIsRetrying(false);
       setCount(0);
-      if (!session) {
+      if (session.sessionId == '') {
         // If there is no session, delete the match
         deleteMatch(sessionuser.id, difficulty, language).then(() => {
           console.log('Deleted match');
@@ -62,7 +63,7 @@ function MatchModal(props: {
       } else {
         setIsSuccess(false);
         setIsLoading(true);
-        navigate('/interview');
+        // navigate('/interview');
       }
     }
   };

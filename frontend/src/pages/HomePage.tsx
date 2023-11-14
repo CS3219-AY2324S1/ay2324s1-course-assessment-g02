@@ -37,7 +37,7 @@ const UnAuthHomePageComponents = () => {
           <Typography variant="h1">Welcome to PeerPrep</Typography>
         </Grid>
         <Grid>
-          <Typography variant="h3">
+          <Typography variant="h5">
             {`${getRandomCandyEmoji()} Candy crush your interview! ${getRandomCandyEmoji()}`}
           </Typography>
         </Grid>
