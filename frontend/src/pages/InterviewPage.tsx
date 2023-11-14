@@ -59,9 +59,8 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
     }
   };
 
-  const handleCloseChat = (event) => {
+  const handleCloseChat = () => {
     setOpenChatPopper(false);
-    event.stopPropogation();
   };
 
   useEffect(() => {
