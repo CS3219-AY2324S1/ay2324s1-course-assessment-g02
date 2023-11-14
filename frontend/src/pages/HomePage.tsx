@@ -2,10 +2,10 @@ import { Grid, Box, Typography } from '@mui/material';
 import { QuestionsPageButton } from '../components/Buttons/QuestionsPageButton';
 import { MatchPageButton } from '../components/Buttons/MatchPageButton';
 import MatchModal from '../components/Match/MatchModal';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '../components/Auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
-import { getRandomCandyEmoji } from '../constants/themes';
+import { getListRandomEmojis } from '../constants/themes';
 import useUserData from '../hooks/useUserData';
 import GetUserIdProvider from '../components/Auth/GetUserIdProvider';
 import Loading from '../components/Loading';
@@ -24,6 +24,8 @@ const HomePageComponents = () => {
 };
 
 const UnAuthHomePageComponents = () => {
+  const emojis = useMemo(() => getListRandomEmojis(2), []);
+
   return (
     <>
       <Grid
@@ -38,7 +40,7 @@ const UnAuthHomePageComponents = () => {
         </Grid>
         <Grid>
           <Typography variant="h5">
-            {`${getRandomCandyEmoji()} Candy crush your interview! ${getRandomCandyEmoji()}`}
+            {`${emojis[0]} Candy crush your interview! ${emojis[1]}`}
           </Typography>
         </Grid>
         <Grid item></Grid>
@@ -59,6 +61,8 @@ const UnAuthHomePageComponents = () => {
 };
 
 const AuthHomePageComponents = (props: { userId; user }) => {
+  const emojis = useMemo(() => getListRandomEmojis(2), []);
+
   const [open, setOpen] = useState<boolean>(false);
   const { user, isLoading } = useUserData({ id: props.userId });
   const navigate = useNavigate();
@@ -94,7 +98,7 @@ const AuthHomePageComponents = (props: { userId; user }) => {
         </Grid>
         <Grid>
           <Typography variant="h3">
-            {`${getRandomCandyEmoji()} Candy crush your interview! ${getRandomCandyEmoji()}`}
+            {`${emojis[0]} Candy crush your interview! ${emojis[1]}`}
           </Typography>
         </Grid>
         <Grid item></Grid>

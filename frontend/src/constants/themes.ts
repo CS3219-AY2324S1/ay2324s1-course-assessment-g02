@@ -65,8 +65,22 @@ export const getRandomCandyEmoji = (): string => {
     '🍰',
     '🍦',
     '🍨',
-    '🍧'
+    '🍧',
+    '🍨',
+    '🍮',
+    '🍯',
+    '🍒',
+    '🍓',
+    '🥧'
   ];
   const randomIndex = Math.floor(Math.random() * candyEmojis.length);
   return candyEmojis[randomIndex];
+};
+
+export const getListRandomEmojis = (n: number): string[] => {
+  const emojis: string[] = [];
+  for (let i = 0; i < n; i++) {
+    emojis.push(getRandomCandyEmoji());
+  }
+  return emojis;
 };

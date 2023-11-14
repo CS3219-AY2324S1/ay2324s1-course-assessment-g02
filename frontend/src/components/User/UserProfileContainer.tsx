@@ -1,11 +1,11 @@
 import { Paper, Grid, Typography, IconButton } from '@mui/material';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
 import ChangePasswordModal from './ChangePasswordModal';
 import DeleteUserModal from './DeleteUserModal';
 import { Stack } from '@mui/system';
-import { getRandomCandyEmoji } from '../../constants/themes';
+import { getListRandomEmojis } from '../../constants/themes';
 
 const UserProfileContainer = (props: {
   session;
@@ -24,6 +24,8 @@ const UserProfileContainer = (props: {
 
   const editable =
     props.currentUser === (userData.user.id as number) ? true : false;
+
+  const emojis = useMemo(() => getListRandomEmojis(4), []);
 
   return (
     <Paper
@@ -54,7 +56,14 @@ const UserProfileContainer = (props: {
                 color="text.primary"
                 sx={{ fontSize: '1.25rem' }}
               >
-                {getRandomCandyEmoji()} Name: {userName}
+                {emojis[0]} Name: {userName}
+              </Typography>
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{ fontSize: '1rem' }}
+              >
+                {emojis[1]} ID: {id}
               </Typography>
               <Typography
                 variant="body1"
@@ -62,8 +71,7 @@ const UserProfileContainer = (props: {
                 color="text.secondary"
                 sx={{ fontSize: '1rem' }}
               >
-                {getRandomCandyEmoji()} Preferred Language:{' '}
-                {userPreferredLanguage}
+                {emojis[2]} Preferred Language: {userPreferredLanguage}
               </Typography>
               <Typography
                 variant="body1"
@@ -71,15 +79,7 @@ const UserProfileContainer = (props: {
                 color="text.secondary"
                 sx={{ fontSize: '1rem' }}
               >
-                {getRandomCandyEmoji()} Preferred Complexity:{' '}
-                {userPreferredComplexity}
-              </Typography>
-              <Typography
-                variant="body1"
-                color="text.secondary"
-                sx={{ fontSize: '1rem' }}
-              >
-                {getRandomCandyEmoji()} ID: {id}
+                {emojis[3]} Preferred Complexity: {userPreferredComplexity}
               </Typography>
             </Grid>
             {editable && (
