@@ -70,7 +70,7 @@ function HistoryQuestionModal(props: HistoryQuestionModalProps) {
               <Editor
                 value={props.question.code}
                 language={props.question.language}
-                theme={theme === 'light' ? 'hannahLight' : 'vs-dark'}
+                theme={theme === 'light' ? 'hannahLight' : 'hannahDark'}
                 options={{ readOnly: true }}
               />
             </Paper>
