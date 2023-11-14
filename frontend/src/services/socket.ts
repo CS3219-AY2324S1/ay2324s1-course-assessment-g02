@@ -1,11 +1,10 @@
 import { io } from 'socket.io-client';
 
-const URL = `http://${import.meta.env.VITE_APP_INTERVIEW_HOST}:${
-  import.meta.env.VITE_APP_INTERVIEW_BACKEND_PORT
-}`;
+const URL = `http://${import.meta.env.VITE_APP_INTERVIEW_HOST}:${import.meta.env.VITE_APP_INTERVIEW_BACKEND_PORT
+  }`;
 
 export const socket = io(URL, {
-  withCredentials: true, // not sure if I need this
+  withCredentials: false, // not sure if I need this
   // Switch to this later and force validation before using it
   autoConnect: false
 });
