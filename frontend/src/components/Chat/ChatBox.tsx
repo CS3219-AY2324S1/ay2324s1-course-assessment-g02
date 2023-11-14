@@ -23,23 +23,11 @@ const ChatBox = (props: ChatProps) => {
   return (
     <Box
       sx={{
-        backgroundColor: 'background.paper',
         borderRadius: '1em',
         height: '100%',
         padding: '0.5em'
       }}
     >
-      <Stack
-        direction="row"
-        spacing={1}
-        display="flex"
-        justifyContent="space-between"
-      >
-        <Typography variant="h6" gutterBottom>
-          Chat Room
-        </Typography>
-        <CircleIcon sx={{ color: isConnected ? 'green' : 'red' }} />
-      </Stack>
       <Stack spacing={1}>
         {messages.length === 0 && (
           <Typography variant="body2">No messages yet.</Typography>

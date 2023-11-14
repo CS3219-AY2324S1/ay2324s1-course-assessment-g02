@@ -1,8 +1,9 @@
 import ChatBox from './ChatBox';
 import ChatInputBox from './ChatInputBox';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { ChatMessageType } from './types';
 import CloseIcon from '@mui/icons-material/Close';
+import CircleIcon from '@mui/icons-material/Circle';
 
 interface ChatProps {
   isConnected: boolean;
@@ -23,22 +24,23 @@ const Chat = (props: ChatProps) => {
         height: '100%',
         borderRadius: '1em',
         p: '0.5em',
-        pt: '2em',
         position: 'relative'
       }}
     >
-      <IconButton
-        onClick={onClose}
-        sx={{
-          position: 'absolute',
-          top: 8,
-          left: 8,
-          zIndex: 2,
-          boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)'
-        }}
+      <Stack
+        direction="row"
+        spacing={1}
+        display="flex"
+        justifyContent="space-between"
       >
-        <CloseIcon />
-      </IconButton>
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+        <Typography variant="h6" gutterBottom>
+          Chat Room
+        </Typography>
+        <CircleIcon sx={{ color: isConnected ? 'green' : 'red' }} />
+      </Stack>
       <Box
         sx={{
           flex: 1,
