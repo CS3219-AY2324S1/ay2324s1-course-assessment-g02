@@ -1,7 +1,7 @@
 import Playground from '../components/Problems/Playground';
-import { Paper, Box, Stack } from '@mui/material';
+import { Paper, Box, Stack, Popper, Button, Badge } from '@mui/material';
 import ProblemDescription from '../components/Problems/ProblemDescription';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SessionProvider,
   useSession
@@ -9,6 +9,9 @@ import {
 import { useAuth } from '../components/Auth/AuthProvider';
 import Chat from '../components/Chat/Chat';
 import Loading from '../components/Loading';
+import ChatIcon from '@mui/icons-material/Chat';
+import { socket } from '../services/socket.js';
+import { ChatMessageType } from '../components/Chat/types';
 
 interface UnwrappedInterviewPageProps {
   user;
@@ -16,12 +19,50 @@ interface UnwrappedInterviewPageProps {
 
 const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
   const session = useSession();
-
-  if (!session) {
-    throw new Error('session still loading');
-  }
-
+  const [openChatPopper, setOpenChatPopper] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const { isConnected, questionId } = session.session;
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
+  const [newMessagesCount, setNewMessagesCount] = useState(0);
+
+  useEffect(() => {
+    const eventListener = (data) => {
+      setMessages((list) => {
+        // Increment new messages count if chat is not open
+        if (!openChatPopper) {
+          setNewMessagesCount((prevCount) => prevCount + 1);
+        }
+        return [...list, data];
+      });
+    };
+    socket.on('messageResponse', eventListener);
+    return () => {
+      socket.off('messageResponse', eventListener);
+    };
+  }, [openChatPopper]);
+
+  useEffect(() => {
+    const eventListener = (data) => {
+      setMessages((list) => [...list, data]);
+    };
+    socket.on('restoreMessages', eventListener);
+    return () => {
+      socket.off('restoreMessages', eventListener);
+    };
+  }, []);
+
+  const handleChatPopperClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpenChatPopper((prevOpen) => !prevOpen);
+    if (!openChatPopper) {
+      setNewMessagesCount(0);
+    }
+  };
+
+  const handleCloseChat = (event) => {
+    setOpenChatPopper(false);
+    event.stopPropogation();
+  };
 
   useEffect(() => {
     const html = document.querySelector('html');
@@ -42,10 +83,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           overflowY: 'scroll'
         }}
       >
-        <Box
-          width={{ xs: '100%', sm: '33.33%' }}
-          sx={{ h: '100%', p: '0.5em' }}
-        >
+        <Box width="50%" sx={{ h: '100%', p: '0.5em' }}>
           <Paper
             elevation={5}
             style={{
@@ -58,10 +96,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           </Paper>
         </Box>
 
-        <Box
-          width={{ xs: '100%', sm: '33.33%' }}
-          sx={{ h: '100%', p: '0.5em' }}
-        >
+        <Box width="50%" sx={{ h: '100%', p: '0.5em' }}>
           <Paper
             elevation={5}
             style={{
@@ -74,21 +109,65 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           </Paper>
         </Box>
 
-        <Box
-          width={{ xs: '100%', sm: '33.33%' }}
-          sx={{ h: '100%', p: '0.5em' }}
-        >
-          <Paper
-            elevation={5}
-            style={{
-              height: '100%',
-              overflowY: 'scroll',
-              borderRadius: '1em'
+        <Stack width="0%" sx={{ position: 'relative', height: '90%' }}>
+          <Paper elevation={5} style={{}}></Paper>
+          <Button
+            variant="outlined"
+            onClick={handleChatPopperClick}
+            sx={{
+              position: 'absolute',
+              bottom: 8,
+              right: 8,
+              borderRadius: '50%',
+              minWidth: '56px',
+              height: '56px',
+              backgroundColor: 'primary.main',
+              color: 'primary.contrastText',
+              '&:hover': {
+                backgroundColor: 'primary.dark'
+              },
+              boxShadow: 3
             }}
           >
-            <Chat isConnected={isConnected} userEmail={props.user.email} />
-          </Paper>
-        </Box>
+            <Badge
+              color="error"
+              badgeContent={newMessagesCount}
+              invisible={newMessagesCount === 0}
+            >
+              <ChatIcon />
+            </Badge>
+          </Button>
+          <Popper
+            open={openChatPopper}
+            anchorEl={anchorEl}
+            placement="top-end"
+            modifiers={[
+              {
+                name: 'offset',
+                options: {
+                  offset: [0, -10]
+                }
+              }
+            ]}
+          >
+            <Paper
+              elevation={5}
+              style={{
+                height: '400px',
+                overflowY: 'scroll',
+                borderRadius: '1em'
+              }}
+            >
+              <Chat
+                isConnected={isConnected}
+                userEmail={props.user.email}
+                messages={messages}
+                newMessageIndex={messages.length - newMessagesCount}
+                onClose={handleCloseChat}
+              />
+            </Paper>
+          </Popper>
+        </Stack>
       </Stack>
     </Box>
   );

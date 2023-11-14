@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
-import { socket } from '../../services/socket.js';
+import { useEffect, useRef } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import ChatMessage from './ChatMessage.tsx';
 import { ChatDirections, ChatMessageType } from './types';
@@ -8,35 +7,17 @@ import CircleIcon from '@mui/icons-material/Circle';
 interface ChatProps {
   isConnected: boolean;
   userEmail: string;
+  messages: ChatMessageType[];
+  newMessageIndex: number;
 }
 
 const ChatBox = (props: ChatProps) => {
   const isConnected = props.isConnected;
-  const [messages, setMessages] = useState<ChatMessageType[]>([]);
+  const messages = props.messages;
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const eventListener = (data) => {
-      setMessages((list) => [...list, data]);
-    };
-    socket.on('messageResponse', eventListener);
-    return () => {
-      socket.off('messageResponse', eventListener);
-    };
-  }, []);
-
-  useEffect(() => {
-    const eventListener = (data) => {
-      setMessages((list) => [...list, data]);
-    };
-    socket.on('restoreMessages', eventListener);
-    return () => {
-      socket.off('restoreMessages', eventListener);
-    };
-  }, []);
-
-  useEffect(() => {
-    lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
+    lastMessageRef.current?.scrollIntoView({ behavior: 'instant' });
   }, [messages]);
 
   return (
@@ -70,7 +51,7 @@ const ChatBox = (props: ChatProps) => {
               : ChatDirections.left;
           return (
             <ChatMessage
-              key={_i} // consider using unique ids
+              key={_i}
               message={message}
               direction={direction}
               sender={sender}

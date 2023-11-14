@@ -15,12 +15,15 @@ import { socket } from '../../services/socket.js';
 import CodeSubmissionDialog from './CodeSubmissionDialog';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ProgrammingLanguages } from '../../constants/enums.js';
 
 const Playground = () => {
   const { theme } = useContext(ThemeContext);
   const [editorContent, setEditorContent] = useState('# Enter code here');
   const [language, setLanguage] = useState('python');
-  const languageOptions = ['python', 'javascript', 'cpp'];
+  const languageOptions = Object.values(ProgrammingLanguages).map((lang) =>
+    lang.toLowerCase()
+  );
   const [codeSubmitDialogOpen, setCodeSubmitDialogOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -108,6 +111,11 @@ const Playground = () => {
               value={editorContent}
               theme={theme === 'light' ? 'light' : 'vs-dark'}
               onChange={handleEditorChange}
+              options={{
+                minimap: {
+                  enabled: false
+                }
+              }}
             />
           </Box>
           <Button variant="outlined" onClick={handleCodeSubmitDialogOpen}>
