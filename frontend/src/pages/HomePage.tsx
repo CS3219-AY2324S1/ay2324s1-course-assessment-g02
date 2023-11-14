@@ -60,7 +60,6 @@ const UnAuthHomePageComponents = () => {
 
 const AuthHomePageComponents = (props: { userId; user }) => {
   const [open, setOpen] = useState<boolean>(false);
-  console.log(props.userId);
   const { user, isLoading } = useUserData({ id: props.userId });
   const navigate = useNavigate();
 
