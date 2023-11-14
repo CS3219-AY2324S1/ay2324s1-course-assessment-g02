@@ -60,10 +60,11 @@ const UserProfileContainer = (props: {
               </Typography>
               <Typography
                 variant="body1"
+                gutterBottom
                 color="text.secondary"
                 sx={{ fontSize: '1rem' }}
               >
-                {emojis[1]} ID: {id}
+                {emojis[1]} Candy ID: {id}
               </Typography>
               <Typography
                 variant="body1"
