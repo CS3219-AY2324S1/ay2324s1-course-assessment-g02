@@ -13,16 +13,25 @@ router.get('/get', async (req, res) => {
 });
 
 router.get('/find', async (req, res) => {
-  const { id, difficulty, language } = req.query;
+  const { id, difficulty, language, userId } = req.query;
   console.log(
     `Received request to find match for ${id}, ${difficulty}, ${language}`
   );
+
+  const idNumber = Number(id);
+
+  if (isNaN(idNumber)) {
+    return res.status(400).json({ error: 'Invalid id, must be a number' });
+  }
+
   const result = await matchService.getMatch(
-    id as string,
+    userId as string,
     difficulty as string,
-    language as string
+    language as string,
+    idNumber
   );
-  res.json(result);
+
+  return res.json(result);
 });
 
 router.delete('/delete', async (req, res) => {

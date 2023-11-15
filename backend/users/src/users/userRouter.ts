@@ -47,14 +47,16 @@ userRouter.get(
               select: {
                 username: true,
                 email: true,
-                id: true
+                id: true,
+                isDeleted: true
               }
             },
             user2: {
               select: {
                 username: true,
                 email: true,
-                id: true
+                id: true,
+                isDeleted: true
               }
             }
           }
@@ -73,14 +75,16 @@ userRouter.get(
               select: {
                 username: true,
                 email: true,
-                id: true
+                id: true,
+                isDeleted: true
               }
             },
             user2: {
               select: {
                 username: true,
                 email: true,
-                id: true
+                id: true,
+                isDeleted: true
               }
             }
           }

@@ -15,7 +15,9 @@ function UserHistoryTableRow(props: {
   const [open, setOpen] = useState(false);
   const candyBuddy =
     attempt.user1.id == props.id ? attempt.user2 : attempt.user1;
-  const candyBuddyName = candyBuddy.username
+  const candyBuddyName = candyBuddy.isDeleted
+    ? 'Deleted'
+    : candyBuddy.username
     ? candyBuddy.username
     : candyBuddy.email;
 
@@ -53,6 +55,7 @@ function UserHistoryTableRow(props: {
             component={Link}
             to={`/user/${candyBuddy.id}`}
             variant="outlined"
+            disabled={candyBuddy.isDeleted}
             sx={{
               borderRadius: '12px',
               textTransform: 'none',
