@@ -25,6 +25,11 @@ function QuestionTableRow(props: {
   const [openQuestiomModal, setOpenQuestiomModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
 
+  const handleOpenEditModal = (b: boolean) => {
+    setOpenEditModal(true);
+    console.log(question);
+  };
+
   return (
     <>
       <QuestionModal
@@ -48,7 +53,6 @@ function QuestionTableRow(props: {
         }}
         role="checkbox"
         tabIndex={-1}
-        key={question.id}
         onClick={() => setOpenQuestiomModal(!openQuestiomModal)}
       >
         <TableCell align="center">
@@ -96,7 +100,7 @@ function QuestionTableRow(props: {
                 aria-label="edit"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setOpenEditModal(true);
+                  handleOpenEditModal();
                 }}
                 disabled={!editable}
               >

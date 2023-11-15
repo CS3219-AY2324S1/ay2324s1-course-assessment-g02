@@ -101,9 +101,11 @@ function QuestionTable(props: {
     await deleteQuestionApi(id).then(
       (res) => {
         console.log('Question deleted successfully', res);
+        toast('Question deleted successfully', { type: 'success' });
         setData(data.filter((question) => question.id != id));
       },
       (error) => {
+        toast('Error deleting question', { type: 'error' });
         console.error('Error deleting question', error);
       }
     );
@@ -151,24 +153,19 @@ function QuestionTable(props: {
             selectedCategoryIds={selectedCategoryIds}
             editable={editable}
           />
-          <TableBody
-            sx={{
-              overflowY: 'scroll'
-            }}
-          >
+          <TableBody sx={{ overflowY: 'scroll' }}>
             {filteredData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((question) => {
-                return (
-                  <QuestionTableRow
-                    question={question}
-                    questions={data}
-                    deleteQuestion={deleteQuestion}
-                    editQuestion={editQuestion}
-                    editable={editable}
-                  />
-                );
-              })}
+              .map((question) => (
+                <QuestionTableRow
+                  key={question.id}
+                  question={question}
+                  questions={data}
+                  deleteQuestion={deleteQuestion}
+                  editQuestion={editQuestion}
+                  editable={editable}
+                />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
