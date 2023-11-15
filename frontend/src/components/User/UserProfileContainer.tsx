@@ -23,7 +23,7 @@ const UserProfileContainer = (props: {
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
 
   const editable =
-    props.currentUser === (userData.user.id as number) ? true : false;
+    props.currentUser == (userData.user.id as number) ? true : false;
 
   const emojis = useMemo(() => getListRandomEmojis(4), []);
 
