@@ -16,11 +16,13 @@ import {
   OutlinedInput,
   Checkbox,
   ListItemText,
-  MenuProps
+  MenuProps,
+  IconButton
 } from '@mui/material';
 import { useState } from 'react';
 import { Categories } from '../../constants/enums';
 import { toast } from 'react-toastify';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface EditQuestionModalProps {
   editQuestion: (question: QuestionSchema) => void;
@@ -115,16 +117,33 @@ function EditQuestionModal(props: EditQuestionModalProps) {
   return (
     <Modal open={props.open} onClose={handleClose}>
       <Paper
-        sx={
-          {
-            display: 'grid',
-            gridRowGap: '20px',
-            padding: '20px',
-            margin: '10px 40px'
-          } as React.CSSProperties
-        }
+        sx={{
+          display: 'grid',
+          gridRowGap: '20px',
+          padding: '20px',
+          margin: '10px 40px',
+          position: 'relative'
+        }}
       >
-        <Typography variant="h6">Add Question</Typography>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '20px'
+          }}
+        >
+          <Typography variant="h6">Edit Question</Typography>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              marginLeft: 'auto'
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
 
         <FormControl>
           <FormLabel error={!!validation.title}>Question Title*</FormLabel>
