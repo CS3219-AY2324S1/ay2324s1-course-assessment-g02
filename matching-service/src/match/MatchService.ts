@@ -16,6 +16,18 @@ export default class MatchService {
     language: string,
     id: number
   ) {
+    const session = await this.checkUser(userId);
+    console.log('checking for user session');
+    if (session !== '') {
+      this.deleteMatch(userId, difficulty, language);
+      return {
+        status: true,
+        id: userId,
+        sessionId: session,
+        difficulty,
+        language
+      };
+    }
     console.log('creating match', userId, difficulty, language);
     await this.createMatch(userId, difficulty, language, id);
     return this.findMatch(userId, difficulty, language, id);
@@ -37,6 +49,9 @@ export default class MatchService {
       console.log(
         `${userId} is already in a session with ${matchDetails.partner}`
       );
+
+      this.deleteMatch(userId, difficulty, language);
+
       return {
         status: true,
         id: userId,
@@ -80,6 +95,8 @@ export default class MatchService {
       const sessionCreated = await this.redisService.get(
         `session:${sessionId}`
       );
+
+      this.deleteMatch(userId, difficulty, language);
 
       if (sessionCreated == null) {
         console.log('questionId', question.id);
@@ -173,12 +190,13 @@ export default class MatchService {
     const data = await this.redisService.get(key);
     const map = JSON.parse(data || '{}');
     // Check if partner exists
-    if (map[userId] !== null) {
+    if (userId in map && map[userId] !== null) {
       const { partnerId } = map[userId];
       delete map[partnerId];
     }
-
-    delete map[userId];
-    await this.redisService.set(key, JSON.stringify(map));
+    if (userId in map && map[userId] !== null) {
+      delete map[userId];
+      await this.redisService.set(key, JSON.stringify(map));
+    }
   }
 }
