@@ -53,7 +53,7 @@ function QuestionModal(props: QuestionModalProps) {
             gridTemplateRows: 'auto 1fr',
             gap: '20px',
             padding: '20px',
-            margin: '10px 300px',
+            margin: '10px 40px',
             overflowY: 'auto',
             maxHeight: '90%'
           }}
