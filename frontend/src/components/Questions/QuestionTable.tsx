@@ -131,7 +131,7 @@ function QuestionTable(props: {
       <QuestionTableToolbar
         editable={editable}
         setAddQuestionModalOpen={setAddQuestionModalOpen}
-        data={data}
+        data={filteredData}
         rowsPerPage={rowsPerPage}
         page={page}
         handleChangePage={handleChangePage}
