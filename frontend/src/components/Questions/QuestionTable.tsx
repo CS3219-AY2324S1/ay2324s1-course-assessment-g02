@@ -19,7 +19,7 @@ function QuestionTable(props: {
   const [data, setData] = useState(props.questionData);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
-  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'desc' });
   const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
   const editable = props.user ? props.user.email === 'admin@gmail.com' : false;
 
@@ -59,25 +59,33 @@ function QuestionTable(props: {
   };
 
   const handleSort = (key: string) => {
+    // Determine new sort direction
     const isAsc = sortConfig.key === key && sortConfig.direction === 'asc';
-    setSortConfig({ key, direction: isAsc ? 'desc' : 'asc' });
+    const newDirection = isAsc ? 'desc' : 'asc';
 
+    // Update the sort configuration
+    setSortConfig({ key, direction: newDirection });
+
+    // Sort the data
     const sortedData = [...data].sort((a, b) => {
       if (key === 'complexity') {
-        const order = ['Easy', 'Medium', 'Hard'];
+        const order = ['Hard', 'Medium', 'Easy'];
         return (
-          (order.indexOf(a[key]) - order.indexOf(b[key])) * (isAsc ? 1 : -1)
+          (order.indexOf(a[key]) - order.indexOf(b[key])) *
+          (newDirection === 'asc' ? -1 : 1)
         );
       } else {
         if (a[key] < b[key]) {
-          return sortConfig.direction === 'asc' ? -1 : 1;
+          return newDirection === 'asc' ? -1 : 1;
         }
         if (a[key] > b[key]) {
-          return sortConfig.direction === 'asc' ? 1 : -1;
+          return newDirection === 'asc' ? 1 : -1;
         }
         return 0;
       }
     });
+
+    // Update the data
     setData(sortedData);
   };
 
@@ -93,9 +101,11 @@ function QuestionTable(props: {
     await deleteQuestionApi(id).then(
       (res) => {
         console.log('Question deleted successfully', res);
+        toast('Question deleted successfully', { type: 'success' });
         setData(data.filter((question) => question.id != id));
       },
       (error) => {
+        toast('Error deleting question', { type: 'error' });
         console.error('Error deleting question', error);
       }
     );
@@ -121,7 +131,7 @@ function QuestionTable(props: {
       <QuestionTableToolbar
         editable={editable}
         setAddQuestionModalOpen={setAddQuestionModalOpen}
-        data={data}
+        data={filteredData}
         rowsPerPage={rowsPerPage}
         page={page}
         handleChangePage={handleChangePage}
@@ -143,24 +153,19 @@ function QuestionTable(props: {
             selectedCategoryIds={selectedCategoryIds}
             editable={editable}
           />
-          <TableBody
-            sx={{
-              overflowY: 'scroll'
-            }}
-          >
+          <TableBody sx={{ overflowY: 'scroll' }}>
             {filteredData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((question) => {
-                return (
-                  <QuestionTableRow
-                    question={question}
-                    questions={data}
-                    deleteQuestion={deleteQuestion}
-                    editQuestion={editQuestion}
-                    editable={editable}
-                  />
-                );
-              })}
+              .map((question) => (
+                <QuestionTableRow
+                  key={question.id}
+                  question={question}
+                  questions={data}
+                  deleteQuestion={deleteQuestion}
+                  editQuestion={editQuestion}
+                  editable={editable}
+                />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

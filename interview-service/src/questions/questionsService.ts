@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 
 export interface attemptSchema {
   questionId: number;
-  userId1: string;
-  userId2: String;
+  userId1: number;
+  userId2: number;
   code: string;
   language: string;
 }

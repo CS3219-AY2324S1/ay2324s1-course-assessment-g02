@@ -1,8 +1,8 @@
 export interface AttemptedQuestionSchema {
   id: number;
   questionId: number;
-  userId1: string;
-  userId2: string;
+  userId1: number;
+  userId2: number;
   code: string;
   attemptedAt: Date;
   completedAt: Date;
@@ -32,6 +32,7 @@ export interface UserSchema {
   preferredLanguage: string;
   attemptedQuestion1: AttemptedQuestionSchema[];
   attemptedQuestion2: AttemptedQuestionSchema[];
+  isDeleted: boolean;
 }
 
 export interface UserIdSchema {

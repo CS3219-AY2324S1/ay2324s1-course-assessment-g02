@@ -1,7 +1,9 @@
 export interface SessionResponse {
   status: boolean;
-  id1: string;
-  id2: string;
+  id1: number;
+  id2: number;
+  userId1: string;
+  userId2: string;
   sessionId: string;
   questionId: number;
   isConnected: boolean;

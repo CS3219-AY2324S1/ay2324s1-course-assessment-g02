@@ -10,28 +10,51 @@ export default class MatchService {
     this.redisService = new RedisCacheService();
   }
 
-  async getMatch(id: string, difficulty: string, language: string) {
-    console.log('creating match', id, difficulty, language);
-    await this.createMatch(id, difficulty, language);
-    return this.findMatch(id, difficulty, language);
+  async getMatch(
+    userId: string,
+    difficulty: string,
+    language: string,
+    id: number
+  ) {
+    const session = await this.checkUser(userId);
+    console.log('checking for user session');
+    if (session !== '') {
+      this.deleteMatch(userId, difficulty, language);
+      return {
+        status: true,
+        id: userId,
+        sessionId: session,
+        difficulty,
+        language
+      };
+    }
+    console.log('creating match', userId, difficulty, language);
+    await this.createMatch(userId, difficulty, language, id);
+    return this.findMatch(userId, difficulty, language, id);
   }
 
   async findMatch(
-    id: string,
+    userId: string,
     difficulty: string,
-    language: string
+    language: string,
+    id: number
   ): Promise<MatchResponse> {
     const key = `${difficulty}_${language}`;
     const data = await this.redisService.get(key);
     const map = JSON.parse(data || '{}'); // Initialize to an empty object if data is null
-    console.log('map', map[id]);
+    console.log('map', map[userId]);
 
-    if (map[id] !== null) {
-      const matchDetails = map[id];
-      console.log(`${id} is already in a session with ${matchDetails.partner}`);
+    if (map[userId] !== null && map[userId].partner !== null) {
+      const matchDetails = map[userId];
+      console.log(
+        `${userId} is already in a session with ${matchDetails.partner}`
+      );
+
+      this.deleteMatch(userId, difficulty, language);
+
       return {
         status: true,
-        id,
+        id: userId,
         partnerId: matchDetails.partner,
         sessionId: matchDetails.sessionId,
         difficulty,
@@ -40,8 +63,9 @@ export default class MatchService {
     }
 
     const unmatchedId = Object.keys(map).find(
-      (otherId) => otherId !== id && map[otherId] === null
+      (otherId) => otherId !== userId && map[otherId].partner === null
     );
+    console.log('unmatchedId', unmatchedId);
 
     if (unmatchedId) {
       const sessionId = MatchService.generateSessionId();
@@ -50,14 +74,20 @@ export default class MatchService {
       if (question === null) {
         throw new Error('Error getting random question');
       }
-      map[id] = { partner: unmatchedId, sessionId };
-      map[unmatchedId] = { partner: id, sessionId };
+      const id1 = map[userId].id;
+      const id2 = map[unmatchedId].id;
+
+      map[userId] = { partner: unmatchedId, sessionId };
+      map[unmatchedId] = {
+        partner: userId,
+        sessionId
+      };
       await this.redisService.set(key, JSON.stringify(map));
-      console.log(`Successfully matched ${id} with ${unmatchedId}`);
+      console.log(`Successfully matched ${userId} with ${unmatchedId}`);
 
       // Send both users to a `user:${userId}`:sessionId in redis for lookup
-      console.log(`Setting user:${id} to ${sessionId}`);
-      await this.redisService.set(`user:${id}`, sessionId);
+      console.log(`Setting user:${userId} to ${sessionId}`);
+      await this.redisService.set(`user:${userId}`, sessionId);
       console.log(`Setting user:${unmatchedId} to ${sessionId}`);
       await this.redisService.set(`user:${unmatchedId}`, sessionId);
 
@@ -66,14 +96,18 @@ export default class MatchService {
         `session:${sessionId}`
       );
 
+      this.deleteMatch(userId, difficulty, language);
+
       if (sessionCreated == null) {
         console.log('questionId', question.id);
         await this.redisService.set(
           `session:${sessionId}`,
           JSON.stringify({
             status: true,
-            id1: id,
-            id2: unmatchedId,
+            id1: id1,
+            id2: id2,
+            userId1: userId,
+            userId2: unmatchedId,
             sessionId,
             questionId: question.id,
             startTime: Date.now(),
@@ -84,7 +118,7 @@ export default class MatchService {
       }
       return {
         status: true,
-        id,
+        id: userId,
         partnerId: unmatchedId,
         sessionId,
         difficulty,
@@ -96,7 +130,7 @@ export default class MatchService {
 
     return {
       status: false,
-      id,
+      id: userId,
       difficulty,
       language
     };
@@ -133,28 +167,36 @@ export default class MatchService {
     return '';
   }
 
-  async createMatch(id: string, difficulty: string, language: string) {
+  async createMatch(
+    userId: string,
+    difficulty: string,
+    language: string,
+    id: number
+  ) {
     const key = `${difficulty}_${language}`;
     const data = await this.redisService.get(key);
     const map = data !== null ? JSON.parse(data) : {};
-    if (!(id in map)) {
-      map[id] = null;
+    if (!(userId in map)) {
+      map[userId] = { partner: null, id: id };
       await this.redisService.set(key, JSON.stringify(map));
-      console.log(`Added ${id} to match queue for ${difficulty}_${language}`);
+      console.log(
+        `Added ${userId} to match queue for ${difficulty}_${language}`
+      );
     }
   }
 
-  async deleteMatch(id: string, difficulty: string, language: string) {
+  async deleteMatch(userId: string, difficulty: string, language: string) {
     const key = `${difficulty}_${language}`;
     const data = await this.redisService.get(key);
     const map = JSON.parse(data || '{}');
     // Check if partner exists
-    if (map[id] !== null) {
-      const { partnerId } = map[id];
+    if (userId in map && map[userId] !== null) {
+      const { partnerId } = map[userId];
       delete map[partnerId];
     }
-
-    delete map[id];
-    await this.redisService.set(key, JSON.stringify(map));
+    if (userId in map && map[userId] !== null) {
+      delete map[userId];
+      await this.redisService.set(key, JSON.stringify(map));
+    }
   }
 }

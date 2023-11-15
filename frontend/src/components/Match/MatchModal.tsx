@@ -88,21 +88,23 @@ function MatchModal(props: {
 
       console.log(`Counter: ${count}`);
 
-      findMatch(sessionuser.id, difficulty, language).then((response) => {
-        console.log('response', response);
-        if (response.status) {
-          setIsLoading(false);
-          setIsSuccess(true);
-          toast('🍭 Match found! 🍭');
-          const sessionId = response.sessionId;
-          sessionStorage.setItem(sessionId, JSON.stringify(response));
-          console.log(`Found match for ${sessionuser.id}`);
-          console.log('Session ID: ' + sessionId);
-          successCloseModal();
-        } else {
-          setCount((count) => count + 1);
+      findMatch(sessionuser.id, difficulty, language, user.id).then(
+        (response) => {
+          console.log('response', response);
+          if (response.status) {
+            setIsLoading(false);
+            setIsSuccess(true);
+            toast('🍭 Match found! 🍭');
+            const sessionId = response.sessionId;
+            sessionStorage.setItem(sessionId, JSON.stringify(response));
+            console.log(`Found match for ${sessionuser.id}`);
+            console.log('Session ID: ' + sessionId);
+            successCloseModal();
+          } else {
+            setCount((count) => count + 1);
+          }
         }
-      });
+      );
     },
     isRetrying ? 1000 : null
   );

@@ -142,10 +142,10 @@ export default class sessionStore {
           );
         }
       }
-      await this.redisService.delete(`user:${sessionData.id1}`);
-      console.log('User:session deleted:', `user:${sessionData.id1}`);
-      await this.redisService.delete(`user:${sessionData.id2}`);
-      console.log('User:session deleted:', `user:${sessionData.id2}`);
+      await this.redisService.delete(`user:${sessionData.userId1}`);
+      console.log('User:session deleted:', `user:${sessionData.userId1}`);
+      await this.redisService.delete(`user:${sessionData.userId2}`);
+      console.log('User:session deleted:', `user:${sessionData.userId2}`);
     }
     await this.redisService.delete(`session:${sessionId}`);
     console.log('Session deleted:', `session:${sessionId}`);

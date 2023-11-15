@@ -71,7 +71,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
   return !session || !isConnected ? (
     <Loading />
   ) : (
-    <Box display="flex" flexGrow={1}>
+    <Box display="flex" flexGrow={1} width="100vw">
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
         spacing={0.5}
@@ -82,7 +82,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           overflowY: 'scroll'
         }}
       >
-        <Box width="50%" sx={{ h: '100%', p: '0.5em' }}>
+        <Box width={{ xs: '100%', sm: '50%' }} sx={{ h: '100%' }}>
           <Paper
             elevation={5}
             style={{
@@ -95,7 +95,7 @@ const UnwrappedInterviewPage = (props: UnwrappedInterviewPageProps) => {
           </Paper>
         </Box>
 
-        <Box width="50%" sx={{ h: '100%', p: '0.5em' }}>
+        <Box width={{ xs: '100%', sm: '50%' }} sx={{ h: '100%' }}>
           <Paper
             elevation={5}
             style={{

@@ -11,6 +11,7 @@ const useQuestion = (id: number) => {
     complexity: Complexity.Easy,
     categories: []
   });
+
   const { isError, isLoading } = useQuery([id], () => getQuestion(id), {
     enabled: true,
     retry: 2,

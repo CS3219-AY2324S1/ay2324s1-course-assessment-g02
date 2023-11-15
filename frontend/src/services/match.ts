@@ -6,15 +6,17 @@ const matchUrl: string = `http://${import.meta.env.VITE_APP_MATCH_HOST}:${
 }/match/`;
 
 export const findMatch = async (
-  id: string,
+  userId: string,
   difficulty: string,
-  language: string
+  language: string,
+  id: number
 ) => {
   const res = await axios.get(matchUrl + 'find', {
     params: {
-      id: id,
+      userId: userId,
       difficulty: difficulty,
-      language: language
+      language: language,
+      id: id
     }
   });
   return res.data as MatchResponse;
