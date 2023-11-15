@@ -19,6 +19,11 @@ const useUserData = (props: { id: number }) => {
   const [userAttemptedQuestions, setUserAttemptedQuestions] = useState<
     AttemptedQuestionSchema[]
   >([]);
+
+  if (id === undefined) {
+    throw new Error('id is undefined');
+  }
+
   const { isError, isLoading } = useQuery(['userData', id], () => getUser(id), {
     enabled: true,
     retry: 2,

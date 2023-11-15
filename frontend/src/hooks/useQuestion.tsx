@@ -11,6 +11,11 @@ const useQuestion = (id: number) => {
     complexity: Complexity.Easy,
     categories: []
   });
+
+  if (id === undefined) {
+    throw new Error('id is undefined');
+  }
+
   const { isError, isLoading } = useQuery([id], () => getQuestion(id), {
     enabled: true,
     retry: 2,
