@@ -1,6 +1,10 @@
-# Leetcode
+# PeerPrep: Candy Crush that Interview!
 
-### Local (Docker)
+## Cloud deployment
+
+Go to this link to try out PeerPrep! http://peer-prep-alb-540971804.ap-southeast-1.elb.amazonaws.com/
+
+## Local (Docker)
 
 1. Clone the repository
 2. Run the following command in the root directory of the project, define your own ports in env if you want to
