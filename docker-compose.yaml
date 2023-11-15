@@ -22,17 +22,6 @@ services:
     networks:
       - default
 
-  interview-service:
-    build:
-      context: ./interview-service
-    restart: always
-    env_file:
-      - ./interview-service/.env.docker
-    ports:
-      - ${SOCKET_PORT}:${SOCKET_PORT}
-    networks:
-      - default
-
   question-service:
     build:
       context: ./backend/questions
@@ -70,19 +59,9 @@ services:
       - question-service
       - matching-service
 
-  supabase-service:
-    build:
-      context: ./supabase-service
-    restart: always
-    env_file:
-      - ./supabase-service/.env
-    ports:
-      - ${SUPABASE_PORT}:${SUPABASE_PORT}
-    networks:
-      - default
-
 volumes:
   redis-data:
+
 
 networks:
   default:
