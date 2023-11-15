@@ -6,7 +6,6 @@ import { useAuth } from '../components/Auth/AuthProvider';
 import GetUserIdProvider from '../components/Auth/GetUserIdProvider';
 import useUserData from '../hooks/useUserData';
 import { Box, Grid } from '@mui/material';
-import UserHistoryTable from '../components/User/UserHistoryTable';
 
 interface UserPageProps {
   userId: number;
@@ -42,12 +41,6 @@ const UserPage = (props: UserPageProps): JSX.Element => {
             userData={userData}
             currentUser={props.userId}
             session={props.session}
-          />
-        </Grid>
-        <Grid item xs={12} md={9} lg={10}>
-          <UserHistoryTable
-            userAttemptedQuestions={user.userAttemptedQuestions}
-            id={user.id}
           />
         </Grid>
       </Grid>
