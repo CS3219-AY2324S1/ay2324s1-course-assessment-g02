@@ -9,19 +9,6 @@ services:
     volumes:
       - redis-data:/data
 
-  matching-service:
-    build:
-      context: ./matching-service
-    restart: always
-    env_file:
-      - ./matching-service/.env.docker
-    ports:
-      - ${MATCH_PORT}:${MATCH_PORT}
-    depends_on:
-      - redis
-    networks:
-      - default
-
   question-service:
     build:
       context: ./backend/questions
