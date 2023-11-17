@@ -31,23 +31,38 @@ userRouter.get(
   })
 );
 
-// Create user
 userRouter.post(
   "/",
   asyncHandler(async (req: Request, res: Response) => {
-    const { email } = req.body;
-
+    const { userId, email } = req.body;
     const newUser = await prisma.user.create({
       data: {
+        userId,
         email,
       },
     });
-
     // Respond with a success message
     res.status(201).json({
       message: "user created successfully",
       user: newUser,
     });
+  })
+);
+
+// Get id from userId
+userRouter.get(
+  "/userId/:userId",
+  asyncHandler(async (req: Request, res: Response) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        userId: req.params.userId,
+      },
+    });
+    if (!user) {
+      res.status(404).json({ message: "user not found" });
+      return;
+    }
+    res.status(200).json(user.id);
   })
 );
 
