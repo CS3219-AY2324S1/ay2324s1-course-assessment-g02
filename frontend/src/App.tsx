@@ -22,8 +22,6 @@ import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import { UserPageMain, UserProfilesPage } from './pages/UserPage';
 import QuestionsPage from './pages/QuestionsPage';
-import MatchPage from './pages/MatchPage';
-import InterviewPage from './pages/InterviewPage';
 import { useMonaco } from '@monaco-editor/react';
 
 function App() {
@@ -102,8 +100,6 @@ function App() {
                       <Route path="/user" element={<UserPageMain />} />
                       <Route path="/user/:id" element={<UserProfilesPage />} />
                       <Route path="/questions" element={<QuestionsPage />} />
-                      <Route path="/match" element={<MatchPage />} />
-                      <Route path="/interview" element={<InterviewPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   )}

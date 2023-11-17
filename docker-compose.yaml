@@ -1,13 +1,6 @@
 version: '3.8'
 
 services:
-  redis:
-    image: 'redis:alpine'
-    restart: always
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
-    volumes:
-      - redis-data:/data
 
   question-service:
     build:
@@ -44,11 +37,6 @@ services:
     depends_on:
       - user-service
       - question-service
-      - matching-service
-
-volumes:
-  redis-data:
-
 
 networks:
   default:

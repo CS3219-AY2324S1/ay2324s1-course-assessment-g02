@@ -80,12 +80,6 @@ const AuthHomePageComponents = (props: { userId; user }) => {
     <Loading />
   ) : (
     <>
-      <MatchModal
-        user={user}
-        sessionUser={props.user}
-        open={open}
-        setOpen={setOpen}
-      />
       <Grid
         container
         direction="column"
@@ -101,7 +95,8 @@ const AuthHomePageComponents = (props: { userId; user }) => {
             {`${emojis[0]} Candy crush your interview! ${emojis[1]}`}
           </Typography>
         </Grid>
-        <Grid item></Grid>
+        <Grid item>
+        </Grid>
         <Grid
           container
           spacing={3}
@@ -111,9 +106,6 @@ const AuthHomePageComponents = (props: { userId; user }) => {
         >
           <Grid item xs="auto">
             <QuestionsPageButton />
-          </Grid>
-          <Grid item xs="auto">
-            <MatchPageButton setOpen={handleOpen} />
           </Grid>
         </Grid>
       </Grid>
