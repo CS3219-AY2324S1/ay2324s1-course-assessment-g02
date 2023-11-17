@@ -108,6 +108,7 @@ function AddQuestionModal(props: QuestionModalProps) {
             gridRowGap: "20px",
             padding: "20px",
             margin: "10px 300px",
+            overflow: "scroll",
           }}
         >
           <Typography variant="h6">Add Question</Typography>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 
 /* https://supabase.com/docs/guides/auth/auth-helpers/auth-ui */
 import {
@@ -21,6 +21,7 @@ const AuthBox = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     width: 400,
     padding: 10,
+    margin: 10,
 }));
 
 // const Container = (props: any) => {
@@ -63,10 +64,25 @@ function AuthPage() {
                     theme="default"
                 />
             </AuthBox>
-
-            OK
-            <SignInOutButton user={user} />
-        </Box>
+            <Grid container direction="column" maxWidth={"20%"}>
+                <Button
+                    variant="contained"
+                    onClick={() => {
+                        navigate('/');
+                    }}
+                >
+                    Questions Page
+                </Button>
+                <Button
+                    variant="outlined"
+                    onClick={() => {
+                        navigate('/users');
+                    }}
+                >
+                    Users Page
+                </Button>
+            </Grid>
+        </Box >
     );
 }
 

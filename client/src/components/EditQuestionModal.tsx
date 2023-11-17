@@ -108,9 +108,11 @@ function EditQuestionModal(props: QuestionModalProps) {
             gridRowGap: "20px",
             padding: "20px",
             margin: "10px 300px",
+            height: "80vh",
+            overflow: "scroll",
           }}
         >
-          <Typography variant="h6">Add Question</Typography>
+          <Typography variant="h6">Edit Question</Typography>
 
           <FormControl>
             <FormLabel error={!!validation.title}>Question Title*</FormLabel>
