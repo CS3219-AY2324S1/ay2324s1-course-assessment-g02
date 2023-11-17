@@ -20,6 +20,7 @@ function QuestionTableRow(props: {
   questions: Question[];
   deleteQuestion: (questionId: string) => void;
   updateQuestion: (question: Question) => void;
+  editable: boolean;
 }) {
   const {
     question,
@@ -28,7 +29,7 @@ function QuestionTableRow(props: {
     updateQuestion,
   } = props;
   const [open, setOpen] = React.useState(false);
-  const [ editQuestionModalOpen, setEditQuestionModalOpen ] = React.useState(false);
+  const [editQuestionModalOpen, setEditQuestionModalOpen] = React.useState(false);
   return (
     <React.Fragment>
       <EditQuestionModal
@@ -65,27 +66,29 @@ function QuestionTableRow(props: {
         <TableCell>
           <Chip label={question.complexity} />
         </TableCell>
-        <TableCell align="center">
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteQuestion(question._id || "");
-            }}
-          >
-            Delete
-          </Button>
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              setEditQuestionModalOpen(true);
-              updateQuestion(question);
-            }}
-          >
-            <EditIcon />
-          </Button>
-        </TableCell>
+        {props.editable && (
+          <TableCell align="center">
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteQuestion(question._id || "");
+              }}
+            >
+              Delete
+            </Button>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditQuestionModalOpen(true);
+                updateQuestion(question);
+              }}
+            >
+              <EditIcon />
+            </Button>
+          </TableCell>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

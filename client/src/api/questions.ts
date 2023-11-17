@@ -14,7 +14,7 @@ export const getAllQuestions = async () => {
   const allQuestions: Question[] = await axios
     .get(url)
     .then((response) => {
-      console.log("Response:", response.data);
+      // console.log("Response:", response.data);
       return response.data;
     })
     .catch((error) => {
