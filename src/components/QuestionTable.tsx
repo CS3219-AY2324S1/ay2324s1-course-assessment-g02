@@ -115,6 +115,7 @@ function QuestionTable() {
           <TableHead>
             <TableRow>
               <TableCell />
+              <TableCell>Id</TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Categories</TableCell>
               <TableCell>Complexity</TableCell>

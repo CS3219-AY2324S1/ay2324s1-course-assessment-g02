@@ -38,6 +38,7 @@ function QuestionTableRow(props: {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
+        <TableCell>{question.id}</TableCell>
         <TableCell>{question.title}</TableCell>
         <TableCell>
           <Stack direction="row" spacing={1}>
@@ -67,15 +68,15 @@ function QuestionTableRow(props: {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Stack>
-                <div>
+                {/* <div>
                   Leetcode Link: <a href={question.link}>{question.link}</a>
-                </div>
+                </div> */}
                 <Typography variant="h6" gutterBottom component="div">
                   Description
                 </Typography>
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: question.description.replace(/\n/g, "<br />"),
+                    __html: question.description.replace(/\n\n\n/g, "<br />"),
                   }}
                 />
               </Stack>

@@ -97,6 +97,18 @@ function AddQuestionModal(props: QuestionModalProps) {
     }
 
     addQuestion(newQuestion);
+    setTitle("");
+    setDescription("");
+    setCategories({
+      Strings: false,
+      "Data Structure": false,
+      Algorithms: false,
+      Arrays: false,
+      Recursion: false,
+      "Bit Manipulation": false,
+      Databases: false,
+      "Brain Teaser": false,
+    });
     handleClose();
   };
 
@@ -108,7 +120,9 @@ function AddQuestionModal(props: QuestionModalProps) {
             display: "grid",
             gridRowGap: "20px",
             padding: "20px",
-            margin: "10px 300px",
+            margin: "20px 40px",
+            height: "80vh",
+            overflow: "auto",
           }}
         >
           <Typography variant="h6">Add Question</Typography>
@@ -141,13 +155,13 @@ function AddQuestionModal(props: QuestionModalProps) {
               minRows={4}
             />
           </FormControl>
-          <FormControl>
-            <FormLabel>Leetcode Link</FormLabel>
-            <TextField
+          {/* <FormControl> */}
+          {/* <FormLabel>Leetcode Link</FormLabel> */}
+          {/* <TextField
               value={lcLink}
               onChange={(e) => setLcLink(e.target.value)}
-            />
-          </FormControl>
+            /> */}
+          {/* </FormControl> */}
           <FormControl component="fieldset" variant="standard">
             <FormLabel>Categories</FormLabel>
             <FormGroup row>
@@ -185,7 +199,11 @@ function AddQuestionModal(props: QuestionModalProps) {
               <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
             </RadioGroup>
           </FormControl>
-          <Button variant={"contained"} onClick={submitQuestion}>
+          <Button
+            variant={"contained"}
+            onClick={submitQuestion}
+            sx={{ height: "40px" }}
+          >
             Submit
           </Button>
         </Paper>
