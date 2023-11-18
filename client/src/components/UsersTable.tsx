@@ -122,6 +122,7 @@ function UsersTable() {
   };
 
   const editUser = (u: User) => {
+    console.log("u", u);
     updateUser(u);
     setUserData((data) => data.map((user) => (user.id === u.id ? u : user)));
   };
@@ -172,6 +173,7 @@ function UsersTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((u) => (
                 <UserTableRow
+                  key={u.id}
                   u={u}
                   users={userData}
                   editUser={editUser}

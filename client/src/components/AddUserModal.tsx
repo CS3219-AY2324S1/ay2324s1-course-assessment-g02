@@ -123,7 +123,7 @@ function addUserModal(props: AddUserModalProps) {
             >
               <MenuItem value="Python">Python</MenuItem>
               <MenuItem value="Java">Java</MenuItem>
-              <MenuItem value="Cpp">C++</MenuItem>
+              <MenuItem value="Cpp">Cpp</MenuItem>
               <MenuItem value="C">C</MenuItem>
               <MenuItem value="Go">Go</MenuItem>
             </Select>

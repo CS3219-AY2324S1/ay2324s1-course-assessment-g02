@@ -36,22 +36,17 @@ function EditUserModal(props: EditUserModalProps) {
   const [complexity, setComplexity] = useState("Easy");
   const [validation, setValidation] = useState({
     email: "",
-    password: "",
   });
 
   const submitQuestion = () => {
-    if (!email && !password) {
+    if (!email) {
       // lol cos setstate is async
-      setValidation({ email: "", password: "" });
+      setValidation({ email: "" });
     } else if (!email) {
       setValidation({ ...validation, email: "Email can't be empty" });
     } else if (!password) {
-      setValidation({
-        ...validation,
-        password: "Password can't be empty",
-      });
     }
-    if (!email || !password) {
+    if (!email) {
       return;
     }
 
@@ -85,29 +80,24 @@ function EditUserModal(props: EditUserModalProps) {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setValidation({ email: "", password: "" });
+                setValidation({ email: "" });
               }}
               error={!!validation.email}
               helperText={validation.email}
             />
           </FormControl>
           <FormControl>
-            <FormLabel error={!!validation.password}>Password*</FormLabel>
+            <FormLabel>Password</FormLabel>
             <TextField
               value={password}
               hidden
               onChange={(e) => {
                 setPassword(e.target.value);
-                setValidation({ ...validation, password: "" });
               }}
-              error={!!validation.password}
-              helperText={validation.password}
             />
           </FormControl>
           <FormControl>
-            <FormLabel error={!!validation.password}>
-              Preferred Language
-            </FormLabel>
+            <FormLabel>Preferred Language</FormLabel>
             <Select
               label="Preferred Language"
               value={language}
@@ -118,7 +108,7 @@ function EditUserModal(props: EditUserModalProps) {
             >
               <MenuItem value="Python">Python</MenuItem>
               <MenuItem value="Java">Java</MenuItem>
-              <MenuItem value="Cpp">C++</MenuItem>
+              <MenuItem value="Cpp">Cpp</MenuItem>
               <MenuItem value="C">C</MenuItem>
               <MenuItem value="Go">Go</MenuItem>
             </Select>

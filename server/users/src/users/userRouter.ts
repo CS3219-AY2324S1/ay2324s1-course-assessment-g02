@@ -70,11 +70,12 @@ userRouter.get(
 
 // Update user's username, userId, and/or email
 // Doesn't include friends, attempted questions, or badges
-// Expect different routes for that
+// Expect different routes for fthat
 userRouter.put(
   "/:id",
   asyncHandler(async (req: Request, res: Response) => {
-    const { username, preferredLanguage, preferredComplexity } = req.body;
+    const { username, preferredLanguage, preferredComplexity, email } =
+      req.body;
     const id = Number(req.params.id);
 
     const existingUser = await prisma.user.findUnique({
@@ -89,6 +90,7 @@ userRouter.put(
     const updatedUser = await prisma.user.update({
       where: { id },
       data: {
+        email: email || existingUser.email,
         username: username || existingUser.username,
         preferredLanguage: preferredLanguage || existingUser.preferredLanguage,
         preferredComplexity:

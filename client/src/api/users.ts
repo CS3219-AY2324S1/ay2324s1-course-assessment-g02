@@ -54,12 +54,16 @@ export const createUser = async (
 };
 
 export const updateUser = async (u: User) => {
+  console.log("u2", u);
+  const payload = {
+    username: u.username,
+    email: u.email,
+    preferredComplexity: u.preferredComplexity,
+    preferredLanguage: u.preferredLanguage,
+  };
+  console.log(payload);
   await axios
-    .put(url + u.id, {
-      username: u.username,
-      preferredComplexity: u.preferredComplexity,
-      preferredlanguage: u.preferredLanguage,
-    })
+    .put(url + u.id, payload)
     .then((response) => {
       console.log(response.data);
     })
