@@ -30,7 +30,12 @@ export const getAllUsers = async () => {
   return allUsers;
 };
 
-export const createUser = async (email: string, password: string) => {
+export const createUser = async (
+  email: string,
+  password: string,
+  preferredComplexity: string,
+  preferredLanguage: string
+) => {
   const createQuestionResp: User = await axios
     .post(url, {
       userId: email,
