@@ -34,11 +34,13 @@ userRouter.get(
 userRouter.post(
   "/",
   asyncHandler(async (req: Request, res: Response) => {
-    const { userId, email } = req.body;
+    const { userId, email, preferredComplexity, preferredLanguage } = req.body;
     const newUser = await prisma.user.create({
       data: {
         userId,
         email,
+        preferredComplexity,
+        preferredLanguage,
       },
     });
     // Respond with a success message

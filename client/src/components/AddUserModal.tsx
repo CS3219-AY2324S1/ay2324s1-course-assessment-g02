@@ -11,14 +11,19 @@ import {
   Radio,
   Paper,
   TextField,
-  FormGroup,
-  Checkbox,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { useState } from "react";
 import { User } from "../api/users";
 
 interface AddUserModalProps {
-  addUser: (email: string, password: string) => void;
+  addUser: (
+    email: string,
+    password: string,
+    preferredComplexity: string,
+    preferredLanguage: string
+  ) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   users: User[];
@@ -62,7 +67,7 @@ function addUserModal(props: AddUserModalProps) {
       }
     }
 
-    addUser(email, password);
+    addUser(email, password, complexity, language);
     handleClose();
   };
 
@@ -77,7 +82,7 @@ function addUserModal(props: AddUserModalProps) {
             margin: "10px 300px",
           }}
         >
-          <Typography variant="h6">Add Question</Typography>
+          <Typography variant="h6">Add User</Typography>
 
           <FormControl>
             <FormLabel error={!!validation.email}>Email*</FormLabel>
@@ -108,11 +113,24 @@ function addUserModal(props: AddUserModalProps) {
             <FormLabel error={!!validation.password}>
               Preferred Language
             </FormLabel>
-            <TextField />
+            <Select
+              label="Preferred Language"
+              value={language}
+              onChange={(event: any) => {
+                setLanguage(event.target.value as string);
+              }}
+              displayEmpty
+            >
+              <MenuItem value="Python">Python</MenuItem>
+              <MenuItem value="Java">Java</MenuItem>
+              <MenuItem value="Cpp">C++</MenuItem>
+              <MenuItem value="C">C</MenuItem>
+              <MenuItem value="Go">Go</MenuItem>
+            </Select>
           </FormControl>
           <FormControl>
             <FormLabel id="demo-controlled-radio-buttons-group">
-              Preferred QuestionComplexity
+              Preferred Question Complexity
             </FormLabel>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { TextField } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -25,6 +26,19 @@ function QuestionTable() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [questionData, setQuestionData] = useState<Question[]>([]);
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
+
+  const handlePageNumberChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const pageNumber = parseInt(event.target.value, 10);
+    if (
+      !isNaN(pageNumber) &&
+      pageNumber >= 1 &&
+      pageNumber <= Math.ceil(questionData.length / rowsPerPage)
+    ) {
+      setPage(pageNumber - 1);
+    }
+  };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -105,6 +119,7 @@ function QuestionTable() {
               .map((question) => {
                 return (
                   <QuestionTableRow
+                    key={question._id} // Correct usage of key here
                     question={question}
                     deleteQuestion={deleteQuestionId}
                     questions={questionData}
@@ -115,15 +130,34 @@ function QuestionTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={questionData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "right",
+          justifyContent: "flex-end",
+          margin: "10px",
+        }}
+      >
+        <TextField
+          label="Go to page"
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          size="small"
+          onChange={handlePageNumberChange}
+          style={{ marginRight: "10px" }}
+        />
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={questionData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
     </Paper>
   );
 }

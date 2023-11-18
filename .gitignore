@@ -3,8 +3,8 @@ logs
 *.log
 
 # Locks
-yarn.lock
-package-lock.json
+**yarn.lock
+**package-lock.json
 
 # Runtime data
 pids
@@ -28,7 +28,7 @@ build/Release
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-node_modules
+**node_modules
 
 # Build files
 /public/assets

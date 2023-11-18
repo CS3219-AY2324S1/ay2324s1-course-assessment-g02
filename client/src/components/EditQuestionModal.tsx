@@ -85,16 +85,6 @@ function EditQuestionModal(props: QuestionModalProps) {
       complexity: complexity as "Easy" | "Medium" | "Hard",
     };
 
-    for (let qn of questions) {
-      if (qn.title === newQuestion.title && qn._id !== newQuestion._id) {
-        setValidation({
-          ...validation,
-          title: "There already exists a question with the same title.",
-        });
-        return;
-      }
-    }
-
     updateQuestion(newQuestion);
     handleClose();
   };
@@ -110,7 +100,7 @@ function EditQuestionModal(props: QuestionModalProps) {
             margin: "10px 300px",
           }}
         >
-          <Typography variant="h6">Add Question</Typography>
+          <Typography variant="h6">Edit Question</Typography>
 
           <FormControl>
             <FormLabel error={!!validation.title}>Question Title*</FormLabel>

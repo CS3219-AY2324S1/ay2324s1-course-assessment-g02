@@ -107,7 +107,9 @@ function AddQuestionModal(props: QuestionModalProps) {
             display: "grid",
             gridRowGap: "20px",
             padding: "20px",
-            margin: "10px 300px",
+            margin: "20px 40px",
+            height: "80vh",
+            overflow: "auto",
           }}
         >
           <Typography variant="h6">Add Question</Typography>
@@ -177,7 +179,11 @@ function AddQuestionModal(props: QuestionModalProps) {
               <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
             </RadioGroup>
           </FormControl>
-          <Button variant={"contained"} onClick={submitQuestion}>
+          <Button
+            variant={"contained"}
+            onClick={submitQuestion}
+            sx={{ height: "40px" }}
+          >
             Submit
           </Button>
         </Paper>
