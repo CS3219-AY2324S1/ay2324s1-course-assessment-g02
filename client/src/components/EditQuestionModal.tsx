@@ -98,6 +98,8 @@ function EditQuestionModal(props: QuestionModalProps) {
             gridRowGap: "20px",
             padding: "20px",
             margin: "10px 300px",
+            height: "80vh",
+            overflowY: "scroll",
           }}
         >
           <Typography variant="h6">Edit Question</Typography>
