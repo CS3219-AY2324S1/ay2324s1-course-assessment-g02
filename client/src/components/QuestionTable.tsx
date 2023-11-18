@@ -27,7 +27,7 @@ function QuestionTable() {
   const [questionData, setQuestionData] = useState<Question[]>([]);
   const [addQuestionModalOpen, setAddQuestionModalOpen] = useState(false);
   const { user } = Auth.useUser();
-  const editable = user ? user.email === 'chia.hannahk+420@gmail.com' : false;
+  const editable = user ? user.email === "admin@gmail.com" : false;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);

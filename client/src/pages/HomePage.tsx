@@ -3,26 +3,31 @@ import { AppBar, Grid, Toolbar, Typography } from "@mui/material";
 import QuestionTable from "../components/QuestionTable";
 import SignInOutButton from "../components/SignInOutButton";
 import { Auth } from "@supabase/auth-ui-react";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const { user } = Auth.useUser();
-  var displayName = ""
+  const navigate = useNavigate();
+  var displayName = "";
   if (user !== null) {
-    displayName = user.email === "chia.hannahk+420@gmail.com" ? "Admin" : "User"
+    displayName = user.email === "admin@gmail.com" ? "Admin" : "User";
   } else {
-    displayName = "Not logged in"
+    displayName = "Not logged in";
   }
   return (
     <div>
       <div>
         <AppBar position="sticky">
           <Toolbar>
-            <Typography variant="h6" sx={{ my: 2, flexGrow: 1 }}>
+            <Typography
+              onClick={() => navigate("/")}
+              display="flex"
+              variant="h6"
+              sx={{ my: 2, flexGrow: 1 }}
+            >
               Assignment 3
             </Typography>
-            <Typography sx={{ my: 2, }}>
-              {displayName}
-            </Typography>
+            <Typography sx={{ my: 2 }}>{displayName}</Typography>
             <SignInOutButton user={user} />
           </Toolbar>
         </AppBar>
@@ -39,9 +44,9 @@ const HomePage = () => {
           <Grid item>
             <Typography variant="h2">Sign in to view questions</Typography>
           </Grid>
-        </Grid>)
-      }
-    </div >
+        </Grid>
+      )}
+    </div>
   );
 };
 
