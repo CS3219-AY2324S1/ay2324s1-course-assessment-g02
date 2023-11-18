@@ -22,14 +22,11 @@ function QuestionTableRow(props: {
   updateQuestion: (question: Question) => void;
   editable: boolean;
 }) {
-  const {
-    question,
-    questions,
-    deleteQuestion,
-    updateQuestion,
-  } = props;
+  const { question, questions, deleteQuestion, updateQuestion } = props;
   const [open, setOpen] = React.useState(false);
-  const [editQuestionModalOpen, setEditQuestionModalOpen] = React.useState(false);
+  const [editQuestionModalOpen, setEditQuestionModalOpen] = React.useState(
+    false
+  );
   return (
     <React.Fragment>
       <EditQuestionModal
@@ -100,7 +97,7 @@ function QuestionTableRow(props: {
                 </Typography>
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: question.description.replace(/\n/g, "<br />"),
+                    __html: question.description.replace(/\n\n\n/g, "<br />"),
                   }}
                 />
               </Stack>

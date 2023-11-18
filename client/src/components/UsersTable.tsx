@@ -102,10 +102,18 @@ function UsersTable() {
     setPage(0);
   };
 
-  const addUser = (email: string, password: string) => {
-    createUser(email, password).then((u) =>
-      setUserData((data) => [...data, u])
-    );
+  const addUser = (
+    email: string,
+    password: string,
+    preferredComplexity: string,
+    preferredLanguage: string
+  ) => {
+    createUser(
+      email,
+      password,
+      preferredComplexity,
+      preferredLanguage
+    ).then((u) => setUserData((data) => [...data, u]));
   };
 
   const deleteUserId = (u: User) => {

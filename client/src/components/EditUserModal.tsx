@@ -13,6 +13,8 @@ import {
   TextField,
   FormGroup,
   Checkbox,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useState } from "react";
 import { User } from "../api/users";
@@ -28,28 +30,29 @@ interface EditUserModalProps {
 function EditUserModal(props: EditUserModalProps) {
   const { users, editUser, open, setOpen, user } = props;
   const handleClose = () => props.setOpen(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
-  const [language, setLanguage] = useState("Python");
-  const [complexity, setComplexity] = useState("Easy");
+  const [language, setLanguage] = useState(user.preferredLanguage);
+  const [complexity, setComplexity] = useState(user.preferredComplexity);
   const [validation, setValidation] = useState({
     email: "",
+    password: "",
   });
 
   const submitQuestion = () => {
-    if (!email) {
+    if (!email && !password) {
+      // lol cos setstate is async
+      setValidation({ email: "", password: "" });
+    } else if (!email) {
       setValidation({ ...validation, email: "Email can't be empty" });
-      return;
+    } else if (!password) {
+      setValidation({
+        ...validation,
+        password: "Password can't be empty",
+      });
     }
-
-    for (let u of users) {
-      if (u.email === email) {
-        setValidation({
-          ...validation,
-          email: "There already exists a user with the same email.",
-        });
-        return;
-      }
+    if (!email || !password) {
+      return;
     }
 
     const newUser: User = {
@@ -74,7 +77,7 @@ function EditUserModal(props: EditUserModalProps) {
             margin: "10px 300px",
           }}
         >
-          <Typography variant="h6">Add Question</Typography>
+          <Typography variant="h6">Edit User</Typography>
 
           <FormControl>
             <FormLabel error={!!validation.email}>Email*</FormLabel>
@@ -82,18 +85,43 @@ function EditUserModal(props: EditUserModalProps) {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setValidation({ email: "" });
+                setValidation({ email: "", password: "" });
               }}
               error={!!validation.email}
               helperText={validation.email}
             />
           </FormControl>
           <FormControl>
-            <FormLabel>Preferred Language</FormLabel>
+            <FormLabel error={!!validation.password}>Password*</FormLabel>
             <TextField
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
+              value={password}
+              hidden
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setValidation({ ...validation, password: "" });
+              }}
+              error={!!validation.password}
+              helperText={validation.password}
             />
+          </FormControl>
+          <FormControl>
+            <FormLabel error={!!validation.password}>
+              Preferred Language
+            </FormLabel>
+            <Select
+              label="Preferred Language"
+              value={language}
+              onChange={(event: any) => {
+                setLanguage(event.target.value as string);
+              }}
+              displayEmpty
+            >
+              <MenuItem value="Python">Python</MenuItem>
+              <MenuItem value="Java">Java</MenuItem>
+              <MenuItem value="Cpp">C++</MenuItem>
+              <MenuItem value="C">C</MenuItem>
+              <MenuItem value="Go">Go</MenuItem>
+            </Select>
           </FormControl>
           <FormControl>
             <FormLabel id="demo-controlled-radio-buttons-group">
